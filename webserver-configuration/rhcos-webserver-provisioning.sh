@@ -24,8 +24,8 @@ function nightly() {
 
 function general_release() {
   # https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/
-  OC_VERSION="4.1"
-  BUILD_VERSION="4.1.0-x86_64"
+  OC_VERSION="4.2"
+  BUILD_VERSION="4.2.0-x86_64"
   VERSION="latest"
   sudo mkdir -p /var/lib/tftpboot/openshift4/${OC_VERSION}
   cd /var/lib/tftpboot/openshift4/${OC_VERSION}
