@@ -77,5 +77,5 @@ $ ls /var/www/html/openshift4/4.2/ignitions/
 bootstrap.ign  master.ign  worker.ign
 ```
 
-**Link**
-[Creating the Kubernetes manifest and Ignition config files](https://docs.openshift.com/container-platform/4.2/installing/installing_bare_metal/installing-bare-metal.html#installation-user-infra-generate-k8s-manifest-ignition_installing-bare-metal)
+**Link**  
+[Creating the Kubernetes manifest and Ignition config files](https://docs.openshift.com/container-platform/4.2/installing/installing_bare_metal/installing-bare-metal.html#installation-user-infra-generate-k8s-manifest-ignition_installing-bare-metal)  
