@@ -5,7 +5,7 @@
 [OpenShift 4 on KVM/libvirt](kvm-scripts/)  
 
 # Useful scripts
-[DHCP Server Configuration]()  
+[DHCP Server Configuration](dhcp-configuration/)  
 [DNS Configuration](dns-server-configuration/)  
 [Web (HTTP) server Configuration](webserver-configuration/)  
 [PXE Configuration](pxe-configuration/)  
