@@ -151,13 +151,17 @@ $TTL 900
 211 IN PTR dns.ocp4.example.com.
 ```
 
-**named.conf validation**
+**Test the bind server configuration**
 ```
 named-checkconf /etc/named.conf
 ```
 
 **Test dns resolution**
+```
 dig @localhost  etcd-0.ocp4.example.com
+```
 
 **Test Reverse pointer**
+```
 dig @localhost -t srv _etcd-server-ssl._tcp.ocp4.example.com
+```
