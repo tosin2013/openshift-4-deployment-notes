@@ -22,7 +22,7 @@ Check logged on user
 $ oc whoami 
 ```
 
-Check for Pending CSRs
+**Check for Pending CSRs**  
 [Approving the CSRs for your machines](https://docs.openshift.com/container-platform/4.2/installing/installing_bare_metal/installing-bare-metal.html?extIdCarryOver=true&sc_cid=701f2000001Css5AAC#installation-approve-csrs_installing-bare-metal)
 
 
