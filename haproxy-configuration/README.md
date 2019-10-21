@@ -1,18 +1,26 @@
 # Configure HA-Proxy for OpenShift
 
 ### Install HA Proxy Package
+```
 sudo yum install -y haproxy 
+```
 
 ### Configure Firewall rules
+```
 sudo firewall-cmd --add-port={80/tcp,443/tcp,6443/tcp,22623/tcp,32700/tcp} --permanent
 sudo firewall-cmd --reload
+```
 
 ### Backup haproxy config
+```
 sudo cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.bak
+```
 
 ### edit haproxy config
-sudo vim /etc/haproxy/haproxy.cfg
+
 ```
+sudo vim /etc/haproxy/haproxy.cfg
+
 global
     log         127.0.0.1 local2 info
     chroot      /var/lib/haproxy
@@ -76,11 +84,15 @@ backend router_http
 ```
 
 ### Set semanage ports for selinux
+```
 sudo semanage port  -a 22623 -t http_port_t -p tcp
 sudo semanage port  -a 6443 -t http_port_t -p tcp
 sudo semanage port  -a 32700 -t http_port_t -p tcp
 sudo semanage port  -l  | grep -w http_port_t
+```
 
 ### Test Haproxy service
+```
 systemctl start haproxy
 systemctl status haproxy
+```
