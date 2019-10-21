@@ -19,8 +19,8 @@ max-lease-time 14400;
 option routers                  192.168.1.1;
 option broadcast-address        192.168.1.255;
 option subnet-mask              255.255.255.0;
-option domain-name-servers      192.168.1.245; # you dns server
-option domain-name              "example.com"; # your domain name
+option domain-name-servers      192.168.1.245; # your dns server
+option domain-name              "example.com"; # your domain fqdn
 
 
 subnet 192.168.1.0 netmask 255.255.255.0 {
