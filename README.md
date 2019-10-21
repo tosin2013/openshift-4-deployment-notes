@@ -6,7 +6,7 @@
 
 # Useful scripts
 [DHCP Server Configuration]()  
-[DNS Configuration]()  
+[DNS Configuration](dns-server/)  
 [Web (HTTP) server Configuration](webserver-configuration/)  
 [PXE Configuration](pxe-configuration/)  
 [HAProxy Configuration](haproxy-configuration/)  
