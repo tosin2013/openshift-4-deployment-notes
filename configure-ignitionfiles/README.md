@@ -5,7 +5,7 @@ Run the following the machine you plan to install OpenShift from after you have 
 
 **Define OpenShift Version**
 ```
-$ export OC_VERSION="4.2.0-0"
+$ export OC_VERSION="4.2.0"
 ```
 
 **Generate Cluster key**
