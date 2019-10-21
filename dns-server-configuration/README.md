@@ -2,7 +2,9 @@
 The DNS Server is used for communication between the RHCOS Nodes.
 
 **install bind server packages**
+```
 sudo yum -y install bind bind-utils 
+```
 
 **Configure firewall rules**
 ```
