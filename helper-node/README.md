@@ -5,20 +5,20 @@ This will show who to setup a helper node manually. There is a ansible playbook 
 
 The helpernode will server as yout LB/DHCP/PXE/DNS and HTTPD server.
 
-**Assumptions**
+**Assumptions**  
 1. The machine has access to the internet.
 2. The network does no have DHCP
 
-**Hardware Recommendations**
+**Hardware Recommendations**  
 * 4 vCPUS 
 * 4 GB of RAM 
 * 40 GB HD
 * Static IP 
 
-**Configure a RHEL 7 machine**
+**Configure a RHEL 7 machine**  
 I have not tested this on RHEL 8 and am open to feedback. 
 
-**Install and configure firewalld**
+**Install and configure firewalld**  
 ```
 sudo yum install firewalld -y 
 sudo systemctl enable firewalld
@@ -26,26 +26,26 @@ sudo systemctl start firewalld
 sudo  systemctl status firewalld
 ```
 
-**Configure DHCP**
+**Configure DHCP**  
 [DHCP Server Configuration](dhcp-configuration/)  
 
-**Configure DNS**
+**Configure DNS**  
 [DNS Configuration](dns-server-configuration/) 
 
-**Configure WebServer**
+**Configure WebServer**  
 [Web (HTTP) server Configuration](webserver-configuration/)  
 
-**Configure PXE**
+**Configure PXE**  
 [PXE Configuration](pxe-configuration/)  
 
-**Configure HAPROXY**
+**Configure HAPROXY**  
 [HAProxy Configuration](haproxy-configuration/)  
 
 
-**Copy ignition files to helpernode** 
+**Copy ignition files to helpernode**  
 This should be followed after you have the openshift install files and config file on this machine or a remote machine. 
 
-**create iginition file directory**
+**create iginition file directory**  
 ```
 $ export OC_VERSION="4.2"
 
