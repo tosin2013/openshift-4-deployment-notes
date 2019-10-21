@@ -11,6 +11,7 @@
 [PXE Configuration](pxe-configuration/)  
 [HAProxy Configuration](haproxy-configuration/)  
 [Configure OpenShift Installer](configure-installers/)
+[Configure OpenShift ignition Configs](configure-ignitionfiles/)
 
 ## Day Two Operations
 [Configure a HTPasswd identity provider](configure-htpasswd-identity-provider.md)
