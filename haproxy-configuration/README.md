@@ -43,10 +43,10 @@ frontend kubernetes_api
 backend kubernetes_api
     balance roundrobin
     option ssl-hello-chk
-    server bootstrap-0 bootstrap-0.ocp4.qubinodedemo.com:6443 check
-    server master-01 master-01.ocp4.qubinodedemo.com:6443 check
-    server master-02 master-02.ocp4.qubinodedemo.com:6443 check
-    server master-03 master-03.ocp4.qubinodedemo.com:6443 check
+    server bootstrap-0 bootstrap-0.ocp4.example.com:6443 check
+    server master-01 master-01.ocp4.example.com:6443 check
+    server master-02 master-02.ocp4.example.com:6443 check
+    server master-03 master-03.ocp4.example.com:6443 check
 
 frontend machine_config
     bind 0.0.0.0:22623
@@ -55,10 +55,10 @@ frontend machine_config
 backend machine_config
     balance roundrobin
     option ssl-hello-chk
-    server bootstrap-0 bootstrap-0.ocp4.qubinodedemo.com:22623 check
-    server master-01 master-01.ocp4.qubinodedemo.com:22623 check
-    server master-02 master-02.ocp4.qubinodedemo.com:22623 check
-    server master-03 master-03.ocp4.qubinodedemo.com:22623 check
+    server bootstrap-0 bootstrap-0.ocp4.example.com:22623 check
+    server master-01 master-01.ocp4.example.com:22623 check
+    server master-02 master-02.ocp4.example.com:22623 check
+    server master-03 master-03.ocp4.example.com:22623 check
 
 frontend router_https
     bind 0.0.0.0:443
@@ -67,8 +67,8 @@ frontend router_https
 backend router_https
     balance roundrobin
     option ssl-hello-chk
-    server worker-01 worker-01.ocp4.qubinodedemo.com:443 check
-    server worker-02 worker-02.ocp4.qubinodedemo.com:443 check
+    server worker-01 worker-01.ocp4.example.com:443 check
+    server worker-02 worker-02.ocp4.example.com:443 check
 
 frontend router_http
     mode http
@@ -79,8 +79,8 @@ frontend router_http
 backend router_http
     mode http
     balance roundrobin
-    server worker-01 worker-01.ocp4.qubinodedemo.com:80 check
-    server worker-02 worker-02.ocp4.qubinodedemo.com:80 check
+    server worker-01 worker-01.ocp4.example.com:80 check
+    server worker-02 worker-02.ocp4.example.com:80 check
 ```
 
 ### Set semanage ports for selinux
