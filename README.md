@@ -6,7 +6,7 @@
 
 
 ## Useful tool
-[Helper ndoe](helper-node/)
+[Helper node](helper-node/)
 
 ## Useful scripts
 [DHCP Server Configuration](dhcp-configuration/)  
