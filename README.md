@@ -10,6 +10,7 @@
 [Web (HTTP) server Configuration](webserver-configuration/)  
 [PXE Configuration](pxe-configuration/)  
 [HAProxy Configuration](haproxy-configuration/)  
+[Configure OpenShift Installer](configure-installers/)
 
 ## Day Two Operations
 [Configure a HTPasswd identity provider](configure-htpasswd-identity-provider.md)
