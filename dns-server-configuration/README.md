@@ -1,9 +1,9 @@
-# Configure Bind Server For OpenShift 4 Deployments 
+# Configure Bind Server For OpenShift 4 Deployments
 The DNS Server is used for communication between the RHCOS Nodes.
 
 **install bind server packages**
 ```
-sudo yum -y install bind bind-utils 
+sudo yum -y install bind bind-utils
 ```
 
 **Configure firewall rules**
@@ -39,20 +39,20 @@ options {
 	recursing-file  "/var/named/data/named.recursing";
 	secroots-file   "/var/named/data/named.secroots";
 	allow-query { localhost; internal_nets; };
-	
-	/* 
+
+	/*
 	 - If you are building an AUTHORITATIVE DNS server, do NOT enable recursion.
-	 - If you are building a RECURSIVE (caching) DNS server, you need to enable 
-	   recursion. 
-	 - If your recursive DNS server has a public IP address, you MUST enable access 
+	 - If you are building a RECURSIVE (caching) DNS server, you need to enable
+	   recursion.
+	 - If your recursive DNS server has a public IP address, you MUST enable access
 	   control to limit queries to your legitimate users. Failing to do so will
-	   cause your server to become part of large scale DNS amplification 
+	   cause your server to become part of large scale DNS amplification
 	   attacks. Implementing BCP38 within your network would greatly
-	   reduce such attack surface 
+	   reduce such attack surface
 	*/
 	recursion yes;
 	allow-recursion { localhost; internal_nets; };
-	
+
 	dnssec-enable yes;
 	dnssec-validation no;
 
@@ -105,7 +105,7 @@ zone "1.168.192.in-addr.arpa" {
 
 **Create zone file**
 ```
-$ cat /var/named/ocp4.example.com.zone 
+$ cat /var/named/ocp4.example.com.zone
 $ORIGIN ocp4.example.com.
 $TTL 900
 @ IN SOA dns.ocp4.example.com. root.ocp4.example.com. (
@@ -134,7 +134,7 @@ _etcd-server-ssl._tcp     IN      SRV     0 10    2380 etcd-2.ocp4.example.com.
 
 **Create reverse zone file**
 ```
-$ cat /var/named/1.168.192.in-addr.arpa.zone 
+$ cat /var/named/1.168.192.in-addr.arpa.zone
 $TTL 900
 @ IN SOA bastion.ocp4.example.com. hostmaster.ocp4.example.com. (
 
@@ -156,6 +156,16 @@ $TTL 900
 **Test the bind server configuration**
 ```
 named-checkconf /etc/named.conf
+```
+
+**Start the bind service instance**
+```
+systemctl start named
+```
+
+**Enable the bind service instance**
+```
+systemctl enable named
 ```
 
 **Test dns resolution**

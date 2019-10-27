@@ -2,7 +2,7 @@
 
 ### Install HA Proxy Package
 ```
-sudo yum install -y haproxy 
+sudo yum install -y haproxy
 ```
 
 ### Configure Firewall rules
@@ -95,4 +95,9 @@ sudo semanage port  -l  | grep -w http_port_t
 ```
 systemctl start haproxy
 systemctl status haproxy
+```
+
+### Enable the haproxy service
+```
+systemctl enable haproxy
 ```
