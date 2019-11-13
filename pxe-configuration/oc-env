@@ -1,0 +1,10 @@
+# Nightly builds
+# export OC_VERSION="4.2.0-0.nightly"
+# export BUILD_VERSION="42.80.20190828.2"
+
+# GA Builds
+export OC_VERSION="4.2.0"
+export BUILD_VERSION="4.2.0-x86_64"
+
+# IP of webserver
+export WEBSERVER=192.168.1.211

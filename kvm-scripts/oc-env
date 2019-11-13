@@ -1,0 +1,13 @@
+#export OC_VERSION="4.2.0-0.nightly"
+#export BUILD_VERSION="42.80.20190828.2"
+#export RELEASE="pre-release"
+#export VERSION="latest"
+
+export OC_VERSION="4.2"
+export BUILD_VERSION="4.2.0-x86_64"
+export RELEASE="4.2"
+export VERSION="latest"
+
+export WEB_SERVER=192.168.1.211
+
+export KVM_NETWORK="kvmnet"
