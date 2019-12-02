@@ -1,12 +1,10 @@
 # DHCP Configuration for OpenShift 4
 
-The DHCP Server is used to assign coreos nodes with the correct ip address. Note the machine name below will name the RHCOS machine with the name name upon boot. 
-
-
+The DHCP Server is used to assign coreos nodes with the correct ip address. Note the machine name below will name the RHCOS machine with the name name upon boot.
 
 **Install dhcp package**
 ```
-sudo yum install -y  dhcp-server
+sudo yum install -y  dhcp
 ```
 
 **Update dhcp.conf file**
@@ -40,7 +38,7 @@ subnet 192.168.1.0 netmask 255.255.255.0 {
 
       	# this is PXE specific
       	filename "pxelinux.0";
-      	next-server 192.168.1.80; # your PXE Server 
+      	next-server 192.168.1.80; # your PXE Server
          	}
 }
 
