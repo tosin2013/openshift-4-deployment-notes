@@ -1,12 +1,14 @@
 # Vmware Steps
 
 **Recommend resource requirements**  
-Machine  | Operating System  | vCPU  | RAM  |  Storage  
---|---|---|---|--  
-Bootstrap  | RHCOS  | 4  | 16 GB  | 120 GB  
-Control plane  |  RHCOS | 4  | 16 GB  | 120 GB  
-Compute  |  RHCOS | 4  | 16 GB  |  120 GB  
-Bastion Host (Helper Node)  |  RHEL 7.x  | 4  | 16 GB | 120 GB  
+
+
+Machine  | Operating System  | vCPU  | RAM  |  Storage |  
+--|---|---|---|--|  
+Bootstrap  | RHCOS  | 4  | 16 GB  | 120 GB|    
+Control plane  |  RHCOS | 4  | 16 GB  | 120 GB|    
+Compute  |  RHCOS | 4  | 16 GB  |  120 GB|    
+Bastion Host (Helper Node)  |  RHEL 7.x  | 4  | 16 GB | 120 GB |   
 
 **For general deployments**  
 1. Review Requirements
