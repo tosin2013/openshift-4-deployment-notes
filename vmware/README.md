@@ -28,6 +28,8 @@ Bastion Host (Helper Node)  |  RHEL 7.x  | 4  | 16 GB | 120 GB |
 9. Configure Machines for OpenShift
   1. [Creating Red Hat Enterprise Linux CoreOS (RHCOS) machines in vSphere](https://docs.openshift.com/container-platform/4.2/installing/installing_vsphere/installing-vsphere.html#installation-vsphere-machines_installing-vsphere)
 10.  Startup Machines
+11. View run OpenShift installer
+  1. Reference [Run OpenShift installer](https://github.com/tosin2013/openshift-4-deployment-notes/tree/master/run-ocp-installer)
 
 **For Static IP deployments**  
 [OpenShift 4.2 vSphere Install with Static IPs](https://blog.openshift.com/openshift-4-2-vsphere-install-with-static-ips/)
