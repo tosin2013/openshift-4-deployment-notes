@@ -1,9 +1,9 @@
-# OpenShift Container Platform [4] Installation 
+# OpenShift Container Platform [4] Installation
 
 [OpenShift 4 on AWS](aws/)  
 [OpenShift 4 on Bare Metal](bare-metal/)  
 [OpenShift 4 on KVM/libvirt](kvm-scripts/)  
-
+[OpenShift 4 on VMWARE](vmware/)  
 
 ## Useful tool
 [Helper node](helper-node/)
