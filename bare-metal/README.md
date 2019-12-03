@@ -17,7 +17,7 @@
    1. see [README.md](https://github.com/tosin2013/openshift-4-deployment-notes/tree/master/configure-ignitionfiles)
 9.  Startup Machines
 10. View run OpenShift installer
-  1. Reference [Run OpenShift installer](https://github.com/tosin2013/openshift-4-deployment-notes/tree/master/run-ocp-installer)
+   1. Reference [Run OpenShift installer](https://github.com/tosin2013/openshift-4-deployment-notes/tree/master/run-ocp-installer)
 
 **For Static IP deployments**  
 Use [filetranspiler](https://github.com/ashcrow/filetranspiler) this will generate a igition json file with addtions from a fake root.
