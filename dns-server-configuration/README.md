@@ -152,6 +152,27 @@ $TTL 900
 76 IN PTR bootstrap-0.ocp4.example.com.
 211 IN PTR dns.ocp4.example.com.
 ```
+**check that dnsserver resolves to loopback address**
+```
+ cat /etc/sysconfig/network-scripts/ifcfg-ens192
+TYPE="Ethernet"
+PROXY_METHOD="none"
+BROWSER_ONLY="no"
+BOOTPROTO="dhcp"
+DEFROUTE="yes"
+IPV4_FAILURE_FATAL="no"
+IPV6INIT="yes"
+IPV6_AUTOCONF="yes"
+IPV6_DEFROUTE="yes"
+IPV6_FAILURE_FATAL="no"
+IPV6_ADDR_GEN_MODE="stable-privacy"
+NAME="ens192"
+UUID="xxxxx-xxxx-xxx-xxx"
+DEVICE="ens192"
+ONBOOT="yes"
+DNS1=127.0.0.1 # may need to add to your file
+
+```
 
 **Test the bind server configuration**
 ```
