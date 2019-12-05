@@ -1,7 +1,7 @@
 # Configure ignition files
-Ignition files are used by the RHCOS to determine hwo to configure each node. 
+Ignition files are used by the RHCOS to determine hwo to configure each node.
 
-Run the following the machine you plan to install OpenShift from after you have configured the installer. 
+Run the following the machine you plan to install OpenShift from after you have configured the installer.
 
 **Define OpenShift Version**
 ```
@@ -10,13 +10,13 @@ $ export OC_VERSION="4.2.0"
 
 **Generate Cluster key**
 ```
-$ ssh-keygen -t rsa -b 4096 -f ~/.ssh/cluster-key -N '' 
+$ ssh-keygen -t rsa -b 4096 -f ~/.ssh/cluster-key -N ''
 
 $ chmod 400 /home/$USER/.ssh/cluster-key.pub
 $ cat  /home/$USER/.ssh/cluster-key.pub
 ```
 
-**Add key to enviornment so you may ssh into coreos node**
+**Add key to environment so you may ssh into coreos node**
 ```
 eval "$(ssh-agent -s)"
 ssh-add  /home/$USER/.ssh/cluster-key.pub
@@ -25,13 +25,13 @@ ssh-add  /home/$USER/.ssh/cluster-key.pub
 **Create Directory for config files**
 ```
 mkdir -p ocp4
-cd ocp4 
+cd ocp4
 ```
 
-**Get pull secert from the url below** 
+**Get pull secret from the url below**
 * https://cloud.openshift.com/clusters/install
 
-**Create a refernce install-config**
+**Create a reference install-config for baremetal cluster**
 ```
 cat >install-config-base.yaml<<EOF
 apiVersion: v1
@@ -62,7 +62,7 @@ EOF
 
 **Copy reference install config to final**
 ```
-cp install-config-base.yaml install-config.yaml 
+cp install-config-base.yaml install-config.yaml
 ```
 
 **Create install configs**
@@ -72,7 +72,7 @@ openshift-install create ignition-configs
 
 **Copy install bootstrap.ign master.ign and worker.ign to helpernode or webserver**
 ```
-# example directory 
+# example directory
 $ ls /var/www/html/openshift4/4.2/ignitions/
 bootstrap.ign  master.ign  worker.ign
 ```
