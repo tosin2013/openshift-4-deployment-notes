@@ -1,5 +1,5 @@
 # Configuring RH-SSO on OpenShift 4
-This documentation details how to configure Red Hat Single Sign-On 7.3 to be used for authentication to OpenShift. 
+This documentation details how to configure Red Hat Single Sign-On 7.3 to be used for authentication to OpenShift.
 
 **Source variables**
 ```
@@ -71,8 +71,8 @@ oc get cm/router-ca -n openshift-config-managed -o jsonpath='{.data.ca\-bundle\.
 ### Configure identity providers using the web console
 1. Navigate to Administration → Cluster Settings.
 2. Under the Global Configuration tab, click OAuth.
-3. Under the Identity Providers section, select your identity provider from the Add drop-down menu.
-Link: [Configuring identity providers using the web console](https://docs.openshift.com/container-platform/4.2/authentication/identity_providers/configuring-oidc-identity-provider.html#identity-provider-configuring-using-the-web-console_configuring-oidc-identity-provider)
+3. Under the Identity Providers section, select your identity provider from the Add drop-down menu.  
+[Configuring identity providers using the web console](https://docs.openshift.com/container-platform/4.2/authentication/identity_providers/configuring-oidc-identity-provider.html#identity-provider-configuring-using-the-web-console_configuring-oidc-identity-provider)
 
 ### WIP - Using CLI to configure identity provider
 **Source Variables**
