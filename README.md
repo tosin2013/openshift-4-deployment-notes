@@ -20,6 +20,6 @@
 ## Notes
 [Performing OpenShift 4 installation](run-ocp-installer/)  
 
-## Day Two Operations
-[Configure a HTPasswd identity provider](post-steps/configure-htpasswd-identity-provider.md)
+## Day Two Operations  
+[Configure a HTPasswd identity provider](post-steps/configure-htpasswd-identity-provider.md)  
 [Configure Red Hat Single Sign-On 7.3 identity provider](post-steps/red-hat-sso-templates.md)
