@@ -23,4 +23,4 @@
 ## Day Two Operations  
 [Configure a HTPasswd identity provider](post-steps/configure-htpasswd-identity-provider.md)  
 [Configure Red Hat Single Sign-On 7.3 identity provider](post-steps/red-hat-sso-templates.md)  
-[Configure NFS Provisioner role](https://github.com/tosin2013/nfs-provisioner-role)
+[Configure NFS Provisioner as Alternative Storage Class](https://github.com/tosin2013/nfs-provisioner-role)
