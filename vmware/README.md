@@ -32,9 +32,9 @@ Bastion Host (Helper Node)  |  RHEL 7.x  | 4  | 16 GB | 120 GB |
    1. Reference [Run OpenShift installer](https://github.com/tosin2013/openshift-4-deployment-notes/tree/master/run-ocp-installer)
 
 **For Static IP deployments**  
-[OpenShift 4.2 vSphere Install with Static IPs using coreos ISO](https://blog.openshift.com/openshift-4-2-vsphere-install-with-static-ips/)
-[coreos-iso-maker V2.1](https://github.com/chuckersjp/coreos-iso-maker)
-[OpenShift 4.2 vSphere Install with Static IPs using OVA](https://github.com/spagno/ocp4-utils)
+[OpenShift 4.2 vSphere Install with Static IPs using coreos ISO](https://blog.openshift.com/openshift-4-2-vsphere-install-with-static-ips/)  
+[coreos-iso-maker V2.1](https://github.com/chuckersjp/coreos-iso-maker)  
+[OpenShift 4.2 vSphere Install with Static IPs using OVA](https://github.com/spagno/ocp4-utils)  
 
 **Links:**  
 * [Installing a cluster on vSphere](https://docs.openshift.com/container-platform/4.2/installing/installing_vsphere/installing-vsphere.html)
