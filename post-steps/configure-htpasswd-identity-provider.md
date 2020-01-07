@@ -1,8 +1,13 @@
-# Configure a HTPasswd identity provider 
+# Configure a HTPasswd identity provider
+**Verifiy RHEL 7.x Release**
+```
+$ cat /etc/redhat-release
+Red Hat Enterprise Linux Server release 7.7 (Maipo)
+```
 
 **Create your file with a user name and hashed password**
 ```
-#!/bin/bash 
+#!/bin/bash
 USERNAME=user
 PASSWORD=$(openssl rand -base64 16)
 htpasswd -c -B -b /tmp/passwordFile ${USERNAME} ${PASSWORD}
@@ -23,9 +28,9 @@ $ oc create secret generic htpass-secret --from-file=htpasswd=/tmp/passwordFile 
 ```
 **Add an identity provider to your cluster.**
 ```
-#!/bin/bash 
-PROVIDER_NAME=users_htpasswd_provider 
-cat >htacess-provider.yml<<YAML
+#!/bin/bash
+PROVIDER_NAME=users_htpasswd_provider
+cat >htaccess-provider.yml<<YAML
 apiVersion: config.openshift.io/v1
 kind: OAuth
 metadata:
@@ -33,14 +38,14 @@ metadata:
 spec:
   identityProviders:
   - name: $PROVIDER_NAME
-    mappingMethod: claim 
-    type: HTPasswd
+    mappingMethod: claim
+    type: htpasswd
     htpasswd:
       fileData:
-        name: htpass-secret 
+        name: htpass-secret
 YAML
 
-oc apply -f htacess-provider.yml
+oc apply -f htaccess-provider.yml
 
 USERNAME=user
 oc login -u $USERNAME
