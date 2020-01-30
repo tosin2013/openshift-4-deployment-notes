@@ -1,5 +1,6 @@
 # Configure a HTPasswd identity provider
-**Verifiy RHEL 7.x Release**
+
+**Verify RHEL 7.x Release**
 ```
 $ cat /etc/redhat-release
 Red Hat Enterprise Linux Server release 7.7 (Maipo)
