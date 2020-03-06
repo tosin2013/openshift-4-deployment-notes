@@ -40,7 +40,7 @@ spec:
   identityProviders:
   - name: $PROVIDER_NAME
     mappingMethod: claim
-    type: htpasswd
+    type: HTPasswd
     htpasswd:
       fileData:
         name: htpass-secret
