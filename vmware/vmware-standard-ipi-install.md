@@ -5,6 +5,7 @@
 * DHCP Server
 * Bation host to run commands 
 * unzip
+* wget
 
 ## Default Resource requirements  
 
@@ -12,8 +13,8 @@
 Machine  | Operating System  | vCPU  | RAM  |  Storage |  
 --|---|---|---|--|  
 Bootstrap  | RHCOS  | 4  | 16 GB  | 120 GB|    
-3 Control plane  |  RHCOS | 4  | 16 GB  | 120 GB|    
-3 Compute  |  RHCOS | 4  | 16 GB  |  120 GB|    
+3 Master nodes  |  RHCOS | 4  | 16 GB  | 120 GB|    
+3 Compute nodes  |  RHCOS | 4  | 16 GB  |  120 GB|    
 
 
 ## Cluster Resources
@@ -83,9 +84,7 @@ $ ./configure-openshift-packages.sh
   ./configure-openshift-packages.sh  --install -v pre-release
 
 ```
-
-**Download trusted root CA certificates from the vSphere Web Services SDK**
-```
+https://bugzilla.redhat.com/show_bug.cgi?id=1871306
 export vcenter_fqdn=my_vcenter_fqdn
 curl -OL -k https://$vcenter_fqdn/certs/download.zip
 ```
@@ -129,6 +128,10 @@ system:admin
 **Configure image registry**  
 [Configuring registry storage for VMware vSphere](https://docs.openshift.com/container-platform/4.5/installing/installing_vsphere/installing-vsphere-installer-provisioned.html#registry-configuring-storage-vsphere_installing-vsphere-installer-provisioned)
 
+
+## Known issue
+* openshift-installer destory command has issues.
+[OpenShift destory cluster command fails when ran on vSphere 6.7](https://bugzilla.redhat.com/show_bug.cgi?id=1871306)
 
 
 ## Links: 
