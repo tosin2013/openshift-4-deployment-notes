@@ -113,7 +113,7 @@ $ oc whoami
 system:admin
 ```
 
-**Configure image registry**
+**Configure image registry**  
 [Configuring registry storage for VMware vSphere](https://docs.openshift.com/container-platform/4.5/installing/installing_vsphere/installing-vsphere-installer-provisioned.html#registry-configuring-storage-vsphere_installing-vsphere-installer-provisioned)
 
 
