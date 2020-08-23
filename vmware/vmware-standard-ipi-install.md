@@ -71,7 +71,7 @@ ssh-add ~/.ssh/cluster-key
 * You may use the script found below.
   * Configure OpenShift Packages -> [configure-openshift-packages.sh](../pre-steps/configure-openshift-packages.sh)
 
-** Download trusted root CA certificates from the vSphere Web Services SDK**
+**Download trusted root CA certificates from the vSphere Web Services SDK**
 ```
 export vcenter_fqdn=my_vcenter_fqdn
 curl -OL -k https://$vcenter_fqdn/certs/download.zip
