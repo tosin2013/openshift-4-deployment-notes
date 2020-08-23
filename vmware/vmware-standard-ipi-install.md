@@ -6,6 +6,7 @@
 * Bation host to run commands 
 * unzip
 * wget
+* curl 
 
 ## Default Resource requirements  
 
@@ -84,6 +85,9 @@ $ ./configure-openshift-packages.sh
   ./configure-openshift-packages.sh  --install -v pre-release
 
 ```
+
+**Download trusted root CA certificates from the vSphere Web Services SDK**
+```
 https://bugzilla.redhat.com/show_bug.cgi?id=1871306
 export vcenter_fqdn=my_vcenter_fqdn
 curl -OL -k https://$vcenter_fqdn/certs/download.zip
@@ -129,7 +133,7 @@ system:admin
 [Configuring registry storage for VMware vSphere](https://docs.openshift.com/container-platform/4.5/installing/installing_vsphere/installing-vsphere-installer-provisioned.html#registry-configuring-storage-vsphere_installing-vsphere-installer-provisioned)
 
 
-## Known issue
+## Known issues
 * openshift-installer destory command has issues.
 [OpenShift destory cluster command fails when ran on vSphere 6.7](https://bugzilla.redhat.com/show_bug.cgi?id=1871306)
 
