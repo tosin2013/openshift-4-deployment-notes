@@ -1,0 +1,122 @@
+# vSphere Standard IPI install
+
+## Prerequisites
+* DNS Server 
+* DHCP Server
+* Bation host to run commands 
+* unzip
+
+## Default Resource requirements  
+
+
+Machine  | Operating System  | vCPU  | RAM  |  Storage |  
+--|---|---|---|--|  
+Bootstrap  | RHCOS  | 4  | 16 GB  | 120 GB|    
+3 Control plane  |  RHCOS | 4  | 16 GB  | 120 GB|    
+3 Compute  |  RHCOS | 4  | 16 GB  |  120 GB|    
+
+
+## Cluster Resources
+A standard OpenShift Container Platform installation creates the following vCenter resources:
+
+* 1 Folder
+* 1 Tag category
+* 1 Tag
+* Virtual machines:
+  * 1 template
+  * 1 temporary bootstrap node
+  * 3 control plane nodes
+  * 3 compute machines
+
+## Review vCenter Requirements and permissions 
+[Required vCenter account privileges](https://docs.openshift.com/container-platform/4.5/installing/installing_vsphere/installing-vsphere-installer-provisioned.html#installation-vsphere-installer-infra-requirements_installing-vsphere-installer-provisioned)
+
+
+## DNS Server Configuration 
+* Add the following DNS records to dns server
+
+**Example below is using bind**
+```
+$ cat /var/named/ocp4.example.lab.db 
+$ORIGIN ocp4.example.lab.
+$TTL 900
+@ IN SOA dns.ocp4.example.lab. root.ocp4.example.lab. (
+2020122002 1D 1H 1W 3H
+)
+@ IN NS dns.ocp4.example.lab.
+
+root IN A 10.90.30.100
+dns  IN A 10.90.30.100
+api              IN  A   10.90.30.101
+*.apps           IN  A   10.90.30.102
+
+```
+
+## Bastion Instructions
+**Generate cluster-key**
+```
+ssh-keygen -t rsa -b 4096 -f ~/.ssh/cluster-key -N ''
+chmod 400 ~/.ssh/cluster-key .pub
+cat  ~/.ssh/cluster-key.pub
+```
+
+**Start the ssh-agent process as a background task and add key to ssh-agent**
+```
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/cluster-key 
+```
+
+
+**Install oc cli and openshift-installer**
+* You may use the script found below.
+  * Configure OpenShift Packages -> [configure-openshift-packages.sh](../pre-steps/configure-openshift-packages.sh)
+
+** Download trusted root CA certificates from the vSphere Web Services SDK**
+```
+export vcenter_fqdn=my_vcenter_fqdn
+curl -OL -k https://$vcenter_fqdn/certs/download.zip
+```
+
+**unzip the certs**
+```
+unzip download.zip 
+```
+
+**Copy the certs into the anchors directory**
+```
+cp certs/lin/* /etc/pki/ca-trust/source/anchors
+```
+
+**Update the ca-trust**
+```
+update-ca-trust extract
+```
+
+**make cluster installation directory**
+```
+mkdir my_ocp4_cluster
+```
+
+**Deploy Cluster**
+```
+./openshift-install create cluster --dir=my_ocp4_cluster --log-level=info 
+```
+
+**Login to cluster**
+```
+export KUBECONFIG=my_ocp4_cluster/auth/kubeconf
+```
+
+**Test login**
+```
+$ oc whoami
+system:admin
+```
+
+**Configure image registry**
+[Configuring registry storage for VMware vSphere](https://docs.openshift.com/container-platform/4.5/installing/installing_vsphere/installing-vsphere-installer-provisioned.html#registry-configuring-storage-vsphere_installing-vsphere-installer-provisioned)
+
+
+
+## Links: 
+https://docs.openshift.com/container-platform/4.5/installing/installing_vsphere/installing-vsphere-installer-provisioned.html
