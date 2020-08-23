@@ -134,8 +134,8 @@ system:admin
 
 
 ## Known issues
-* openshift-installer destory command has issues.
-[OpenShift destory cluster command fails when ran on vSphere 6.7](https://bugzilla.redhat.com/show_bug.cgi?id=1871306)
+* openshift-installer destory command has issues.  
+  * [OpenShift destory cluster command fails when ran on vSphere 6.7](https://bugzilla.redhat.com/show_bug.cgi?id=1871306)
 
 
 ## Links: 
