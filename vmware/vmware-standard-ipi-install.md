@@ -70,6 +70,19 @@ ssh-add ~/.ssh/cluster-key
 **Install oc cli and openshift-installer**
 * You may use the script found below.
   * Configure OpenShift Packages -> [configure-openshift-packages.sh](../pre-steps/configure-openshift-packages.sh)
+```
+$ ./configure-openshift-packages.sh 
+./configure-openshift-packages.sh [OPTION]
+
+ Options:
+  -i, --install     Install OpenShift latest binaries
+  -d, --delete      Remove oc client and openshift-install
+  -h, --help        Display this help and exit
+
+  To install OpenShift pre-release binaries
+  ./configure-openshift-packages.sh  --install -v pre-release
+
+```
 
 **Download trusted root CA certificates from the vSphere Web Services SDK**
 ```
