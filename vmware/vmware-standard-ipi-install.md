@@ -119,7 +119,7 @@ mkdir my_ocp4_cluster
 
 **Login to cluster**
 ```
-export KUBECONFIG=my_ocp4_cluster/auth/kubeconf
+export KUBECONFIG=my_ocp4_cluster/auth/kubeconfig
 ```
 
 **Test login**
