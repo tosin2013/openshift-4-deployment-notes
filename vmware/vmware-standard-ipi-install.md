@@ -88,7 +88,6 @@ $ ./configure-openshift-packages.sh
 
 **Download trusted root CA certificates from the vSphere Web Services SDK**
 ```
-https://bugzilla.redhat.com/show_bug.cgi?id=1871306
 export vcenter_fqdn=my_vcenter_fqdn
 curl -OL -k https://$vcenter_fqdn/certs/download.zip
 ```
