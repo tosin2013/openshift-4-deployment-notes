@@ -50,6 +50,7 @@ $TTL 900
 root IN A 10.90.30.100
 dns  IN A 10.90.30.100
 api              IN  A   10.90.30.101
+api-int          IN  A   10.90.30.101
 *.apps           IN  A   10.90.30.102
 
 ```
