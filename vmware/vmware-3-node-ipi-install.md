@@ -138,7 +138,7 @@ compute:
 ```
 
 
-**Change the master setting  in install-config.yaml for logging**
+**Change the master setting  in install-config.yaml**
 * you may also use `16384` for the memory
 ```
 controlPlane:
