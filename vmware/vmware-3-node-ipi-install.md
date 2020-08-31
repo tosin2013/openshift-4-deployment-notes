@@ -138,7 +138,8 @@ compute:
 ```
 
 
-**Optional: Change the master setting  in install-config.yaml for logging**
+**Change the master setting  in install-config.yaml for logging**
+* you may also use `16384` for the memory
 ```
 controlPlane:
   architecture: amd64
