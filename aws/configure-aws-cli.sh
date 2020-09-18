@@ -1,32 +1,46 @@
 #!/bin/bash
+set -xe 
 
-curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
-unzip awscli-bundle.zip 
+if [ "$#" -ne 3 ];
+then 
+  echo "Please pass required arguments"
+  echo "USAGE: $0 aws_access_key_id aws_secret_access_key aws_region"
+  exit $1
+fi 
 
-./awscli-bundle/install -i /usr/local/aws -b /bin/aws 
+if [ "$EUID" -ne 0 ]
+  then 
+  RUN_SUDO="sudo"
+fi
+
+
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+
+${RUN_SUDO} ./aws/install
 
 aws --version || exit 1
 
-rm -rf /root/awscli-bundle /root/awscli-bundle.zip 
+if [ "$EUID" -ne 0 ]
+then
+  rm -rf ${HOME}/awscli-bundle ${HOME}/awscli-bundle.zip 
+else
+  rm -rf /root/awscli-bundle /root/awscli-bundle.zip 
+fi
 
+export AWSKEYID=${1}
+export AWSSECRETKEY=${2}
+export REGION=${3}
 
-cat >source_me<<EOF
-export AWSKEY=changekey
-export AWSSECRETKEY=changekey
-export REGION=your-region
-EOF
-
-source  source_me
-
-mkdir $HOME/.aws
+mkdir -p $HOME/.aws
 cat  >$HOME/.aws/credentials<<EOF
 [default]
-aws_access_key_id = ${AWSKEY}
+aws_access_key_id = ${AWSKEYID}
 aws_secret_access_key = ${AWSSECRETKEY}
 region = ${REGION}
 EOF
 
 cat $HOME/.aws/credentials
 
-aws sts get-caller-identity 
+aws sts get-caller-identity || exit $?
 
