@@ -56,14 +56,26 @@ EOF
 }
 
 function delete_aws_cli(){
+    echo "*******************************"
+    echo "        Removing aws cli     "
+    echo "*******************************" 
   ${RUN_SUDO} rm -rf /usr/local/bin/aws
+  ${RUN_SUDO} rm -rf /usr/local/aws-cli/v2/
 
   if [ "$EUID" -ne 0 ]
   then
-    rm -rf ${HOME}/awscli-bundle ${HOME}/awscli-bundle.zip 
+    rm -rf $(find $HOME -name awscliv2.zip)
+    if  [ -d $(pwd)/aws ];
+    then 
+      rm -rf $(pwd)/aws
+    fi
   else
     rm -rf /root/awscli-bundle /root/awscli-bundle.zip 
+    rm -rf /root/awscliv2.zip
+    rm -rf /root/aws
   fi
+
+  exit 0
 }
 
 optstring=v
@@ -104,7 +116,7 @@ unset options
 while [[ $1 = -?* ]]; do
   case $1 in
     -h|--help) usage >&2; break ;;
-    -i|--install)  shift; install_aws_cli $2 $3 $4;;
+    -i|--install)  shift; install_aws_cli $1 $2 $3;;
     -d|--delete) shift; delete_aws_cli;;
     --endopts) shift; break ;;
     *) die "invalid option: '$1'." ;;
