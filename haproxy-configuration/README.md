@@ -5,6 +5,7 @@
 sudo yum install -y haproxy
 ```
 
+
 ### Configure Firewall rules
 ```
 sudo firewall-cmd --add-port={80/tcp,443/tcp,6443/tcp,22623/tcp,32700/tcp} --permanent
@@ -17,7 +18,11 @@ sudo cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.bak
 ```
 
 ### edit haproxy config
+* Option 1
+  * View haproxy-tcp.cfg and edit config
+  * [haproxy-tcp.cfg](haproxy-tcp.cfg)
 
+* Option view modify haproxy.cfg below
 ```
 sudo vim /etc/haproxy/haproxy.cfg
 
@@ -67,9 +72,9 @@ frontend router_https
 backend router_https
     balance roundrobin
     option ssl-hello-chk
-    server worker-01 worker-01.ocp4.example.com:443 check
-    server worker-02 worker-02.ocp4.example.com:443 check
-
+    server compute-01 compute-01.ocp4.example.com:443 check
+    server compute-02 compute-02.ocp4.example.com:443 check
+    
 frontend router_http
     mode http
     option httplog
@@ -79,8 +84,8 @@ frontend router_http
 backend router_http
     mode http
     balance roundrobin
-    server worker-01 worker-01.ocp4.example.com:80 check
-    server worker-02 worker-02.ocp4.example.com:80 check
+    server compute-01 compute-01.ocp4.example.com:80 check
+    server compute-02 compute-02.ocp4.example.com:80 check
 ```
 
 ### Set semanage ports for selinux
@@ -101,3 +106,7 @@ systemctl status haproxy
 ```
 systemctl enable haproxy
 ```
+
+### Notes
+* If your machine is using mutiple interfaces review the link below. 
+[https://stackoverflow.com/questions/34793885/haproxy-cannot-bind-socket-0-0-0-08888](https://stackoverflow.com/questions/34793885/haproxy-cannot-bind-socket-0-0-0-08888)

@@ -10,9 +10,23 @@ Control plane  |  RHCOS | 4  | 16 GB  | 120 GB|
 Compute  |  RHCOS | 4  | 16 GB  |  120 GB|    
 Bastion Host (Helper Node)  |  RHEL 7.x  | 4  | 16 GB | 120 GB |   
 
+## Bastion Instructions
+**Generate cluster-key**
+```
+ssh-keygen -t rsa -b 4096 -f ~/.ssh/cluster-key -N ''
+chmod 400 ~/.ssh/cluster-key .pub
+cat  ~/.ssh/cluster-key.pub
+```
+
+**Start the ssh-agent process as a background task and add key to ssh-agent**
+```
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/cluster-key 
+```
+
 **For general deployments**  
 1. Review Requirements
-   1. [Machine requirements for a cluster with user-provisioned infrastructure](https://docs.openshift.com/container-platform/4.5/installing/installing_vsphere/installing-vsphere.html)
+   1. [Machine requirements for a cluster with user-provisioned infrastructure](https://docs.openshift.com/container-platform/4.6/installing/installing_vsphere/installing-vsphere.html)
 2. Configure DNS.
    1. Example [Bind Setup](https://github.com/tosin2013/openshift-4-deployment-notes/tree/master/dns-server-configuration)
 4. Configure HAProxy. Provision the required load balancers.
@@ -22,7 +36,7 @@ Bastion Host (Helper Node)  |  RHEL 7.x  | 4  | 16 GB | 120 GB |
 6. Configure PXE servers
    1. Example [PXE Configuration](https://github.com/tosin2013/openshift-4-deployment-notes/tree/master/pxe-configuration)
 7. Configure installer
-   1. see [script](https://github.com/tosin2013/openshift-4-deployment-notes/tree/master/configure-installers)
+   1. see [script](../pre-steps/configure-openshift-packages.sh)
 8. Configure ignition files
    1. see [README.md](https://github.com/tosin2013/openshift-4-deployment-notes/tree/master/configure-ignitionfiles)
 9. Configure Machines for OpenShift

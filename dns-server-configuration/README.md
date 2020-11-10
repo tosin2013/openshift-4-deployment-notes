@@ -103,7 +103,7 @@ zone "1.168.192.in-addr.arpa" {
 
 ```
 
-**Create zone file**
+**Create zone file for OpenShift 4.6**
 ```
 $ cat /var/named/ocp4.example.com.zone
 $ORIGIN ocp4.example.com.
@@ -115,6 +115,41 @@ $TTL 900
 
 root IN A 192.168.1.211
 dns  IN A 192.168.1.211
+api              IN  A   192.168.1.211
+api-int          IN  A   192.168.1.211
+*.apps           IN  A   192.168.1.211
+```
+
+**Create reverse zone file for OpenShift 4.6**
+```
+$ cat /var/named/1.168.192.in-addr.arpa.zone
+$TTL 900
+@ IN SOA bastion.ocp4.example.com. hostmaster.ocp4.example.com. (
+
+2019062001 1D 1H 1W 3H
+
+)
+
+@ IN NS bastion.ocp4.example.com.
+
+211 IN PTR dns.ocp4.example.com.
+```
+
+**Create zone file below OpenShift 4.6**
+```
+$ cat /var/named/ocp4.example.com.zone
+$ORIGIN ocp4.example.com.
+$TTL 900
+@ IN SOA dns.ocp4.example.com. root.ocp4.example.com. (
+2019062002 1D 1H 1W 3H
+)
+@ IN NS dns.ocp4.example.com.
+
+root IN A 192.168.1.211
+dns  IN A 192.168.1.211
+api              IN  A   192.168.1.211
+api-int          IN  A   192.168.1.211
+*.apps           IN  A   192.168.1.211
 bootstrap-0        IN  A   192.168.1.76
 master-01           IN  A   192.168.1.77
 master-02           IN  A   192.168.1.78
@@ -122,17 +157,15 @@ master-03           IN  A   192.168.1.79
 etcd-0           IN  A   192.168.1.77
 etcd-1           IN  A   192.168.1.78
 etcd-2           IN  A   192.168.1.79
-api              IN  A   192.168.1.211
-api-int          IN  A   192.168.1.211
-*.apps           IN  A   192.168.1.211
-worker-01           IN  A   192.168.1.80
-worker-02           IN  A   192.168.1.81
+comptue-01           IN  A   192.168.1.80
+comptue-02           IN  A   192.168.1.81
+comptue-03           IN  A   192.168.1.82
 _etcd-server-ssl._tcp   IN  SRV 0 10    2380 etcd-0.ocp4.example.com.
 _etcd-server-ssl._tcp     IN      SRV     0 10    2380 etcd-1.ocp4.example.com.
 _etcd-server-ssl._tcp     IN      SRV     0 10    2380 etcd-2.ocp4.example.com.
 ```
 
-**Create reverse zone file**
+**Create reverse zone file  below OpenShift 4.6**
 ```
 $ cat /var/named/1.168.192.in-addr.arpa.zone
 $TTL 900
@@ -147,11 +180,13 @@ $TTL 900
 77 IN PTR master-01.ocp4.example.com.
 78 IN PTR master-02.ocp4.example.com.
 79 IN PTR master-03.ocp4.example.com.
-80 IN PTR worker-01.ocp4.example.com.
-81 IN PTR worker-02.ocp4.example.com.
+80 IN PTR compute-01.ocp4.example.com.
+81 IN PTR compute-02.ocp4.example.com.
+82 IN PTR compute-03.ocp4.example.com.
 76 IN PTR bootstrap-0.ocp4.example.com.
 211 IN PTR dns.ocp4.example.com.
 ```
+
 **check that dnsserver resolves to loopback address**
 ```
  cat /etc/sysconfig/network-scripts/ifcfg-ens192
@@ -189,12 +224,17 @@ systemctl start named
 systemctl enable named
 ```
 
-**Test dns resolution**
+**Test dns resolution for OpenShift 4.6**
+```
+dig @localhost  api-int.ocp4.example.com
+```
+
+**Test dns resolution  below OpenShift 4.6**
 ```
 dig @localhost  etcd-0.ocp4.example.com
 ```
 
-**Test Reverse pointer**
+**Test Reverse pointer  below OpenShift 4.6**
 ```
 dig @localhost -t srv _etcd-server-ssl._tcp.ocp4.example.com
 ```
