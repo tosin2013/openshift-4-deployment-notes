@@ -16,6 +16,7 @@ Bastion Host (Helper Node)  |  RHEL 7.x  | 4  | 16 GB | 120 GB |
  *  Configure installer see [configure-openshift-packages.sh](../pre-steps/configure-openshift-packages.sh)
  * Install [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-ansible-on-rhel-centos-or-fedora) 
  * Install [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) 
+ * Install [govc](https://github.com/vmware/govmomi/releases/tag/v0.23.0)
 
 **Generate cluster-key**
 ```
