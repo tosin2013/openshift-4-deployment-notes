@@ -4,3 +4,6 @@
 * [vSphere User Provisioned w/static ip installation Steps](vsphere-upi-installation-static-ip.md)
 * [vSphere Standard IPI install](vmware-standard-ipi-install.md)
 * [vSphere 3 node IPI install](vmware-3-node-ipi-install.md)
+
+## Post Step
+* [Configuring Registiry for image-registry-storage](configuring-registry.md)
