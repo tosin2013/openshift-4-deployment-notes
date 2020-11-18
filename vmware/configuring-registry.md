@@ -75,5 +75,24 @@ spec:
       storage: 100Gi 
 ```
 
+Edit the image Registry settings
+```
+oc edit configs.imageregistry.operator.openshift.io
+```
+
+Change managementState to Managed
+```
+spec:
+  logLevel: Normal
+  managementState: Managed
+```
+
+Update storage
+```
+storage:
+  pvc:
+    claim: 
+```
+
 **Link:**  
 [Configuring block registry storage for VMware vSphere](https://docs.openshift.com/container-platform/4.6/registry/configuring_registry_storage/configuring-registry-storage-vsphere.html#installation-registry-storage-block-recreate-rollout_configuring-registry-storage-vsphere)
