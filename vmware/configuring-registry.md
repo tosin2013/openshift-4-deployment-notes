@@ -61,7 +61,7 @@ spec:
     fsType: ext4 
 ```
 
-Create PVC
+**Create PVC**
 ```
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -75,19 +75,19 @@ spec:
       storage: 100Gi 
 ```
 
-Edit the image Registry settings
+**Edit the image Registry settings**
 ```
 oc edit configs.imageregistry.operator.openshift.io
 ```
 
-Change managementState to Managed
+**Change managementState to Managed**
 ```
 spec:
   logLevel: Normal
   managementState: Managed
 ```
 
-Update storage
+**Update storage**
 ```
 storage:
   pvc:
