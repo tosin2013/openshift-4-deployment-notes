@@ -1,5 +1,6 @@
 # Configuring Registiry for image-registry-storage 
 
+## Create VMDK on vmware
 **SSH into ESXi host**
 ```
 ssh root@<insert IP address of ESXi host here>
@@ -35,7 +36,7 @@ cd volumes
 vmkfstools --createvirtualdisk 100G --diskformat zeroedthick Registry.vmdk
 ```
 
-## Create VMDK on vmware
+## Create registry on OpenShift
 
 **set the image registry storage as a block storage type, patch the registry so that it uses the Recreate rollout strategy and runs with only 1 replica:**
 ```
