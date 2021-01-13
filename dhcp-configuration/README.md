@@ -4,7 +4,7 @@ The DHCP Server is used to assign coreos nodes with the correct ip address. Note
 
 **Install dhcp package**
 ```
-sudo yum install -y  dhcp
+sudo yum install -y  dhcp-server
 ```
 
 **Update dhcp.conf file**
