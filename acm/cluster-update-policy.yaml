@@ -15,7 +15,7 @@ spec:
         apiVersion: policy.open-cluster-management.io/v1
         kind: ClusterVersion
         metadata:
-          name: cluster-version-operator
+          name: version
         spec:
           channel: stable-4.7
           object-templates:
