@@ -17,13 +17,16 @@ spec:
         metadata:
           name: version
         spec:
-          channel: stable-4.7
+          remediationAction: enforce
+          severity: med
           object-templates:
             - complianceType: musthave
               objectDefinition:
                 kind: ClusterVersion
                 metadata:
                   name: version
+                spec:
+                  channel: stable-4.7
 ---
 apiVersion: policy.open-cluster-management.io/v1
 kind: PlacementBinding
