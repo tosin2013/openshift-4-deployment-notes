@@ -1,0 +1,24 @@
+# ACM cluster Policy Update
+
+Login to target clustr 
+
+
+On target cluster get the current cluster version
+```
+oc get clusterversion -o yaml
+```
+
+On ACM Cluster create namespace for policy updates
+```
+oc create -f https://raw.githubusercontent.com/tosin2013/openshift-4-deployment-notes/master/acm/create-update-policy-ns.yaml
+```
+
+On ACM Cluster Create upgrade policy
+```
+ oc create -f https://raw.githubusercontent.com/tosin2013/openshift-4-deployment-notes/master/acm/cluster-update-policy.yaml
+```
+
+![](https://i.imgur.com/6Bhft4p.png)
+![](https://i.imgur.com/vkOk7jQ.png)
+![](https://i.imgur.com/GybGQp2.png)
+![](https://i.imgur.com/EppTwsB.png)
