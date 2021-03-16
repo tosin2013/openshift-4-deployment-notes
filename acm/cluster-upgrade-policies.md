@@ -22,7 +22,7 @@ On ACM Cluster Create upgrade policy
  oc create -f https://raw.githubusercontent.com/tosin2013/openshift-4-deployment-notes/master/acm/cluster-update-policy.yaml
 ```
 
-![](https://i.imgur.com/6Bhft4p.png)
+![](https://i.imgur.com/V2VrpGA.png)
 ![](https://i.imgur.com/vkOk7jQ.png)
 ![](https://i.imgur.com/GybGQp2.png)
 ![](https://i.imgur.com/EppTwsB.png)
