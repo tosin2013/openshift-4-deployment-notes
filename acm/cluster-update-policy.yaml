@@ -21,8 +21,7 @@ spec:
           object-templates:
             - complianceType: musthave
               objectDefinition:
-                kind: Namespace
-                apiVersion: v1
+                kind: ClusterVersion
                 metadata:
                   name: version
 ---
