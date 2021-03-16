@@ -1,7 +1,7 @@
 apiVersion: policy.open-cluster-management.io/v1
 kind: Policy
 metadata:
-  name: policy-namespace-enforce
+  name: policy-cluster-release-enforce
   namespace: cluster-update-policy
   annotations:
     policy.open-cluster-management.io/standards: 
@@ -32,21 +32,21 @@ spec:
 apiVersion: policy.open-cluster-management.io/v1
 kind: PlacementBinding
 metadata:
-  name: binding-policy-namespace-enforce
+  name: binding-policy-cluster-release-enforce
   namespace: cluster-update-policy
 placementRef:
-  name: placement-policy-namespace-enforce
+  name: placement-policy-cluster-release-enforce
   kind: PlacementRule
   apiGroup: apps.open-cluster-management.io
 subjects:
-- name: policy-namespace-enforce
+- name: policy-cluster-release-enforce
   kind: Policy
   apiGroup: policy.open-cluster-management.io
 ---
 apiVersion: apps.open-cluster-management.io/v1
 kind: PlacementRule
 metadata:
-  name: placement-policy-namespace-enforce
+  name: placement-policy-cluster-release-enforce
   namespace: cluster-update-policy
 spec:
   clusterConditions:
