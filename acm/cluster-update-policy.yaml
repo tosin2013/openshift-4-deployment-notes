@@ -13,9 +13,9 @@ spec:
   policy-templates:
     - objectDefinition:
         apiVersion: policy.open-cluster-management.io/v1
-        kind: ClusterVersion
+        kind: ConfigurationPolicy
         metadata:
-          name: version
+          name: policy-release-channel-subscription
         spec:
           remediationAction: enforce
           severity: med
