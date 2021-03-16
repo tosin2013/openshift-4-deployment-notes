@@ -1,11 +1,15 @@
 # ACM cluster Policy Update
 
-Login to target clustr 
+Login to target cluster 
 
 
 On target cluster get the current cluster version
 ```
-oc get clusterversion -o yaml
+oc get clusterversion -o yaml| grep channel
+          f:channel: {}
+            f:channels: {}
+    channel: stable-4.6
+      channels:
 ```
 
 On ACM Cluster create namespace for policy updates
