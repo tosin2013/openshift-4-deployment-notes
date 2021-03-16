@@ -24,7 +24,7 @@ spec:
                 kind: Namespace
                 apiVersion: v1
                 metadata:
-                  name: cluster-update-policy
+                  name: version
 ---
 apiVersion: policy.open-cluster-management.io/v1
 kind: PlacementBinding
