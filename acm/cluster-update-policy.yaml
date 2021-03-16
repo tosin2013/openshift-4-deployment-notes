@@ -13,9 +13,9 @@ spec:
   policy-templates:
     - objectDefinition:
         apiVersion: policy.open-cluster-management.io/v1
-        kind: ConfigurationPolicy
+        kind: ClusterVersion
         metadata:
-          name: policy-cluster-version-upgrade
+          name: cluster-version-operator
         spec:
           channel: stable-4.7
           object-templates:
