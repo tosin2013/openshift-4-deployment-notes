@@ -115,7 +115,7 @@ mkdir my_ocp4_cluster
 
 **Deploy Cluster**
 ```
-./openshift-install create cluster --dir=my_ocp4_cluster --log-level=info 
+openshift-install create cluster --dir=my_ocp4_cluster --log-level=info 
 ```
 
 **Login to cluster**
