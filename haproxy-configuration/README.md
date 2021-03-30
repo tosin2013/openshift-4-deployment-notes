@@ -8,7 +8,7 @@ sudo yum install -y haproxy
 
 ### Configure Firewall rules
 ```
-sudo firewall-cmd --add-port={80/tcp,443/tcp,6443/tcp,22623/tcp,32700/tcp} --permanent
+sudo firewall-cmd --add-port={80/tcp,443/tcp,6443/tcp,22623/tcp,32700/tcp,1936/tcp} --permanent
 sudo firewall-cmd --reload
 ```
 
@@ -41,6 +41,25 @@ defaults
     timeout server          30s
     log                     global
 
+listen  stats
+     bind *:1936
+     mode            http
+     log             global
+
+     maxconn 10
+
+     #clitimeout      100s
+     #srvtimeout      100s
+     #contimeout      100s
+     timeout queue   100s
+
+     stats enable
+     stats hide-version
+     stats refresh 30s
+     stats show-node
+     stats auth admin:password
+     stats uri  /haproxy?stats
+        
 frontend kubernetes_api
     bind 0.0.0.0:6443
     default_backend kubernetes_api
@@ -93,6 +112,7 @@ backend router_http
 sudo semanage port  -a 22623 -t http_port_t -p tcp
 sudo semanage port  -a 6443 -t http_port_t -p tcp
 sudo semanage port  -a 32700 -t http_port_t -p tcp
+sudo semanage port  -a 1936 -t http_port_t -p tcp
 sudo semanage port  -l  | grep -w http_port_t
 ```
 
@@ -110,3 +130,5 @@ systemctl enable haproxy
 ### Notes
 * If your machine is using mutiple interfaces review the link below. 
 [https://stackoverflow.com/questions/34793885/haproxy-cannot-bind-socket-0-0-0-08888](https://stackoverflow.com/questions/34793885/haproxy-cannot-bind-socket-0-0-0-08888)
+* Example Stats URL 
+*  `http://haproxy-ip-address:1936/haproxy?stats`
