@@ -14,7 +14,7 @@ Bastion Host (Helper Node)  |  RHEL 7.x  | 4  | 16 GB | 120 GB |
 **Generate cluster-key**
 ```
 ssh-keygen -t rsa -b 4096 -f ~/.ssh/cluster-key -N ''
-chmod 400 ~/.ssh/cluster-key .pub
+chmod 400 ~/.ssh/cluster-key
 cat  ~/.ssh/cluster-key.pub
 ```
 
