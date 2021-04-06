@@ -46,4 +46,6 @@ systemctl enable haproxy
 * If your machine is using mutiple interfaces review the link below. 
 [https://stackoverflow.com/questions/34793885/haproxy-cannot-bind-socket-0-0-0-08888](https://stackoverflow.com/questions/34793885/haproxy-cannot-bind-socket-0-0-0-08888)
 * Example Stats URL 
-*  `http://haproxy-ip-address:1936/haproxy?stats`
+  *  `http://haproxy-ip-address:1936/haproxy?stats`
+  * username and password `admin:password`
+
