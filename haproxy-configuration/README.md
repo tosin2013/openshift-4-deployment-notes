@@ -18,94 +18,9 @@ sudo cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.bak
 ```
 
 ### edit haproxy config
-* Option 1
-  * View haproxy-tcp.cfg and edit config
-  * [haproxy-tcp.cfg](haproxy-tcp.cfg)
+* View haproxy-tcp.cfg and edit config
+* [haproxy-tcp.cfg](https://raw.githubusercontent.com/tosin2013/openshift-4-deployment-notes/master/haproxy-configuration/haproxy-tcp.cfg)
 
-* Option view modify haproxy.cfg below
-```
-sudo vim /etc/haproxy/haproxy.cfg
-
-global
-    log         127.0.0.1 local2 info
-    chroot      /var/lib/haproxy
-    pidfile     /var/run/haproxy.pid
-    maxconn     4000
-    user        haproxy
-    group       haproxy
-    daemon
-
-defaults
-    timeout connect         5s
-    timeout client          30s
-    timeout server          30s
-    log                     global
-
-listen  stats
-     bind *:1936
-     mode            http
-     log             global
-
-     maxconn 10
-
-     #clitimeout      100s
-     #srvtimeout      100s
-     #contimeout      100s
-     timeout queue   100s
-
-     stats enable
-     stats hide-version
-     stats refresh 30s
-     stats show-node
-     stats auth admin:password
-     stats uri  /haproxy?stats
-        
-frontend kubernetes_api
-    bind 0.0.0.0:6443
-    default_backend kubernetes_api
-
-backend kubernetes_api
-    balance roundrobin
-    option ssl-hello-chk
-    server bootstrap-0 bootstrap-0.ocp4.example.com:6443 check
-    server master-01 master-01.ocp4.example.com:6443 check
-    server master-02 master-02.ocp4.example.com:6443 check
-    server master-03 master-03.ocp4.example.com:6443 check
-
-frontend machine_config
-    bind 0.0.0.0:22623
-    default_backend machine_config
-
-backend machine_config
-    balance roundrobin
-    option ssl-hello-chk
-    server bootstrap-0 bootstrap-0.ocp4.example.com:22623 check
-    server master-01 master-01.ocp4.example.com:22623 check
-    server master-02 master-02.ocp4.example.com:22623 check
-    server master-03 master-03.ocp4.example.com:22623 check
-
-frontend router_https
-    bind 0.0.0.0:443
-    default_backend router_https
-
-backend router_https
-    balance roundrobin
-    option ssl-hello-chk
-    server compute-01 compute-01.ocp4.example.com:443 check
-    server compute-02 compute-02.ocp4.example.com:443 check
-    
-frontend router_http
-    mode http
-    option httplog
-    bind 0.0.0.0:80
-    default_backend router_http
-
-backend router_http
-    mode http
-    balance roundrobin
-    server compute-01 compute-01.ocp4.example.com:80 check
-    server compute-02 compute-02.ocp4.example.com:80 check
-```
 
 ### Set semanage ports for selinux
 ```
