@@ -27,7 +27,7 @@ kubectl annotate mch multiclusterhub --overwrite mch-imageOverridesCM=bulkimage 
 ```
 
 ## Option 2: Update images individually
-> This Option is useful if you are in an enviornment with a disconnected registry that uses replication. 
+> This Option is useful if you are in an environment with a disconnected registry that uses replication. 
 
 **Optional: Add pull secret to multiclusterhub operator**
 ```
