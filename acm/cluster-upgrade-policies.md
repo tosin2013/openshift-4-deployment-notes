@@ -1,5 +1,7 @@
 # ACM cluster Policy Update
 
+[policy-upgrade-openshift-cluster](https://github.com/open-cluster-management/policy-collection/blob/main/community/CM-Configuration-Management/policy-upgrade-openshift-cluster.yaml)
+
 Login to target cluster 
 
 
