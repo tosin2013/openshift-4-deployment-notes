@@ -49,7 +49,11 @@ function download_binaries(){
     rm -f ${OC_CLI_CLIENT}
     $SUDO chmod +x /usr/bin/oc
     oc version
-    
+
+    oc completion bash > /etc/bash_completion.d/openshift
+    openshift-install completion bash > /etc/bash_completion.d/openshift-install
+    source /etc/bash_completion.d/openshift
+    source /etc/bash_completion.d/openshift-install
 }
 
 function delete_binaries(){
