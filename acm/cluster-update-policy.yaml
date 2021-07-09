@@ -1,0 +1,60 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: policy-cluster-release-enforce
+  namespace: cluster-update-policy
+  annotations:
+    policy.open-cluster-management.io/standards: 
+    policy.open-cluster-management.io/categories: 
+    policy.open-cluster-management.io/controls: 
+spec:
+  remediationAction: enforce
+  disabled: false
+  policy-templates:
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: policy-release-channel-subscription
+        spec:
+          remediationAction: enforce
+          severity: med
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: config.openshift.io/v1
+                kind: ClusterVersion
+                metadata:
+                  name: version
+                spec:
+                  channel: stable-4.7
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: binding-policy-cluster-release-enforce
+  namespace: cluster-update-policy
+placementRef:
+  name: placement-policy-cluster-release-enforce
+  kind: PlacementRule
+  apiGroup: apps.open-cluster-management.io
+subjects:
+- name: policy-cluster-release-enforce
+  kind: Policy
+  apiGroup: policy.open-cluster-management.io
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  name: placement-policy-cluster-release-enforce
+  namespace: cluster-update-policy
+spec:
+  clusterConditions:
+  - status: "True"
+    type: ManagedClusterConditionAvailable
+  clusterSelector:
+    matchExpressions:
+      - key: environment
+        operator: In
+        values:
+          - dev

@@ -59,7 +59,7 @@ api-int          IN  A   10.90.30.101
 **Generate cluster-key**
 ```
 ssh-keygen -t rsa -b 4096 -f ~/.ssh/cluster-key -N ''
-chmod 400 ~/.ssh/cluster-key .pub
+chmod 400 ~/.ssh/cluster-key
 cat  ~/.ssh/cluster-key.pub
 ```
 
@@ -115,7 +115,7 @@ mkdir my_ocp4_cluster
 
 **Deploy Cluster**
 ```
-./openshift-install create cluster --dir=my_ocp4_cluster --log-level=info 
+openshift-install create cluster --dir=my_ocp4_cluster --log-level=info 
 ```
 
 **Login to cluster**

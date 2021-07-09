@@ -49,7 +49,26 @@ function download_binaries(){
     rm -f ${OC_CLI_CLIENT}
     $SUDO chmod +x /usr/bin/oc
     oc version
-    
+
+    if (( $EUID != 0 )); then
+      oc completion bash > openshift
+      $SUDO mv openshift /etc/bash_completion.d/
+      openshift-install completion bash > openshift-install
+      $SUDO mv openshift-install /etc/bash_completion.d/
+    else
+      oc completion bash > /etc/bash_completion.d/openshift
+      openshift-install completion bash > /etc/bash_completion.d/openshift-install
+    fi 
+
+
+    source /etc/bash_completion.d/openshift
+    source /etc/bash_completion.d/openshift-install
+
+    echo "*******************************"
+    echo "run the following to source the openshift auto complete"
+    echo "*******************************" 
+    echo "source /etc/bash_completion.d/openshift"
+    echo "source /etc/bash_completion.d/openshift-install"
 }
 
 function delete_binaries(){
@@ -64,6 +83,8 @@ function delete_binaries(){
     $SUDO rm -rf  /usr/bin/oc
     $SUDO rm -rf /usr/bin/kubectl
     $SUDO rm -rf /usr/bin/openshift-install
+    $SUDO rm -rf /etc/bash_completion.d/openshift
+    $SUDO rm -rf /etc/bash_completion.d/openshift-install
 }
 
 # Print usage
