@@ -23,6 +23,10 @@ PASSWORD=$(openssl rand -base64 16)
 htpasswd -b /tmp/passwordFile  ${USERNAME} ${PASSWORD}
 ```
 
+**Script for interactively creating a multiple user htpasswd file**
+
+[This linked bash script might be a handy alternative if you have multiple users to create](./user_pass_generator.sh)
+
 **Creating the HTPasswd Secret to use the HTPasswd identity provider**
 ```
 $ oc create secret generic htpass-secret --from-file=htpasswd=/tmp/passwordFile  -n openshift-config
