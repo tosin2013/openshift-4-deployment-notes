@@ -1,67 +1,48 @@
-# Configuring Registiry for image-registry-storage 
+# Configuring the Registry for Perisistent Storage 
 
-## Create VMDK on vmware
-**SSH into ESXi host**
-```
-ssh root@<insert IP address of ESXi host here>
-```
+## Manage the registry on OpenShift
 
-**List the storage endpoints**
-```
-esxcli storage filesystem list
-Mount Point                                        Volume Name  UUID                                 Mounted  Type            Size          Free
--------------------------------------------------  -----------  -----------------------------------  -------  ------  ------------  ------------
-/vmfs/volumes/5fa1c2af-46adb800-eb60-24b6fdff0ec2  datastore1   5fa1c2af-46adb800-eb60-24b6fdff0ec2     true  VMFS-6  471909531648  469474738176
-/vmfs/volumes/5fa1c440-84d411d8-96e3-24b6fdff0ec2  datastore2   5fa1c440-84d411d8-96e3-24b6fdff0ec2     true  VMFS-6  999922073600  505899122688
-/vmfs/volumes/5fa1c452-b599bcc0-4417-24b6fdff0ec2  datastore3   5fa1c452-b599bcc0-4417-24b6fdff0ec2     true  VMFS-6  999922073600   78464942080
-/vmfs/volumes/28337976-bc23830c-13dc-9198e73061ba               28337976-bc23830c-13dc-9198e73061ba     true  vfat       261853184     261849088
-/vmfs/volumes/5fa1c280-aa491526-b517-24b6fdff0ec2               5fa1c280-aa491526-b517-24b6fdff0ec2     true  vfat       299712512     116998144
-/vmfs/volumes/7785f478-65d6543f-9b0c-aad3b0d1ca15               7785f478-65d6543f-9b0c-aad3b0d1ca15     true  vfat       261853184     108044288
-/vmfs/volumes/5fa1c2af-768d249c-e007-24b6fdff0ec2               5fa1c2af-768d249c-e007-24b6fdff0ec2     true  vfat      4293591040    4261216256
+Put the registry into a "Managed" state:
 
 ```
-
-**cd into volume and create a volumes folder**
+$ oc patch configs.imageregistry.operator.openshift.io cluster --type merge --patch '{"spec":{"managementState":"Managed"}}'
 ```
-cd <copy Mount Point from above here>
+Make sure we are in the right project (namespace):
 ```
-
-**Create volumes directory and cd into volumes**
-```
-mkdir volumes
-cd volumes
-```
-**Create virtual disk for registry**
-```
-vmkfstools --createvirtualdisk 100G --diskformat zeroedthick Registry.vmdk
+$ oc project openshift-image-registry
 ```
 
-## Create registry on OpenShift
-
-**set the image registry storage as a block storage type, patch the registry so that it uses the Recreate rollout strategy and runs with only 1 replica:**
+Check to see if a registry pod is running:
 ```
-$ oc patch config.imageregistry.operator.openshift.io/cluster --type=merge -p '{"spec":{"rolloutStrategy":"Recreate","replicas":1}}'
+oc get pods
 ```
 
-**create PV**
+You should see something like the following: The Operator, two image-pruner pods (nbot running), and one node-ca pod per workers+controlplane nodes (but no registry pods):
+
 ```
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: pv0001 
-spec:
-  capacity:
-    storage: 100Gi 
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: thin
-  vsphereVolume: 
-    volumePath: "[datastore2] volumes/Registry" 
-    fsType: ext4 
+NAME                                               READY   STATUS      RESTARTS   AGE
+cluster-image-registry-operator-64f5467494-qpz4q   1/1     Running     1          2d8h
+image-pruner-1626825600-bxcwn                      0/1     Completed   0          44h
+image-pruner-1626912000-tz65z                      0/1     Completed   0          20h
+node-ca-57k6g                                      1/1     Running     0          2d8h
+node-ca-bhz6s                                      1/1     Running     0          2d8h
+node-ca-kph47                                      1/1     Running     0          2d8h
+node-ca-r8dnt                                      1/1     Running     0          2d8h
+node-ca-v5qdz                                      1/1     Running     0          2d8h
+node-ca-zn992                                      1/1     Running     0          2d8h
+```
+Now we patch the registry config so that only one replica is running. This is important as we will be using Read Write Once (RW()) Block storage:
+
+```
+ $ oc patch config.imageregistry.operator.openshift.io/cluster --type=merge -p '{"spec":{"rolloutStrategy":"Recreate","replicas":1}}'
 ```
 
-**Create PVC**
+** Create a Persistent Volume Claim **
+
+The name (image-registry-storage) and size (100Gi) are important to have exactly correct.
+
+We will put the following into a file called ```pvc.yaml```
+
 ```
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -72,27 +53,60 @@ spec:
   - ReadWriteOnce 
   resources:
     requests:
-      storage: 100Gi 
+      storage: 100Gi
+```
+Now create the claim:
+
+```
+$ oc create -f  pvc.yaml -n openshift-image-registry
+```
+This creates the pvc, and binds it to a thin provisioned backing store in our VMware folder.
+
+At this point, we will edit the configuration of the imageregistry operator to make the claim:
+
+```
+$ oc edit config.imageregistry.operator.openshift.io
 ```
 
-**Edit the image Registry settings**
+Our storage: configuration looks like this:
+
 ```
-oc edit configs.imageregistry.operator.openshift.io
+  storage: {}
 ```
 
-**Change managementState to Managed**
+Edit to look like this:
+
 ```
-spec:
-  logLevel: Normal
-  managementState: Managed
+  storage:
+    pvc:
+      claim: 
 ```
 
-**Update storage**
+Save the edit.
+
+Upon inspection (re edit) you will see that this is what we have:
+
 ```
-storage:
-  pvc:
-    claim: 
+  storage:
+    pvc:
+      claim: image-registry-storage
 ```
+
+image-registry-storage is automatically chosen by the operator as the pvc.
+
+Lastly, to confirm all is well, let's see if the registry pod is running:
+
+```
+$ oc get pods -n openshift-image-registry | grep registry
+```
+will yield:
+
+```
+cluster-image-registry-operator-64f5467494-qpz4q   1/1     Running     1          2d8h
+image-registry-65477c8b8-7cdxj                     1/1     Running     0          6m4s
+```
+
+Now we see a registry pod running along with the governing operator pod.
 
 **Link:**  
-[Configuring block registry storage for VMware vSphere](https://docs.openshift.com/container-platform/4.6/registry/configuring_registry_storage/configuring-registry-storage-vsphere.html#installation-registry-storage-block-recreate-rollout_configuring-registry-storage-vsphere)
+[Configuring block registry storage for VMware vSphere](https://docs.openshift.com/container-platform/4.7/registry/configuring_registry_storage/configuring-registry-storage-vsphere.html#installation-registry-storage-block-recreate-rollout_configuring-registry-storage-vsphere)
