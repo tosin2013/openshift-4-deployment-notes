@@ -11,8 +11,7 @@ fi
 
 
 offline_token=$(cat ~/offline-token.txt)
-export ASSISTED_SERVICE_IP="api.openshift.com"
-export ASSISTED_SERVICE_PORT="443" 
+ASSISTED_SERVICE_API="api.openshift.com"
 CLUSTER_ID="9c14b495-f437-4869-9196-062661585c31"
 #PULL_SECRET=$(cat ~/pull-secret.txt)
 SSHKEY_NAME="id_rsa.pub"
@@ -48,7 +47,7 @@ jq -n --arg SSH_KEY "$CLUSTER_SSHKEY" --arg NMSTATE_YAML1 "$(cat ocp01.yaml)" --
 cat msg_body.json
 
 
-curl -s -X POST "https://$ASSISTED_SERVICE_IP:$ASSISTED_SERVICE_PORT/api/assisted-install/v1/clusters/$CLUSTER_ID/downloads/image" \
+curl -s -X POST "https://$ASSISTED_SERVICE_API/api/assisted-install/v1/clusters/$CLUSTER_ID/downloads/image" \
   -d @msg_body.json \
   --header "Content-Type: application/json" \
   -H "Authorization: Bearer $ACTIVE_TOKEN" \
@@ -56,5 +55,5 @@ curl -s -X POST "https://$ASSISTED_SERVICE_IP:$ASSISTED_SERVICE_PORT/api/assiste
 
 curl \
   -H "Authorization: Bearer $ACTIVE_TOKEN" \
-  -L "https://$ASSISTED_SERVICE_IP:$ASSISTED_SERVICE_PORT/api/assisted-install/v1/clusters/$CLUSTER_ID/downloads/image" \
+  -L "http://$ASSISTED_SERVICE_API/api/assisted-install/v1/clusters/$CLUSTER_ID/downloads/image" \
   -o ai-liveiso-$CLUSTER_ID.iso
