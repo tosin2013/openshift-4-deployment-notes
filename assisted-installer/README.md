@@ -5,3 +5,17 @@
 ```
 vim ~/offline-token.txt
 ```
+
+2. Create OpenShift pull secret
+```
+vim ~/pull-secret.txt
+```
+
+3. Create mac address file
+```
+vim ~/mac.txt
+```
+
+
+Links: 
+* https://cloud.redhat.com/blog/assisted-installer-on-premise-deep-dive
