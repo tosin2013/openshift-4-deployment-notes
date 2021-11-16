@@ -1,7 +1,7 @@
 # Assisted Installer Scripts
 
 ## Assisted Installer Steps for bare metal with static ips
-1. Get offline token and save it to offline-token.txt
+1. Get offline token and save it to offline-token.txt  
 [Red Hat API Tokens](https://access.redhat.com/management/api)
 ```
 vim ~/offline-token.txt
