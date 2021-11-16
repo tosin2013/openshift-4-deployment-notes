@@ -4,7 +4,6 @@
 #set -e
 
 export SCRIPT_DIR=$(dirname ${BASH_SOURCE[0]})
-echo "Working SCRIPT_DIR: ${SCRIPT_DIR}"
 
 #########################################################
 ## Required Files
@@ -24,9 +23,10 @@ export NTP_SOURCE="time1.google.com"
 #########################################################
 ## Optional Configuration
 export CLUSTER_VERSION="4.9"
-export CLUSTER_RELEASE="4.9.6"
-# ISO_TYPE can be 'minimal' or 'full'
-export ISO_TYPE="minimal"
+## CLUSTER_RELEASE has been moved to query-supported-versions.sh
+#export CLUSTER_RELEASE="4.9.6"
+# ISO_TYPE can be 'minimal-iso' or 'full-iso'
+export ISO_TYPE="minimal-iso"
 
 # CORE_USER_PWD - Leave blank to not set a core user password
 export CORE_USER_PWD=""

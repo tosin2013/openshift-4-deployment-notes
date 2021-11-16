@@ -1,7 +1,8 @@
 #!/bin/bash
-set -xe
 
 ## Asssumes ./cluster-vars.sh has been source'd
+## Bash execution modes are inherited from cluster-vars.sh
+##set -xe
 
 generatePatchData() {
 cat << EOF
@@ -56,15 +57,10 @@ CREATE_CLUSTER_REQUEST=$(curl -s --fail \
 "${ASSISTED_SERVICE_V1_API}/clusters")
 
 if [ -z "$CREATE_CLUSTER_REQUEST" ]; then
-  echo "Failed to create cluster!"
+  echo "===== Failed to create cluster!"
   exit 1
 fi
 
-CLUSTER_ID=$(printf '%s' "$CREATE_CLUSTER_REQUEST" | jq -r '.id')
+export CLUSTER_ID=$(printf '%s' "$CREATE_CLUSTER_REQUEST" | jq -r '.id')
 echo "CLUSTER_ID: ${CLUSTER_ID}"
-
 echo $CLUSTER_ID > ${CLUSTER_DIR}/.cluster-id.nfo
-echo "Cluster ID from file: "
-cat ${CLUSTER_DIR}/.cluster-id.nfo
-
-
