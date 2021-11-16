@@ -32,6 +32,7 @@ $ ./create-custom-iso.sh
 6. Boot Each machine with custom ISO
 
 ## Links: 
+* [Assisted Installer Swagger API](https://generator.swagger.io/?url=https://raw.githubusercontent.com/openshift/assisted-service/master/swagger.yaml)
 * https://cloud.redhat.com/blog/assisted-installer-on-premise-deep-dive
 * https://github.com/kenmoini/ocp4-ai-svc-libvirt
 * https://cloudcult.dev/creating-openshift-clusters-with-the-assisted-service-api/

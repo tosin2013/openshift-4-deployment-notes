@@ -79,9 +79,6 @@ SET_HOST_INFO_REQ=$(curl -s \
 "https://$ASSISTED_SERVICE_IP:$ASSISTED_SERVICE_PORT/api/assisted-install/v1/clusters")
 
 printf '%s' "$SET_HOST_INFO_REQ" | python3 -m json.tool
-CLUSTER_ID=$(curl -s -X GET "https://$ASSISTED_SERVICE_IP:$ASSISTED_SERVICE_PORT/api/assisted-install/v2/clusters?with_hosts=true" --header "Authorization: Bearer $ACTIVE_TOKEN" -H "accept: application/json" -H "get_unregistered_clusters: false"| jq -r '.[].id')
-echo $CLUSTER_ID > ~/$CLUSTER_ID.txt
-echo "Cluster ID"
-cat ~/$CLUSTER_ID.txt
 
-
+echo "$SET_HOST_INFO_REQ"  | jq .id | tr -d '"' > ${CLUSTER_NAME}-cluster-id.txt
+echo "CLUSTER ID FILE: ${CLUSTER_NAME}-cluster-id.txt "
