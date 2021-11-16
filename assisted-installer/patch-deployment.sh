@@ -1,8 +1,29 @@
 #!/bin/bash
+set -xe
+export SSHKEY_NAME="id_rsa.pub"
+export CLUSTER_SSHKEY=$(cat ~/.ssh/${SSHKEY_NAME})
+export PULL_SECRET=$(cat ~/pull-secret.txt | jq -R .)
+export CLUSTER_NAME="ai-poc"
+export CLUSTER_VERSION="4.9"
+export CLUSTER_RELEASE="4.9.6"
+export BASE_DNS="lab.local"
+export CLUSTER_INGRESS_VIP="192.167.124.8"
+export CLUSTER_API_VIP="192.167.124.9"
+export CLUSTER_MACHINE_NETWORK="192.167.124.0/24"
+export NTP_SOURCE="time1.google.com"
+export ASSISTED_SERVICE_IP="api.openshift.com"
+export ASSISTED_SERVICE_PORT="443" 
+export CLUSTER_OVN="OVNKubernetes"
 
-## Asssumes ./cluster-vars.sh has been source'd
-## Bash execution modes are inherited from cluster-vars.sh
-##set -xe
+if [ -f ~/offline-token.txt];
+then 
+  echo "offline-token not found in $HOME directory"
+  echo "create offline token and try again"
+  exit 1
+fi 
+
+offline_token=$(cat ~/offline-token.txt)
+ACTIVE_TOKEN=$(curl -s https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token -d grant_type=refresh_token -d client_id=rhsm-api -d refresh_token=$offline_token | jq .access_token  | tr -d '"')
 
 generatePatchData() {
 cat << EOF
@@ -11,7 +32,7 @@ cat << EOF
   "name": "${CLUSTER_NAME}",  
   "openshift_version": "${CLUSTER_VERSION}",
   "ocp_release_image": "quay.io/openshift-release-dev/ocp-release:${CLUSTER_RELEASE}-x86_64",
-  "base_dns_domain": "${CLUSTER_BASE_DNS}",
+  "base_dns_domain": "${BASE_DNS}",
   "hyperthreading": "all",
   "ingress_vip": "${CLUSTER_INGRESS_VIP}",
   "api_vip": "${CLUSTER_API_VIP}",
@@ -40,27 +61,24 @@ cat << EOF
   "network_type": "${CLUSTER_OVN}",
   "additional_ntp_source": "${NTP_SOURCE}",
   "vip_dhcp_allocation": false,      
-  "ssh_public_key": "$CLUSTER_SSH_PUB_KEY",
+  "ssh_public_key": "$CLUSTER_SSHKEY",
   "pull_secret": $PULL_SECRET
 }
 EOF
 }
 
-echo "===== Creating a new cluster..."
 
-CREATE_CLUSTER_REQUEST=$(curl -s --fail \
+echo "Setting API and Ingress VIPs..."
+
+SET_HOST_INFO_REQ=$(curl -s \
 --header "Authorization: Bearer $ACTIVE_TOKEN" \
 --header "Content-Type: application/json" \
 --header "Accept: application/json" \
 --request POST \
 --data "$(generatePatchData)" \
-"${ASSISTED_SERVICE_V1_API}/clusters")
+"https://$ASSISTED_SERVICE_IP:$ASSISTED_SERVICE_PORT/api/assisted-install/v1/clusters")
 
-if [ -z "$CREATE_CLUSTER_REQUEST" ]; then
-  echo "===== Failed to create cluster!"
-  exit 1
-fi
+printf '%s' "$SET_HOST_INFO_REQ" | python3 -m json.tool
 
-export CLUSTER_ID=$(printf '%s' "$CREATE_CLUSTER_REQUEST" | jq -r '.id')
-echo "CLUSTER_ID: ${CLUSTER_ID}"
-echo $CLUSTER_ID > ${CLUSTER_DIR}/.cluster-id.nfo
+echo "$SET_HOST_INFO_REQ"  | jq .id | tr -d '"' > ${CLUSTER_NAME}-cluster-id.txt
+echo "CLUSTER ID FILE: ${CLUSTER_NAME}-cluster-id.txt "
