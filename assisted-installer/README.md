@@ -2,13 +2,13 @@
 
 ## Assisted Installer Steps for bare metal with static ips
 1. Get offline token and save it to offline-token.txt  
-[Red Hat API Tokens](https://access.redhat.com/management/api)
+> [Red Hat API Tokens](https://access.redhat.com/management/api)
 ```
 vim ~/offline-token.txt
 ```
 
 2. Create OpenShift pull secret  
-[Install OpenShift on Bare Metal](https://console.redhat.com/openshift/install/metal/installer-provisioned)
+> [Install OpenShift on Bare Metal](https://console.redhat.com/openshift/install/metal/installer-provisioned)
 ```
 vim ~/pull-secret.txt
 ```
@@ -20,8 +20,8 @@ $ ./patch-deployment.sh
 
 4. Generate nodes with static ips for environment
 ```
-$ vim ~/patch-deployment.sh
-$ ./patch-deployment.sh
+$ vim ~/node-generator.sh
+$ ./node-generator.sh
 ``` 
 5. Generate ISO for cluster
 ```

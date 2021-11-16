@@ -1,6 +1,7 @@
 #!/bin/bash
 set -xe
-export CLUSTER_SSHKEY=$(cat ~/.ssh/id_ed25519.pub)
+export SSHKEY_NAME="id_rsa.pub"
+export CLUSTER_SSHKEY=$(cat ~/.ssh/${SSHKEY_NAME})
 export PULL_SECRET=$(cat ~/pull-secret.txt | jq -R .)
 export CLUSTER_NAME="ai-poc"
 export CLUSTER_VERSION="4.9"
