@@ -7,7 +7,8 @@
 vim ~/offline-token.txt
 ```
 
-2. Create OpenShift pull secret
+2. Create OpenShift pull secret  
+[Install OpenShift on Bare Metal](https://console.redhat.com/openshift/install/metal/installer-provisioned)
 ```
 vim ~/pull-secret.txt
 ```
