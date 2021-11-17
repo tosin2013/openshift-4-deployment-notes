@@ -18,11 +18,13 @@ $SCRIPT_DIR/query-supported-versions.sh
 ## Check to see if the Cluster has already been created
 if [ -z "$CLUSTER_ID" ]; then
   ## Cluster has not been created yet, add to the AI Service
-  echo "===== Cluster ${CLUSTER_NAME}.${CLUSTER_BASE_DNS} not found, creating now..."
-  $SCRIPT_DIR/create-deployment.sh
+  echo -e "===== Cluster ${CLUSTER_NAME}.${CLUSTER_BASE_DNS} not found, creating now...\n"
+  $SCRIPT_DIR/create-cluster.sh
+  ## Reexport the CLUSTER_ID for use later in the script
+  export CLUSTER_ID=$(cat ${CLUSTER_DIR}/.cluster-id.nfo)
 else
   ## Cluster has already been created, ensure it is configured
-  echo "===== Cluster ${CLUSTER_NAME}.${CLUSTER_BASE_DNS} has already been created, continuing with the configuration process..."
+  echo -e "===== Cluster ${CLUSTER_NAME}.${CLUSTER_BASE_DNS} has already been created, continuing with the configuration process...\n"
 fi
 
 #########################################################
@@ -36,6 +38,7 @@ fi
 if [ ! -z "$CORE_USER_PWD" ]; then
   ## Core user password is set, configure ISO with core user password
   echo "===== Setting password authentication for core user..."
+  sleep 5
   $SCRIPT_DIR/patch-core-user-password.sh
 fi
 

@@ -37,6 +37,20 @@ vim cluster-vars.sh
 
 6. Boot each machine with downloaded ISO
 
+
+## Bootstrap Execution Overview
+
+- Run Preflight tasks - ensure files and variables are set, create asset generation directory
+- Authenticate to the Assisted Installer Service
+- Query the Assisted Installer Service for the supported OCP Release Version
+- Create a Cluster in the AI Svc if it does not already exist
+- Produce NMState configuration file
+- Configure the Discovery ISO
+- [Optional] Set core user password
+- Download the Discovery ISO
+
+Generated assets can be found in `./.generated/${CLUSTER_NAME}.${CLUSTER_BASE_DNS}/`
+
 ## Links
 
 * [Assisted Installer API Swagger Documentation](https://generator.swagger.io/?url=https://raw.githubusercontent.com/openshift/assisted-service/master/swagger.yaml)
