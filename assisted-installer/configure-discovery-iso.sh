@@ -1,38 +1,61 @@
 #!/bin/bash
 
-## Asssumes ./cluster-vars.sh has been source'd
-## Bash execution modes are inherited from cluster-vars.sh
-##set -xe
+set -e
 
-MAC1="52:54:00:00:00:01"
-MAC2="52:54:00:00:00:02"
-MAC3="52:54:00:00:00:03"
+echo -e "\n===== Configuring Discovery ISO..."
+TEMP_ENSEMBLE=$(mktemp -p $CLUSTER_DIR)
 
-jq -n --arg $ISO_TYPE "$ISO_TYPE" --arg SSH_KEY "$CLUSTER_SSH_PUB_KEY" --arg NMSTATE_YAML1 "$(cat ocp01.yaml)" --arg NMSTATE_YAML2 "$(cat ocp02.yaml)" --arg NMSTATE_YAML3 "$(cat ocp03.yaml)" \
-'{
-  "ssh_public_key": $SSH_KEY,
-  "image_type": "$ISO_TYPE",
+NODE_COUNT=0
+NODE_LENGTH=$(echo "${NODE_CFGS}" | jq -r '.nodes | length')
+echo "  Working with ${NODE_LENGTH} nodes..."
+
+## Loop through nodes, set up their variables
+for node in $(echo "${NODE_CFGS}" | jq -r '.nodes[] | @base64'); do
+  _jq() {
+    echo ${node} | base64 --decode | jq -r ${1}
+  }
+  echo "  Generating ISO Config for $(_jq '.name')..."
+  OPT_COM=""
+  NODE_COUNT=$(expr $NODE_COUNT + 1)
+  if [ $NODE_COUNT -ne $NODE_LENGTH ]; then
+    OPT_COM=","
+  fi
+  
+  NMSTATE_FILE=${CLUSTER_DIR}/$(_jq '.name').yaml
+  NODE_INFO=$(mktemp -p $CLUSTER_DIR)
+  # Encode the node's info
+  ENCODED_JSON=$(jq -n --arg NET_YAML "$(cat $NMSTATE_FILE)" --arg OPT_COM "$OPT_COM" \
+  '{
+    "network_yaml": $NET_YAML,
+    "mac_interface_map": [{"mac_address": "'$(_jq '.mac_address')'", "logical_nic_name": "'$(_jq '.ipv4.iface')'"}]
+  }')
+  echo "${ENCODED_JSON}${OPT_COM}" > $NODE_INFO
+  cat $NODE_INFO >> $TEMP_ENSEMBLE
+  ## Cleanup
+  rm $NODE_INFO
+done
+
+generateStaticNetCfgJSON() {
+cat << EOF
+{
+  "ssh_public_key": "$CLUSTER_SSH_PUB_KEY",
+  "image_type": "${ISO_TYPE}",
   "static_network_config": [
-    {
-      "network_yaml": $NMSTATE_YAML1,
-      "mac_interface_map": [{"mac_address": "'${MAC1}'", "logical_nic_name": "enp1s0"}]
-    },
-    {
-      "network_yaml": $NMSTATE_YAML2,
-      "mac_interface_map": [{"mac_address": "'${MAC2}'", "logical_nic_name": "enp1s0"}]
-    },
-    {
-      "network_yaml": $NMSTATE_YAML3,
-      "mac_interface_map": [{"mac_address": "'${MAC3}'", "logical_nic_name": "enp1s0"}]
-    }
+    $(cat $TEMP_ENSEMBLE)
   ]
-}' > ${CLUSTER_DIR}/iso_configuration.json
+}
+EOF
+}
+echo "$(generateStaticNetCfgJSON)" > ${CLUSTER_DIR}/iso_config.json
+rm $TEMP_ENSEMBLE
 
-cat ${CLUSTER_DIR}/iso_configuration.json
+echo -e "\n===== Patching Discovery ISO..."
+ISO_CONFIGURATION_REQ=$(curl -s -o /dev/null -w "%{http_code}" -X POST "${ASSISTED_SERVICE_V1_API}/clusters/$CLUSTER_ID/downloads/image" \
+-d @${CLUSTER_DIR}/iso_config.json \
+--header "Content-Type: application/json" \
+-H "Authorization: Bearer $ACTIVE_TOKEN")
 
-
-curl -s -X POST "${ASSISTED_SERVICE_V1_API}/clusters/$CLUSTER_ID/downloads/image" \
-  -d @${CLUSTER_DIR}/iso_configuration.json \
-  --header "Content-Type: application/json" \
-  -H "Authorization: Bearer $ACTIVE_TOKEN" \
-  | jq '.'
+if [ "$ISO_CONFIGURATION_REQ" -ne "201" ]; then
+  echo "===== Failed to configure ISO!"
+  exit 1
+fi

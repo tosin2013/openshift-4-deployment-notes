@@ -21,12 +21,26 @@ export CLUSTER_MACHINE_NETWORK="192.167.124.0/24"
 export NTP_SOURCE="time1.google.com"
 
 #########################################################
+## Additional Node + Network Configuration
+export CLUSTER_NODE_NET_DNS_SERVERS=("192.168.42.9" "192.168.42.10")
+
+## Set Node Network Configuration
+NODE1_CFG='{"name": "ocp01", "mac_address": "52:54:00:00:00:01", "ipv4": {"address": "192.168.3.51", "gateway": "192.168.3.1", "prefix": "24", "iface": "enp5s0"}}'
+NODE2_CFG='{"name": "ocp02", "mac_address": "52:54:00:00:00:02", "ipv4": {"address": "192.168.3.52", "gateway": "192.168.3.1", "prefix": "24", "iface": "enp5s0"}}'
+NODE3_CFG='{"name": "ocp03", "mac_address": "52:54:00:00:00:03", "ipv4": {"address": "192.168.3.53", "gateway": "192.168.3.1", "prefix": "24", "iface": "enp5s0"}}'
+
+## Add Nodes to the JSON array
+export NODE_CFGS='{ "nodes": [ '${NODE1_CFG}', '${NODE2_CFG}', '${NODE3_CFG}' ] }'
+
+#########################################################
 ## Optional Configuration
+# ISO_TYPE can be 'minimal-iso' or 'full-iso'
+export ISO_TYPE="full-iso"
+
+## CLUSTER_VERSION just needs to be MAJOR.MINOR - actual release is queried from the API
 export CLUSTER_VERSION="4.9"
 ## CLUSTER_RELEASE has been moved to query-supported-versions.sh
 #export CLUSTER_RELEASE="4.9.6"
-# ISO_TYPE can be 'minimal-iso' or 'full-iso'
-export ISO_TYPE="minimal-iso"
 
 # CORE_USER_PWD - Leave blank to not set a core user password
 export CORE_USER_PWD=""
@@ -34,10 +48,19 @@ export CORE_USER_PWD=""
 #########################################################
 ## NOTHING TO SEE HERE - Don't edit past this point
 
-echo -e "\n===== Generating asset directory..."
+export ASSISTED_SERVICE_HOSTNAME="api.openshift.com"
+export ASSISTED_SERVICE_PORT="443" 
+export ASSISTED_SERVICE_PROTOCOL="https"
+export ASSISTED_SERVICE_ENDPOINT="${ASSISTED_SERVICE_PROTOCOL}://${ASSISTED_SERVICE_HOSTNAME}:${ASSISTED_SERVICE_PORT}"
+export ASSISTED_SERVICE_V1_API_PATH="/api/assisted-install/v1"
+export ASSISTED_SERVICE_V2_API_PATH="/api/assisted-install/v2"
+export ASSISTED_SERVICE_V1_API="${ASSISTED_SERVICE_ENDPOINT}${ASSISTED_SERVICE_V1_API_PATH}"
+export ASSISTED_SERVICE_V2_API="${ASSISTED_SERVICE_ENDPOINT}${ASSISTED_SERVICE_V2_API_PATH}"
+
+export CLUSTER_OVN="OVNKubernetes"
+
 GENERATED_ASSETS="${SCRIPT_DIR}/.generated"
 export CLUSTER_DIR="${GENERATED_ASSETS}/${CLUSTER_NAME}.${CLUSTER_BASE_DNS}"
-mkdir -p ${CLUSTER_DIR}
 
 ## Set Cluster ID
 export CLUSTER_ID=""
@@ -66,40 +89,3 @@ else
   echo "No RH API Offline Token found!  Looking for ${RH_OFFLINE_TOKEN_PATH}"
   exit 1
 fi
-
-export ASSISTED_SERVICE_HOSTNAME="api.openshift.com"
-export ASSISTED_SERVICE_PORT="443" 
-export ASSISTED_SERVICE_PROTOCOL="https"
-export ASSISTED_SERVICE_ENDPOINT="${ASSISTED_SERVICE_PROTOCOL}://${ASSISTED_SERVICE_HOSTNAME}:${ASSISTED_SERVICE_PORT}"
-export ASSISTED_SERVICE_V1_API_PATH="/api/assisted-install/v1"
-export ASSISTED_SERVICE_V2_API_PATH="/api/assisted-install/v2"
-export ASSISTED_SERVICE_V1_API="${ASSISTED_SERVICE_ENDPOINT}${ASSISTED_SERVICE_V1_API_PATH}"
-export ASSISTED_SERVICE_V2_API="${ASSISTED_SERVICE_ENDPOINT}${ASSISTED_SERVICE_V2_API_PATH}"
-
-export CLUSTER_OVN="OVNKubernetes"
-
-#########################################################
-## Global Functions
-function checkForProgramAndExit() {
-    command -v $1 > /dev/null 2>&1
-    if [[ $? -eq 0 ]]; then
-        printf '%-72s %-7s\n' $1 "PASSED!";
-    else
-        printf '%-72s %-7s\n' $1 "FAILED!";
-        exit 1
-    fi
-}
-
-echo -e "===== Checking for needed programs..."
-checkForProgramAndExit curl
-checkForProgramAndExit jq
-checkForProgramAndExit python3
-
-echo -e "===== Authenticating to the Red Hat API..."
-export ACTIVE_TOKEN=$(curl -s --fail https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token -d grant_type=refresh_token -d client_id=rhsm-api -d refresh_token=$RH_OFFLINE_TOKEN | jq .access_token  | tr -d '"')
-if [ -z "$ACTIVE_TOKEN" ]; then
-  echo "Failed to authenticate with the RH API!"
-  exit 1
-fi
-
-echo -e "===== Preflight passed...\n"

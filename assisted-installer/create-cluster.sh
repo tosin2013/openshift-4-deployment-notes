@@ -1,8 +1,6 @@
 #!/bin/bash
 
-## Asssumes ./cluster-vars.sh has been source'd
-## Bash execution modes are inherited from cluster-vars.sh
-##set -xe
+set -e
 
 generatePatchData() {
 cat << EOF
@@ -46,6 +44,9 @@ cat << EOF
 EOF
 }
 
+## Save to file anyway for debugging purposes
+echo "$(generatePatchData)" > ${CLUSTER_DIR}/cluster-config.json
+
 echo "===== Creating a new cluster..."
 
 CREATE_CLUSTER_REQUEST=$(curl -s --fail \
@@ -61,6 +62,6 @@ if [ -z "$CREATE_CLUSTER_REQUEST" ]; then
   exit 1
 fi
 
-export CLUSTER_ID=$(printf '%s' "$CREATE_CLUSTER_REQUEST" | jq -r '.id')
-echo "CLUSTER_ID: ${CLUSTER_ID}"
+CLUSTER_ID=$(printf '%s' "$CREATE_CLUSTER_REQUEST" | jq -r '.id')
+echo "  CLUSTER_ID: ${CLUSTER_ID}"
 echo $CLUSTER_ID > ${CLUSTER_DIR}/.cluster-id.nfo

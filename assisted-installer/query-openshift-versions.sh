@@ -1,9 +1,8 @@
 #!/bin/bash
 
-## Asssumes ./cluster-vars.sh has been source'd
-## Bash execution modes are inherited from cluster-vars.sh
-##set -xe
-
+#########################################################
+## Query the Assisted Installer Service for supported 
+##  versions
 echo "===== Querying the Assisted Installer Service for supported versions..."
 
 QUERY_CLUSTER_VERSIONS_REQUEST=$(curl -s --fail \
@@ -19,4 +18,4 @@ if [ -z "$QUERY_CLUSTER_VERSIONS_REQUEST" ]; then
 fi
 
 export CLUSTER_RELEASE=$(printf '%s' "$QUERY_CLUSTER_VERSIONS_REQUEST" | jq -r '.["'"${CLUSTER_VERSION}"'"].display_name')
-echo -e "Found Cluster Release ${CLUSTER_RELEASE} from target version ${CLUSTER_VERSION}\n"
+echo -e "  Found Cluster Release ${CLUSTER_RELEASE} from target version ${CLUSTER_VERSION}\n"

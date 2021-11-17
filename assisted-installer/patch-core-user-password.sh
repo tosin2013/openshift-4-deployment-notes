@@ -1,8 +1,6 @@
 #!/bin/bash
 
-## Asssumes ./cluster-vars.sh has been source'd
-## Bash execution modes are inherited from cluster-vars.sh
-##set -xe
+set -e
 
 ## Download the discovery.ign file from the AI Svc
 DISCOVERY_IGN_URL=${ASSISTED_SERVICE_V1_API}/clusters/${CLUSTER_ID}/downloads/'files?file_name=discovery.ign'
