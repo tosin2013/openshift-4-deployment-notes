@@ -1,9 +1,9 @@
 # Red Hat Advanced Cluster Management for Kubernetes
 
 
-[ACM cluster Policy Update](cluster-upgrade-policies.md)
-[Set Custom Image endpoints for ACM Deployments](set-custom-repo-endpoints.md)
-[Import GKE cluster onto ACM](configure-gke-with-acm.md)
+* [ACM cluster Policy Update](cluster-upgrade-policies.md)
+* [Set Custom Image endpoints for ACM Deployments](set-custom-repo-endpoints.md)
+* [Import GKE cluster onto ACM](configure-gke-with-acm.md)
 
 
 ## Links
