@@ -1,5 +1,13 @@
 # Assisted Installer Scripts
 
+## Prerequisites
+
+The following binaries need to be included in the system $PATH:
+
+- curl
+- jq
+- python3
+
 ## Assisted Installer Steps for Bare Metal machines with Static IPs
 
 1. Get offline token and save it to `~/rh-api-offline-token`
@@ -35,8 +43,58 @@ vim cluster-vars.sh
 ./bootstrap.sh
 ```
 
-6. Boot each machine with downloaded ISO
+Sample expected output:
 
+```
+[kemo@raza assisted-installer]$ ./bootstrap.sh 
+
+===== Running preflight...
+
+===== Generating asset directory...
+===== Checking for needed programs...
+curl                                                                     PASSED!
+jq                                                                       PASSED!
+python3                                                                  PASSED!
+===== Authenticating to the Red Hat API...
+  Using Token: eyJhbGciOiJSUzI...
+
+===== Querying the Assisted Installer Service for supported versions...
+  Found Cluster Release 4.9.4 from target version 4.9
+
+===== Preflight passed...
+
+===== Cluster ai-poc.lab.local not found, creating now...
+
+===== Creating a new cluster...
+  CLUSTER_ID: dc3cfcc3-6a11-4fb2-a94f-e4fe8cac617f
+
+===== Generating NMState Configuration files...
+  Working with 3 nodes...
+  Creating NMState config for ocp01...
+  Creating NMState config for ocp02...
+  Creating NMState config for ocp03...
+
+===== Setting password authentication for core user...
+
+===== Configuring Discovery ISO...
+  Working with 3 nodes...
+  Generating ISO Config for ocp01...
+  Generating ISO Config for ocp02...
+  Generating ISO Config for ocp03...
+
+===== Patching Discovery ISO...
+
+===== Waiting 15s for ISO to build...
+
+
+===== Downloading Discovery ISO locally to ./.generated/ai-poc.lab.local/ai-liveiso-dc3cfcc3-6a11-4fb2-a94f-e4fe8cac617f.iso ...
+
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  987M  100  987M    0     0  58.5M      0  0:00:16  0:00:16 --:--:-- 61.6M
+```
+
+6. Boot each machine with downloaded ISO
 
 ## Bootstrap Execution Overview
 
@@ -45,11 +103,20 @@ vim cluster-vars.sh
 - Query the Assisted Installer Service for the supported OCP Release Version
 - Create a Cluster in the AI Svc if it does not already exist
 - Produce NMState configuration file
-- Configure the Discovery ISO
 - [Optional] Set core user password
+- Configure the Discovery ISO
 - Download the Discovery ISO
 
 Generated assets can be found in `./.generated/${CLUSTER_NAME}.${CLUSTER_BASE_DNS}/`
+
+## Destroy Cluster
+
+A simple script exists to delete a created cluster from the Assisted Installer Service and from the local file system:
+
+```bash
+## Requires a set cluster-vars.sh, looks for CLUSTER_ID in the `./.generated/${CLUSTER_NAME}.${CLUSTER_BASE_DNS}/` directory
+./destroy.sh
+```
 
 ## Links
 
