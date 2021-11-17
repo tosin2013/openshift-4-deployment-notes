@@ -4,6 +4,7 @@
 [OpenShift 4 on Bare Metal](bare-metal/)  
 [OpenShift 4 on KVM/libvirt](kvm-scripts/)  
 [OpenShift 4 on VMWARE](vmware/)  
+[OpenShift 4 Assisted Installer Steps on bare metal](assisted-installer/)
 
 ## Useful tool
 [Helper node](helper-node/)
@@ -19,6 +20,9 @@
 
 ## Notes
 [Performing OpenShift 4 installation](run-ocp-installer/)  
+
+## Cluster Management
+[Red Hat Advanced Cluster Management for Kubernetes](acm/)  
 
 ## Day Two Operations  
 [Configure a HTPasswd identity provider](post-steps/configure-htpasswd-identity-provider.md)  
