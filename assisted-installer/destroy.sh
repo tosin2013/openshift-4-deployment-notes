@@ -8,6 +8,7 @@ if [ ! -f "./cluster-vars.sh" ]; then
 else
   source ./cluster-vars.sh
 fi
+source $SCRIPT_DIR/authenticate-to-api.sh
 
 #########################################################
 ## Check to see if the Cluster ID is available
@@ -18,11 +19,23 @@ else
   ## CLUSTER_ID file is intact, let's delete the cluster from the Assisted Installer service
   echo "===== Cluster ${CLUSTER_NAME}.${CLUSTER_BASE_DNS} found, deleting from API..."
 
+  ## Cancel the cluster from the Assisted Service...
+  CANCEL_CLUSTER_REQ=$(curl -s \
+    --header "Authorization: Bearer $ACTIVE_TOKEN" \
+    --header "Content-Type: application/json" \
+    --request POST \
+  "${ASSISTED_SERVICE_V1_API}/clusters/$CLUSTER_ID/actions/cancel")
+
+  ## Reset the cluster from the Assisted Service...
+  RESET_CLUSTER_REQ=$(curl -s \
+    --header "Authorization: Bearer $ACTIVE_TOKEN" \
+    --header "Content-Type: application/json" \
+    --request POST \
+  "${ASSISTED_SERVICE_V1_API}/clusters/$CLUSTER_ID/actions/reset")
+
   ## Delete the cluster from the Assisted Service...
   DELETE_CLUSTER_REQ=$(curl -s \
     --header "Authorization: Bearer $ACTIVE_TOKEN" \
-    --header "Content-Type: application/json" \
-    --header "Accept: application/json" \
     --request DELETE \
   "${ASSISTED_SERVICE_V1_API}/clusters/$CLUSTER_ID")
 fi
