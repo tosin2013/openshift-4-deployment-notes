@@ -110,7 +110,7 @@ python3                                                                  PASSED!
 Generated assets can be found in `./.generated/${CLUSTER_NAME}.${CLUSTER_BASE_DNS}/`
 
 ## Add worker nodes to deployment
-
+[Steps to add worker node](addworker.md)
 
 ## Destroy Cluster
 
