@@ -36,15 +36,27 @@ if [ "$CLUSTER_INSTALLED_STARTED" == "false" ]; then
   source $SCRIPT_DIR/steps/set-node-hostnames-and-roles.sh
 
   #########################################################
+  ## Set networking VIPs
+  source $SCRIPT_DIR/steps/set-networking.sh
+
+  #########################################################
   ## Check to see if the cluster is ready to install
+  source $SCRIPT_DIR/steps/check-cluster-ready-to-install.sh
 
   #########################################################
   ## Start the Installation
+  source $SCRIPT_DIR/steps/start-install.sh
 else
   #########################################################
   ## Check to see if the installation has completed
-  
-  #########################################################
-  ## Scaling up
-  echo -e "\n===== Scaling action detected!"
+  if [ $CLUSTER_INSTALL_COMPLETED != "2000-01-01T00:00:00.000Z" ]; then
+    echo "  Cluster installed on ${CLUSTER_INSTALL_COMPLETED}"
+
+    #########################################################
+    ## Check to see if we're scaling up Scaling up
+    #echo -e "\n===== Scaling action detected!"
+
+  else
+    echo "  Cluster is still installing..."
+  fi
 fi
