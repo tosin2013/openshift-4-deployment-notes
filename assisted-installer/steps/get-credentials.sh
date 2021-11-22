@@ -2,6 +2,14 @@
 
 set -e
 
+if [ ! -z "$CLUSTER_ID" ]; then
+  TARGET_CLUSTER_ID="$CLUSTER_ID"
+fi
+
+if [ ! -z "$NEW_CLUSTER_ID" ]; then
+  TARGET_CLUSTER_ID="$NEW_CLUSTER_ID"
+fi
+
 echo -e "\n===== Getting cluster credentials..."
 
 # Query the Cluster for kubeadmin password
@@ -10,7 +18,7 @@ CLUSTER_KUBEADMIN_REQ=$(curl -s \
   --header "Content-Type: application/json" \
   --header "Accept: application/json" \
   --request GET \
-"${ASSISTED_SERVICE_V1_API}/clusters/$CLUSTER_ID/credentials")
+"${ASSISTED_SERVICE_V1_API}/clusters/$TARGET_CLUSTER_ID/credentials")
 
 
 if [ -z "$CLUSTER_KUBEADMIN_REQ" ]; then

@@ -2,6 +2,14 @@
 
 set -e
 
+if [ ! -z "$CLUSTER_ID" ]; then
+  TARGET_CLUSTER_ID="$CLUSTER_ID"
+fi
+
+if [ ! -z "$NEW_CLUSTER_ID" ]; then
+  TARGET_CLUSTER_ID="$NEW_CLUSTER_ID"
+fi
+
 echo -e "\n===== Setting Node Hostnames and Roles..."
 
 HOSTS=$(curl -s \
@@ -9,7 +17,7 @@ HOSTS=$(curl -s \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --request GET \
-    "${ASSISTED_SERVICE_V1_API}/clusters/${CLUSTER_ID}/hosts")
+    "${ASSISTED_SERVICE_V1_API}/clusters/${TARGET_CLUSTER_ID}/hosts")
 
 ## Create temporary files
 TEMP_HOST_ENSEMBLE=$(mktemp -p $CLUSTER_DIR)
@@ -101,7 +109,7 @@ SET_HOST_INFO_REQ=$(curl -s -o /dev/null -w "%{http_code}" \
   --header "Accept: application/json" \
   --request PATCH \
   --data "$(generateHostPatchData)" \
-  "${ASSISTED_SERVICE_V1_API}/clusters/${CLUSTER_ID}")
+  "${ASSISTED_SERVICE_V1_API}/clusters/${TARGET_CLUSTER_ID}")
 
 rm $TEMP_HOST_ENSEMBLE
 rm $TEMP_ROLE_ENSEMBLE

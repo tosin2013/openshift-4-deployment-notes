@@ -2,6 +2,15 @@
 
 set -e
 
+if [ ! -z "$CLUSTER_ID" ]; then
+  TARGET_CLUSTER_ID="$CLUSTER_ID"
+fi
+
+if [ ! -z "$NEW_CLUSTER_ID" ]; then
+  TARGET_CLUSTER_ID="$NEW_CLUSTER_ID"
+fi
+
+
 echo -e "===== Checking if cluster installation has completed..."
 
 LOOP_ON="true"
@@ -14,7 +23,7 @@ while [ $LOOP_ON = "true" ]; do
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --request GET \
-  "${ASSISTED_SERVICE_V1_API}/clusters/$CLUSTER_ID")
+  "${ASSISTED_SERVICE_V1_API}/clusters/$TARGET_CLUSTER_ID")
 
   CLUSTER_STATUS=$(echo $CLUSTER_INFO_REQ | jq -r '.status')
 

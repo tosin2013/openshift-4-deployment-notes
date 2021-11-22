@@ -2,6 +2,14 @@
 
 set -e
 
+if [ ! -z "$CLUSTER_ID" ]; then
+  TARGET_CLUSTER_ID="$CLUSTER_ID"
+fi
+
+if [ ! -z "$NEW_CLUSTER_ID" ]; then
+  TARGET_CLUSTER_ID="$NEW_CLUSTER_ID"
+fi
+
 echo -e "\n===== Setting cluster networking..."
 
 generatePatchData() {
@@ -21,7 +29,7 @@ SET_HOST_INFO_REQ=$(curl -s --fail \
   --header "Accept: application/json" \
   --request PATCH \
   --data "$(generatePatchData)" \
-"${ASSISTED_SERVICE_V1_API}/clusters/$CLUSTER_ID")
+"${ASSISTED_SERVICE_V1_API}/clusters/$TARGET_CLUSTER_ID")
 
 if [ -z "$SET_HOST_INFO_REQ" ]; then
   echo "ERROR: Failed to set cluster networking information"

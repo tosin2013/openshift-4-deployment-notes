@@ -142,7 +142,22 @@ Then run the bootstrap-scale-up script:
 
 You'll find a new Discovery ISO downloaded in the generated assets folder.
 
-> ***Note:*** You won't see the additional hosts cluster defined in the Web UI - additional status scripts and idempotent workflows are in the works
+> ***Note:*** You won't see the additional hosts cluster defined in the Web UI - additional node actions are performed via the API and oc CLI
+
+Once the additional hosts have booted and reported in, you can run the bootstrap-scale-up script again and it should kick off the installation process.
+
+```bash
+./bootstrap-scale-up.sh
+```
+
+Having already `oc login`'d to the original cluster, wait for the host to report in as a node's CertificateSigningRequest and approve it:
+
+```bash
+oc get csr|grep Pending
+
+# Approve all CSR
+for csr in $(oc -n openshift-machine-api get csr | awk '/Pending/ {print $1}'); do oc adm certificate approve $csr;done
+```
 
 ## Links
 

@@ -2,6 +2,16 @@
 
 set -e
 
+if [ ! -z "$CLUSTER_ID" ]; then
+  TARGET_CLUSTER_ID="$CLUSTER_ID"
+  NUMBER_OF_CFG_NODES=$(echo $NODE_CFGS | jq -r '.[] | length')
+fi
+
+if [ ! -z "$NEW_CLUSTER_ID" ]; then
+  TARGET_CLUSTER_ID="$NEW_CLUSTER_ID"
+  NUMBER_OF_CFG_NODES="$UNMATCHED_HOSTS_COUNT"
+fi
+
 LOOP_ON="true"
 CYCLE_TIME_IN_SECONDS="10"
 
@@ -15,7 +25,7 @@ while [ $LOOP_ON = "true" ]; do
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --request GET \
-  "${ASSISTED_SERVICE_V1_API}/clusters/$CLUSTER_ID")
+  "${ASSISTED_SERVICE_V1_API}/clusters/$TARGET_CLUSTER_ID")
 
   if [ -z "$CLUSTER_INFO_REQ" ]; then
     echo "ERROR: Failed to get cluster information"
@@ -29,7 +39,6 @@ while [ $LOOP_ON = "true" ]; do
   CLUSTER_INSTALL_STARTED=$(echo $CLUSTER_INFO_REQ | jq -r '.install_started_at')
   CLUSTER_INSTALL_COMPLETED=$(echo $CLUSTER_INFO_REQ | jq -r '.install_completed_at')
   NUMBER_OF_HOSTS_READY=$(echo $CLUSTER_INFO_REQ | jq -r '.ready_host_count')
-  NUMBER_OF_CFG_NODES=$(echo $NODE_CFGS | jq -r '.[] | length')
 
   ## Check if cluster has already been installed (date check)
   if [ $CLUSTER_INSTALL_STARTED == "2000-01-01T00:00:00.000Z" ]; then

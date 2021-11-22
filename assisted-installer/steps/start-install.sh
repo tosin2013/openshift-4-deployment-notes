@@ -2,8 +2,17 @@
 
 set -e
 
-echo -e "\n===== Starting cluster installation..."
+if [ ! -z "$CLUSTER_ID" ]; then
+  TARGET_CLUSTER_ID="$CLUSTER_ID"
+  API_ENDPOINT="${ASSISTED_SERVICE_V1_API}/clusters/$TARGET_CLUSTER_ID/actions/install"
+fi
 
+if [ ! -z "$NEW_CLUSTER_ID" ]; then
+  TARGET_CLUSTER_ID="$NEW_CLUSTER_ID"
+  API_ENDPOINT="${ASSISTED_SERVICE_V1_API}/clusters/$TARGET_CLUSTER_ID/actions/install_hosts"
+fi
+
+echo -e "\n===== Starting cluster installation..."
 
 # Start the Installer
 START_INSTALLATION_REQ=$(curl -s --fail \
@@ -11,7 +20,7 @@ START_INSTALLATION_REQ=$(curl -s --fail \
   --header "Content-Type: application/json" \
   --header "Accept: application/json" \
   --request POST \
-"${ASSISTED_SERVICE_V1_API}/clusters/$CLUSTER_ID/actions/install")
+"${API_ENDPOINT}")
 
 if [ -z "$START_INSTALLATION_REQ" ]; then
   echo "ERROR: Failed to start cluster install"

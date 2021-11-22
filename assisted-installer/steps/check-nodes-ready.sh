@@ -5,6 +5,16 @@ set -e
 LOOP_ON="true"
 CYCLE_TIME_IN_SECONDS="10"
 
+if [ ! -z "$CLUSTER_ID" ]; then
+  TARGET_CLUSTER_ID="$CLUSTER_ID"
+  NUMBER_OF_CFG_NODES=$(echo $NODE_CFGS | jq -r '.[] | length')
+fi
+
+if [ ! -z "$NEW_CLUSTER_ID" ]; then
+  TARGET_CLUSTER_ID="$NEW_CLUSTER_ID"
+  NUMBER_OF_CFG_NODES="$UNMATCHED_HOSTS_COUNT"
+fi
+
 echo -e "\n===== Checking for nodes and if they are ready to install..."
 
 ## Loop de' loop
@@ -16,7 +26,7 @@ while [ $LOOP_ON = "true" ]; do
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --request GET \
-  "${ASSISTED_SERVICE_V1_API}/clusters/$CLUSTER_ID")
+  "${ASSISTED_SERVICE_V1_API}/clusters/$TARGET_CLUSTER_ID")
 
   ## Debug
   ## echo $CLUSTER_INFO_REQ | python3 -m json.tool
@@ -26,7 +36,6 @@ while [ $LOOP_ON = "true" ]; do
   CLUSTER_INSTALL_STARTED=$(echo $CLUSTER_INFO_REQ | jq -r '.install_started_at')
   CLUSTER_INSTALL_COMPLETED=$(echo $CLUSTER_INFO_REQ | jq -r '.install_completed_at')
   NUMBER_OF_HOSTS=$(echo $CLUSTER_INFO_REQ | jq -r '.hosts | length')
-  NUMBER_OF_CFG_NODES=$(echo $NODE_CFGS | jq -r '.[] | length')
 
   ## Overall process:
   ## - Check if cluster has already been installed (date check)
