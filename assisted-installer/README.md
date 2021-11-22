@@ -140,8 +140,15 @@ cp example.cluster-vars.sh cluster-vars.sh
 vim cluster-vars.sh
 
 ## Start a full libvirt install
+## - Create the OpenShift Cluster in the AI Service
+## - [Optional Hack] Create VMs locally with Libvirt
+## - Configure and Start the OpenSHift Install via the AI Service
+## - [Optional Hack] Watch virsh and restart VMs when needed
+## - Post-Install Cluster Configuration & Output
+
 ./bootstrap-create.sh \
  && ./hack/create-kvm-vms.sh \
  && ./bootstrap-install.sh \
- && ./hack/watch-and-reboot-kvm-vms.sh
+ && ./hack/watch-and-reboot-kvm-vms.sh \
+ && ./bootstrap-post-install.sh
 ```
