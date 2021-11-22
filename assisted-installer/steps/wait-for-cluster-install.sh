@@ -2,7 +2,7 @@
 
 set -e
 
-echo -e "===== Waiting for cluster installation to complete..."
+echo -e "===== Checking if cluster installation has completed..."
 
 LOOP_ON="true"
 CYCLE_TIME_IN_SECONDS="10"

@@ -17,9 +17,9 @@ if [ -z "$CLUSTER_KUBEADMIN_REQ" ]; then
   echo "ERROR: Failed to get cluster credentials"
   exit 1
 else
-  CLUSTER_CONSOLE_URL=$(printf '%s' "$CLUSTER_KUBEADMIN_REQ" | jq -r '.console_url')
-  CLUSTER_CONSOLE_KUBEADMIN_USERNAME=$(printf '%s' "$CLUSTER_KUBEADMIN_REQ" | jq -r '.username')
-  CLUSTER_CONSOLE_KUBEADMIN_PASSWORD=$(printf '%s' "$CLUSTER_KUBEADMIN_REQ" | jq -r '.password')
+  export CLUSTER_CONSOLE_URL=$(printf '%s' "$CLUSTER_KUBEADMIN_REQ" | jq -r '.console_url')
+  export CLUSTER_CONSOLE_KUBEADMIN_USERNAME=$(printf '%s' "$CLUSTER_KUBEADMIN_REQ" | jq -r '.username')
+  export CLUSTER_CONSOLE_KUBEADMIN_PASSWORD=$(printf '%s' "$CLUSTER_KUBEADMIN_REQ" | jq -r '.password')
 
   echo -e "\n===== Cluster Credentials ====="
   echo "  kubeadmin Password: ${CLUSTER_CONSOLE_KUBEADMIN_PASSWORD}"

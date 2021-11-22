@@ -28,8 +28,8 @@ source $SCRIPT_DIR/steps/wait-for-cluster-install.sh
 ## Pull the default kubeadmin credentials
 source $SCRIPT_DIR/steps/get-credentials.sh
 
-echo -e "====="
+echo -e "\n====="
 echo -e "===== Installation complete!"
-echo -e "====="
+echo -e "=====\n"
 
 echo -e "From this point you could automate other functions, such as storage, identity, default workloads, and more!\n"

@@ -118,6 +118,32 @@ A simple script exists to delete a created cluster from the Assisted Installer S
 ./destroy.sh
 ```
 
+## Day 2 - Adding Additional Application Nodes
+
+You can generate the Discovery ISO for a scaling action against a previously deployed cluster.
+
+To do so, modify your `cluster-vars.sh` file to add the additional nodes, eg:
+
+```bash
+# ...
+NODE6_CFG='{"name": "ocp06", "role": "application-node", "mac_address": "52:54:00:00:00:06", "ipv4": {"address": "192.168.42.66", "gateway": "192.168.42.1", "prefix": "24", "iface": "enp1s0"}}'
+NODE7_CFG='{"name": "ocp07", "role": "application-node", "mac_address": "52:54:00:00:00:07", "ipv4": {"address": "192.168.42.67", "gateway": "192.168.42.1", "prefix": "24", "iface": "enp1s0"}}'
+
+## Add Nodes to the JSON array
+export NODE_CFGS='{ "nodes": [ '${NODE1_CFG}', '${NODE2_CFG}', '${NODE3_CFG}', '${NODE4_CFG}', '${NODE5_CFG}', '${NODE6_CFG}', '${NODE7_CFG}' ] }'
+# ...
+```
+
+Then run the bootstrap-scale-up script:
+
+```bash
+./bootstrap-scale-up.sh
+```
+
+You'll find a new Discovery ISO downloaded in the generated assets folder.
+
+> ***Note:*** You won't see the additional hosts cluster defined in the Web UI - additional status scripts and idempotent workflows are in the works
+
 ## Links
 
 * [Assisted Installer API Swagger Documentation](https://generator.swagger.io/?url=https://raw.githubusercontent.com/openshift/assisted-service/master/swagger.yaml)
