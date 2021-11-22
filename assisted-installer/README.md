@@ -109,6 +109,9 @@ python3                                                                  PASSED!
 
 Generated assets can be found in `./.generated/${CLUSTER_NAME}.${CLUSTER_BASE_DNS}/`
 
+## Add worker nodes to deployment
+
+
 ## Destroy Cluster
 
 A simple script exists to delete a created cluster from the Assisted Installer Service and from the local file system:
