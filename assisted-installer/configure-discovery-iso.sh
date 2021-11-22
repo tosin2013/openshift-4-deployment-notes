@@ -1,6 +1,12 @@
 #!/bin/bash
 
 set -e
+if [ -z $1 ];
+then 
+  WORKER_NAME=""
+else 
+  WORKER_NAME=$1
+fi
 
 echo -e "\n===== Configuring Discovery ISO..."
 TEMP_ENSEMBLE=$(mktemp -p $CLUSTER_DIR)
@@ -36,6 +42,8 @@ for node in $(echo "${NODE_CFGS}" | jq -r '.nodes[] | @base64'); do
 done
 
 generateStaticNetCfgJSON() {
+#PULL_SECRET=$(cat ${PULL_SECRET_PATH})
+#  "pull_secret": "${PULL_SECRET}",
 cat << EOF
 {
   "ssh_public_key": "$CLUSTER_SSH_PUB_KEY",
@@ -46,16 +54,31 @@ cat << EOF
 }
 EOF
 }
-echo "$(generateStaticNetCfgJSON)" > ${CLUSTER_DIR}/iso_config.json
-rm $TEMP_ENSEMBLE
 
-echo -e "\n===== Patching Discovery ISO..."
-ISO_CONFIGURATION_REQ=$(curl -s -o /dev/null -w "%{http_code}" -X POST "${ASSISTED_SERVICE_V1_API}/clusters/$CLUSTER_ID/downloads/image" \
--d @${CLUSTER_DIR}/iso_config.json \
---header "Content-Type: application/json" \
--H "Authorization: Bearer $ACTIVE_TOKEN")
 
-if [ "$ISO_CONFIGURATION_REQ" -ne "201" ]; then
-  echo "===== Failed to configure ISO!"
-  exit 1
-fi
+if [ -z ${WORKER_NAME} ];
+then 
+  echo "$(generateStaticNetCfgJSON)" > ${CLUSTER_DIR}/iso_config.json
+  rm $TEMP_ENSEMBLE
+  echo -e "\n===== Patching Discovery ISO..."
+  ISO_CONFIGURATION_REQ=$(curl -s -o /dev/null -w "%{http_code}" -X POST "${ASSISTED_SERVICE_V1_API}/clusters/$CLUSTER_ID/downloads/image" \
+  -d @${CLUSTER_DIR}/iso_config.json \
+  --header "Content-Type: application/json" \
+  -H "Authorization: Bearer $ACTIVE_TOKEN")
+
+  if [ "$ISO_CONFIGURATION_REQ" -ne "201" ]; then
+    echo "===== Failed to configure ISO!"
+    exit 1
+  fi
+else
+  echo "$(generateStaticNetCfgJSON)" > ${CLUSTER_DIR}/iso_${WORKER_NAME}_config.json
+  rm $TEMP_ENSEMBLE
+  ISO_CONFIGURATION_REQ=$(curl -s -o /dev/null -w "%{http_code}" -X PATCH "${ASSISTED_SERVICE_V1_API}/clusters/$CLUSTER_ID" \
+      -d @${CLUSTER_DIR}/iso_${WORKER_NAME}_config.json \
+      --header "Content-Type: application/json" \
+      -H "Authorization: Bearer $ACTIVE_TOKEN")
+  if [ "$ISO_CONFIGURATION_REQ" -ne "201" ]; then
+    echo "===== Failed to configure ISO!"
+    exit 1
+  fi
+fi 

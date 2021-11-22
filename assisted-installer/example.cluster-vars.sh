@@ -15,9 +15,9 @@ export RH_OFFLINE_TOKEN_PATH="$HOME/rh-api-offline-token"
 ## Required Configuration
 export CLUSTER_NAME="ai-poc"
 export CLUSTER_BASE_DNS="lab.local"
-export CLUSTER_INGRESS_VIP="192.167.124.8"
-export CLUSTER_API_VIP="192.167.124.9"
-export CLUSTER_MACHINE_NETWORK="192.167.124.0/24"
+export CLUSTER_INGRESS_VIP="192.168.3.8"
+export CLUSTER_API_VIP="192.168.3.9"
+export CLUSTER_MACHINE_NETWORK="192.168.3.0/24"
 export NTP_SOURCE="time1.google.com"
 
 #########################################################
@@ -25,12 +25,20 @@ export NTP_SOURCE="time1.google.com"
 export CLUSTER_NODE_NET_DNS_SERVERS=("192.168.42.9" "192.168.42.10")
 
 ## Set Node Network Configuration
-NODE1_CFG='{"name": "ocp01", "mac_address": "52:54:00:00:00:01", "ipv4": {"address": "192.168.3.51", "gateway": "192.168.3.1", "prefix": "24", "iface": "enp5s0"}}'
-NODE2_CFG='{"name": "ocp02", "mac_address": "52:54:00:00:00:02", "ipv4": {"address": "192.168.3.52", "gateway": "192.168.3.1", "prefix": "24", "iface": "enp5s0"}}'
-NODE3_CFG='{"name": "ocp03", "mac_address": "52:54:00:00:00:03", "ipv4": {"address": "192.168.3.53", "gateway": "192.168.3.1", "prefix": "24", "iface": "enp5s0"}}'
+NODE1_CFG='{"name": "ocp01", "mac_address": "52:54:00:00:00:01", "ipv4": {"address": "192.168.3.51", "gateway": "192.168.3.1", "prefix": "24", "iface": "enp1s0"}}'
+NODE2_CFG='{"name": "ocp02", "mac_address": "52:54:00:00:00:02", "ipv4": {"address": "192.168.3.52", "gateway": "192.168.3.1", "prefix": "24", "iface": "enp1s0"}}'
+NODE3_CFG='{"name": "ocp03", "mac_address": "52:54:00:00:00:03", "ipv4": {"address": "192.168.3.53", "gateway": "192.168.3.1", "prefix": "24", "iface": "enp1s0"}}'
+NODE4_CFG='{"name": "ocp03", "mac_address": "52:54:00:00:00:04", "ipv4": {"address": "192.168.3.53", "gateway": "192.168.3.1", "prefix": "24", "iface": "enp1s0"}}'
+NODE5_CFG='{"name": "ocp03", "mac_address": "52:54:00:00:00:05", "ipv4": {"address": "192.168.3.53", "gateway": "192.168.3.1", "prefix": "24", "iface": "enp1s0"}}'
+NODE6_CFG='{"name": "ocp03", "mac_address": "52:54:00:00:00:06", "ipv4": {"address": "192.168.3.53", "gateway": "192.168.3.1", "prefix": "24", "iface": "enp1s0"}}'
 
 ## Add Nodes to the JSON array
+## Deploy Controller nodes
 export NODE_CFGS='{ "nodes": [ '${NODE1_CFG}', '${NODE2_CFG}', '${NODE3_CFG}' ] }'
+
+### Deploy Controller and worker nodes
+### Uncomment to deploy contoller nodes and workers
+# export NODE_CFGS='{ "nodes": [ '${NODE1_CFG}', '${NODE2_CFG}', '${NODE3_CFG}', '${NODE4_CFG}', '${NODE5_CFG}', '${NODE6_CFG}' ] }'
 
 #########################################################
 ## Optional Configuration
