@@ -24,6 +24,6 @@ else
   echo -e "\n===== Downloading Discovery ISO locally to ${CLUSTER_DIR}/${WORKER_ISO_NAME}.iso ...\n"
   curl \
     -H "Authorization: Bearer $ACTIVE_TOKEN" \
-    -L "${ASSISTED_SERVICE_V1_API}/clusters/$CLUSTER_ID/downloads/image" \
+    -L "${ASSISTED_SERVICE_V1_API}/clusters/${2}/downloads/image" \
     -o ${CLUSTER_DIR}/${WORKER_ISO_NAME}.iso
 fi
