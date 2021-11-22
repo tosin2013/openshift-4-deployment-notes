@@ -124,3 +124,24 @@ A simple script exists to delete a created cluster from the Assisted Installer S
 * https://cloud.redhat.com/blog/assisted-installer-on-premise-deep-dive
 * https://github.com/kenmoini/ocp4-ai-svc-libvirt
 * https://cloudcult.dev/creating-openshift-clusters-with-the-assisted-service-api/
+
+## Branch Testing Cheat Code
+
+```bash
+## Clone & Checkout
+git clone https://github.com/tosin2013/openshift-4-deployment-notes.git
+cd openshift-4-deployment-notes
+
+git checkout kemo-patch-2
+cd assisted-installer/
+
+## Copy/edit vars
+cp example.cluster-vars.sh cluster-vars.sh
+vim cluster-vars.sh
+
+## Start a full libvirt install
+./bootstrap-create.sh \
+ && ./hack/create-kvm-vms.sh \
+ && ./bootstrap-install.sh \
+ && ./hack/watch-and-reboot-kvm-vms.sh
+```
