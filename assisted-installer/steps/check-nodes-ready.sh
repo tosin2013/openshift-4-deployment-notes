@@ -19,7 +19,7 @@ while [ $LOOP_ON = "true" ]; do
   "${ASSISTED_SERVICE_V1_API}/clusters/$CLUSTER_ID")
 
   ## Debug
-  #echo $CLUSTER_INFO_REQ | python3 -m json.tool
+  ## echo $CLUSTER_INFO_REQ | python3 -m json.tool
 
   ## Set variables
   CLUSTER_STATUS=$(echo $CLUSTER_INFO_REQ | jq -r '.status')
