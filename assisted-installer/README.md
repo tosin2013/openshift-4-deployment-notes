@@ -121,9 +121,78 @@ A simple script exists to delete a created cluster from the Assisted Installer S
 ./destroy.sh
 ```
 
+## Day 2 - Adding Additional Application Nodes
+
+You can generate the Discovery ISO for a scaling action against a previously deployed cluster.
+
+To do so, modify your `cluster-vars.sh` file to add the additional nodes, eg:
+
+```bash
+# ...
+NODE6_CFG='{"name": "ocp06", "role": "application-node", "mac_address": "52:54:00:00:00:06", "ipv4": {"address": "192.168.42.66", "gateway": "192.168.42.1", "prefix": "24", "iface": "enp1s0"}}'
+NODE7_CFG='{"name": "ocp07", "role": "application-node", "mac_address": "52:54:00:00:00:07", "ipv4": {"address": "192.168.42.67", "gateway": "192.168.42.1", "prefix": "24", "iface": "enp1s0"}}'
+
+## Add Nodes to the JSON array
+export NODE_CFGS='{ "nodes": [ '${NODE1_CFG}', '${NODE2_CFG}', '${NODE3_CFG}', '${NODE4_CFG}', '${NODE5_CFG}', '${NODE6_CFG}', '${NODE7_CFG}' ] }'
+# ...
+```
+
+Then run the bootstrap-scale-up script:
+
+```bash
+./bootstrap-scale-up.sh
+```
+
+You'll find a new Discovery ISO downloaded in the generated assets folder.
+
+> ***Note:*** You won't see the additional hosts cluster defined in the Web UI - additional node actions are performed via the API and oc CLI
+
+Once the additional hosts have booted and reported in, you can run the bootstrap-scale-up script again and it should kick off the installation process.
+
+```bash
+./bootstrap-scale-up.sh
+```
+
+Having already `oc login`'d to the original cluster, wait for the host to report in as a node's CertificateSigningRequest and approve it:
+
+```bash
+oc get csr|grep Pending
+
+# Approve all CSR
+for csr in $(oc -n openshift-machine-api get csr | awk '/Pending/ {print $1}'); do oc adm certificate approve $csr;done
+```
+
 ## Links
 
 * [Assisted Installer API Swagger Documentation](https://generator.swagger.io/?url=https://raw.githubusercontent.com/openshift/assisted-service/master/swagger.yaml)
 * https://cloud.redhat.com/blog/assisted-installer-on-premise-deep-dive
 * https://github.com/kenmoini/ocp4-ai-svc-libvirt
 * https://cloudcult.dev/creating-openshift-clusters-with-the-assisted-service-api/
+
+## Branch Testing Cheat Code
+
+```bash
+## Clone & Checkout
+git clone https://github.com/tosin2013/openshift-4-deployment-notes.git
+cd openshift-4-deployment-notes
+
+git checkout kemo-patch-2
+cd assisted-installer/
+
+## Copy/edit vars
+cp example.cluster-vars.sh cluster-vars.sh
+vim cluster-vars.sh
+
+## Start a full libvirt install
+## - Create the OpenShift Cluster in the AI Service
+## - [Optional Hack] Create VMs locally with Libvirt
+## - Configure and Start the OpenSHift Install via the AI Service
+## - [Optional Hack] Watch virsh and restart VMs when needed
+## - Post-Install Cluster Configuration & Output
+
+./bootstrap-create.sh \
+ && ./hack/create-kvm-vms.sh \
+ && ./bootstrap-install.sh \
+ && ./hack/watch-and-reboot-kvm-vms.sh \
+ && ./bootstrap-post-install.sh
+```

@@ -5,7 +5,7 @@ The following  will explain how to ad worker nodes to existing baremetal assiste
 ## Steps 
 > Testing in progress
 
-1. Ensure `cluster-vars.sh` have the correct settings if the do not rerun the `bootstrap.sh` script using the steps [here](README.md).
+1. Ensure `cluster-vars.sh` have the correct settings if it does not rerun the `bootstrap.sh` script using the steps [here](README.md).
 2. run the `add-nodes-bootstrap.sh` script
 3. Boot worker node with created iso 
 4. Run the `start-node-install.sh` script 
