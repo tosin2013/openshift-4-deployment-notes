@@ -15,9 +15,9 @@ export RH_OFFLINE_TOKEN_PATH="$HOME/rh-api-offline-token"
 ## Required Configuration
 export CLUSTER_NAME="ai-poc"
 export CLUSTER_BASE_DNS="lab.local"
-export CLUSTER_INGRESS_VIP="192.167.124.8"
-export CLUSTER_API_VIP="192.167.124.9"
-export CLUSTER_MACHINE_NETWORK="192.167.124.0/24"
+export CLUSTER_INGRESS_VIP="192.168.3.8"
+export CLUSTER_API_VIP="192.168.3.9"
+export CLUSTER_MACHINE_NETWORK="192.168.3.0/24"
 export NTP_SOURCE="time1.google.com"
 
 #########################################################
@@ -35,6 +35,10 @@ NODE6_CFG='{"name": "ocp06", "role": "application-node", "mac_address": "52:54:0
 
 ## Add Nodes to the JSON array
 export NODE_CFGS='{ "nodes": [ '${NODE1_CFG}', '${NODE2_CFG}', '${NODE3_CFG}', '${NODE4_CFG}', '${NODE5_CFG}', '${NODE6_CFG}' ] }'
+
+### Deploy Controller and worker nodes
+### Uncomment to deploy contoller nodes and workers
+# export NODE_CFGS='{ "nodes": [ '${NODE1_CFG}', '${NODE2_CFG}', '${NODE3_CFG}', '${NODE4_CFG}', '${NODE5_CFG}', '${NODE6_CFG}' ] }'
 
 #########################################################
 ## Optional Configuration
