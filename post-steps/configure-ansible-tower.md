@@ -5,8 +5,8 @@
 * oc cli
 
 ## Collect Red Hat Subscription Manifest
-[Download the Red Hat Ansible Automation Platform 60-day trial](https://www.redhat.com/en/technologies/management/ansible/try-it)
-[How to Activate Ansible Tower using the Red Hat Subscription Manifest](https://access.redhat.com/solutions/5586461)
+* [Download the Red Hat Ansible Automation Platform 60-day trial](https://www.redhat.com/en/technologies/management/ansible/try-it)
+* [How to Activate Ansible Tower using the Red Hat Subscription Manifest](https://access.redhat.com/solutions/5586461)
 
 ## Automated Steps
 * ssh into bastion host 
@@ -75,4 +75,4 @@ $ oc create -f postgres-nfs-pvc.yml
 ```
 
 ## Import license
-[Import a Subscription](https://docs.ansible.com/ansible-tower/latest/html/quickstart/import_license.html)
+* [Import a Subscription](https://docs.ansible.com/ansible-tower/latest/html/quickstart/import_license.html)
