@@ -166,6 +166,7 @@ for csr in $(oc -n openshift-machine-api get csr | awk '/Pending/ {print $1}'); 
 
 * [Assisted Installer API Swagger Documentation](https://generator.swagger.io/?url=https://raw.githubusercontent.com/openshift/assisted-service/master/swagger.yaml)
 * https://cloud.redhat.com/blog/assisted-installer-on-premise-deep-dive
+* [Assisted Installer on premise deep dive](https://github.com/latouchek/assisted-installer-deepdive)
 * https://github.com/kenmoini/ocp4-ai-svc-libvirt
 * https://cloudcult.dev/creating-openshift-clusters-with-the-assisted-service-api/
 
