@@ -9,7 +9,7 @@ function usage() {
   -n      Openshift Username
   -p      Openshift Password
   -h      Display this help and exit
-  -u      Uninstall coffeeshop 
+  -u      Uninstall tower 
   To deploy ansible tower to OpenShift
   ${0}  -d https://api.ocp4.example.com:6443 -n admin -p 123456789 
   To delete ansible tower from OpenShift
