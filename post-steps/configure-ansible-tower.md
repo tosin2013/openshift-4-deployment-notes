@@ -4,6 +4,10 @@
 * OpenShift Deployment
 * oc cli
 
+## Collect Red Hat Subscription Manifest
+[Download the Red Hat Ansible Automation Platform 60-day trial](https://www.redhat.com/en/technologies/management/ansible/try-it)
+[How to Activate Ansible Tower using the Red Hat Subscription Manifest](https://access.redhat.com/solutions/5586461)
+
 ## Automated Steps
 * ssh into bastion host 
 * download script
@@ -69,3 +73,6 @@ $ oc create -f postgres-nfs-pvc.yml
 ```
 ./setup_openshift.sh -e openshift_host=https://YOUR-OCP-CLUSTER-API-API-URL -e openshift_project=tower -e openshift_user=YOUR-OCP-ADMIN-USERNAME -e openshift_password=YOUR-OCP-PASSWORD -e admin_password=r3dh4t1! -e secret_key=mysecret -e pg_username=admin -e pg_password=r3dh4t1! -e rabbitmq_password=r3dh4t1! -e rabbitmq_erlang_cookie=rabbiterlangpwd -e openshift_pg_pvc_name=postgresql
 ```
+
+## Import license
+[Import a Subscription](https://docs.ansible.com/ansible-tower/latest/html/quickstart/import_license.html)
