@@ -12,19 +12,19 @@ else
 fi
 
 ##### Enter Worker Infofmation
-read -p "Enter worker name > " WORKER_NAME
-read -p "Enter woker MAC address > " MAC_ADDRESS
-read -p "Enter IPV4 Address for worker> " IPV4_ADDRESS
-read -p "Enter Gateway for worker> " GATEWAY
-read -p "Enter Network Prefix > " PREFIX
-read -p "Enter Network Interface > " NETWORK_INTERFACE
+#read -p "Enter worker name > " WORKER_NAME
+#read -p "Enter woker MAC address > " MAC_ADDRESS
+#read -p "Enter IPV4 Address for worker> " IPV4_ADDRESS
+#read -p "Enter Gateway for worker> " GATEWAY
+#read -p "Enter Network Prefix > " PREFIX
+#read -p "Enter Network Interface > " NETWORK_INTERFACE
 
 source ./authenticate-to-api.sh
-export NODE_CFG='{"name": "'${WORKER_NAME}'", "role": "application-node", "mac_address": "'${MAC_ADDRESS}'", "ipv4": {"address": "'${IPV4_ADDRESS}'", "gateway": "'${GATEWAY}'", "prefix": "'${PREFIX}'", "iface": "'${NETWORK_INTERFACE}'"}}'
+#export NODE_CFG='{"name": "'${WORKER_NAME}'", "role": "application-node", "mac_address": "'${MAC_ADDRESS}'", "ipv4": {"address": "'${IPV4_ADDRESS}'", "gateway": "'${GATEWAY}'", "prefix": "'${PREFIX}'", "iface": "'${NETWORK_INTERFACE}'"}}'
 ###################################################
 ## For TEsting 
-#WORKER_NAME="ocp06"
-#export NODE_CFG='{"name": "ocp06", "role": "application-node", "mac_address": "52:54:00:00:00:06", "ipv4": {"address": "10.0.1.56", "gateway": "10.0.1.1", "prefix": "24", "iface": "enp1s0"}}'
+WORKER_NAME="ocp06"
+export NODE_CFG='{"name": "ocp06", "role": "application-node", "mac_address": "52:54:00:00:00:06", "ipv4": {"address": "10.0.1.56", "gateway": "10.0.1.1", "prefix": "24", "iface": "enp1s0"}}'
 export NODE_CFGS='{ "nodes": [ '${NODE_CFG}' ] }'
 
 source  $SCRIPT_DIR/nmstate-generator.sh
@@ -73,14 +73,14 @@ echo -e "  Starting cluster installation..."
 
 #########################################################
 ## Check to see if all the nodes have reported in
-export NEW_CLUSTER_ID=$NEW_CLUSTER_ID;source $SCRIPT_DIR/steps/check-nodes-ready.sh
+export NODE_CFGS=$NODE_CFGS;export NEW_CLUSTER_ID=$NEW_CLUSTER_ID;source $SCRIPT_DIR/steps/check-nodes-ready.sh
 
 #########################################################
 ## Fresh install
 
 #########################################################
 ## Set node hostnames and roles
-export NEW_CLUSTER_ID=$NEW_CLUSTER_ID;source ./steps/set-node-hostnames-and-roles.sh 
+export NODE_CFGS=$NODE_CFGS;export NEW_CLUSTER_ID=$NEW_CLUSTER_ID;source ./steps/set-node-hostnames-and-roles.sh 
 
 #########################################################
 ## Set networking VIPs
@@ -92,7 +92,7 @@ export NEW_CLUSTER_ID=$NEW_CLUSTER_ID;source ./steps/set-node-hostnames-and-role
 
 #########################################################
 ## Start the Installation
-export NEW_CLUSTER_ID=$NEW_CLUSTER_ID;source $SCRIPT_DIR/steps/start-install.sh
+export NODE_CFGS=$NODE_CFGS;export NEW_CLUSTER_ID=$NEW_CLUSTER_ID;source $SCRIPT_DIR/steps/start-install.sh
 
 #########################################################
 ## Query the API for cluster status, ensure it is installed
