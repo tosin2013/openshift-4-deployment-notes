@@ -17,7 +17,7 @@ if [ -z "$CLUSTER_ID" ]; then
   echo "===== Cluster ${CLUSTER_NAME}.${CLUSTER_BASE_DNS} not found, not able to delete from the API..."
 else
   ## CLUSTER_ID file is intact, let's delete the cluster from the Assisted Installer service
-  echo "===== Cluster ${CLUSTER_NAME}.${CLUSTER_BASE_DNS} found, deleting from API..."
+  echo "===== Cluster ${CLUSTER_NAME}.${CLUSTER_BASE_DNS} with Cluster ID: $CLUSTER_ID found, deleting from API..."
 
   ## Cancel the cluster from the Assisted Service...
   CANCEL_CLUSTER_REQ=$(curl -s \

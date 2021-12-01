@@ -96,6 +96,8 @@ python3                                                                  PASSED!
 
 6. Boot each machine with downloaded ISO
 
+7. Run the `./bootstrap-install.sh` to start deployment
+
 ## Bootstrap Execution Overview
 
 - Run Preflight tasks - ensure files and variables are set, create asset generation directory
@@ -110,7 +112,8 @@ python3                                                                  PASSED!
 Generated assets can be found in `./.generated/${CLUSTER_NAME}.${CLUSTER_BASE_DNS}/`
 
 ## Add worker nodes to deployment
-
+* Run the `add-nodes-bootstrap.sh` script
+* After node reboots run the `./hack/auto-approve-certs.sh` script
 
 ## Destroy Cluster
 
@@ -154,6 +157,7 @@ Once the additional hosts have booted and reported in, you can run the bootstrap
 ```
 
 Having already `oc login`'d to the original cluster, wait for the host to report in as a node's CertificateSigningRequest and approve it:
+> See `./hack/auto-approve-certs.sh`
 
 ```bash
 oc get csr|grep Pending
@@ -196,4 +200,14 @@ vim cluster-vars.sh
  && ./bootstrap-install.sh \
  && ./hack/watch-and-reboot-kvm-vms.sh \
  && ./bootstrap-post-install.sh
+
+
+ ## to add aditional test vm 
+ # update ccluster-vars.sh with new NODE Config line
+./hack/create-kvm-vms.sh \
+&& ./add-nodes-bootstrap.sh
+
+ ## To destory test vms
+ ./hack/delete-kvm-vms.sh 
+ ./destory.sh
 ```

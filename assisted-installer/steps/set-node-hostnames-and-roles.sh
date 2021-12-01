@@ -1,7 +1,8 @@
 #!/bin/bash
 
 set -e
-
+source cluster-vars.sh
+source authenticate-to-api.sh
 if [ ! -z "$CLUSTER_ID" ]; then
   TARGET_CLUSTER_ID="$CLUSTER_ID"
 fi
@@ -10,7 +11,37 @@ if [ ! -z "$NEW_CLUSTER_ID" ]; then
   TARGET_CLUSTER_ID="$NEW_CLUSTER_ID"
 fi
 
-echo -e "\n===== Setting Node Hostnames and Roles..."
+echo -e "\n===== Setting Node Hostnames and Roles for ${TARGET_CLUSTER_ID}..."
+
+echo "  Tesing URL.."
+URL_VALIDATION=$(curl -s -X GET   --header "Content-Type: application/json"   \
+  --header "Authorization: Bearer $ACTIVE_TOKEN" \
+  "${ASSISTED_SERVICE_V1_API}/clusters/$TARGET_CLUSTER_ID")
+
+if [ "$URL_VALIDATION" -ne "200" ]; then
+  echo "===== Failed get cluster URL!"
+  exit 1
+fi
+
+CHECK_HOST=$(curl -s -X GET   --header "Content-Type: application/json"   \
+  --header "Authorization: Bearer $ACTIVE_TOKEN" \
+  "${ASSISTED_SERVICE_V1_API}/clusters/$TARGET_CLUSTER_ID"   | jq -r .hosts[].requested_hostname)
+COUNT=1
+while [ -z "$CHECK_HOST" ] || [ "$CHECK_HOST" == "null" ]; do
+  echo "waiting for $COUNT"
+  ((COUNT=$COUNT+1))
+  if [[ $COUNT -eq 100 ]];
+  then
+    echo "Timing out on Request"
+    echo "Please check server"
+    exit $?
+  fi 
+  sleep 10s
+  CHECK_HOST=$(curl -s -X GET   --header "Content-Type: application/json"   \
+    --header "Authorization: Bearer $ACTIVE_TOKEN" \
+    "${ASSISTED_SERVICE_V1_API}/clusters/$TARGET_CLUSTER_ID"   | jq -r .hosts[].requested_hostname)
+done
+
 
 HOSTS=$(curl -s \
     --header "Authorization: Bearer $ACTIVE_TOKEN" \
@@ -18,7 +49,6 @@ HOSTS=$(curl -s \
     --header "Accept: application/json" \
     --request GET \
     "${ASSISTED_SERVICE_V1_API}/clusters/${TARGET_CLUSTER_ID}/hosts")
-
 ## Create temporary files
 TEMP_HOST_ENSEMBLE=$(mktemp -p $CLUSTER_DIR)
 TEMP_ROLE_ENSEMBLE=$(mktemp -p $CLUSTER_DIR)
