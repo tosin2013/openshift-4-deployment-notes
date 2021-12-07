@@ -23,8 +23,48 @@ CP_RAM_GB="16"
 CP_CPU_SOCKETS="1"
 DISK_SIZE="130"
 LIBVIRT_VM_PATH="/var/lib/libvirt/images"
-LIBVIRT_NETWORK="bridge=containerLANbr0,model=virtio"
-LIBVIRT_LIKE_OPTIONS="--connect=qemu:///system -v --memballoon none --cpu host-passthrough --autostart --noautoconsole --virt-type kvm --features kvm_hidden=on --controller type=scsi,model=virtio-scsi --cdrom=${CLUSTER_DIR}/ai-liveiso-$CLUSTER_ID.iso --os-variant=fedora-coreos-stable --events on_reboot=restart,on_poweroff=preserve --graphics vnc,listen=0.0.0.0,tlsport=,defaultMode='insecure' --network ${LIBVIRT_NETWORK} --console pty,target_type=serial"
+if [ ! -f ${LIBVIRT_VM_PATH}/ai-liveiso-$CLUSTER_ID.iso ];
+then 
+  sudo cp ${CLUSTER_DIR}/ai-liveiso-$CLUSTER_ID.iso  ${LIBVIRT_VM_PATH}/ai-liveiso-$CLUSTER_ID.iso 
+fi 
+
+if [ ! -z ${NEW_CLUSTER_ID} ] &&  [ ! -z ${WORKER_NAME} ] ;
+then 
+  if [ ! -f ${LIBVIRT_VM_PATH}/ai-liveiso-$NEW_CLUSTER_ID-$WORKER_NAME.iso ];
+  then 
+    sudo cp ${CLUSTER_DIR}/ai-liveiso-$NEW_CLUSTER_ID-$WORKER_NAME.iso  ${LIBVIRT_VM_PATH}/ai-liveiso-$NEW_CLUSTER_ID-$WORKER_NAME.iso 
+  fi 
+fi 
+
+array=(  containerLANbr0 qubibr0 )
+for i in "${array[@]}"
+do
+  echo "checking for $i"
+  INTERFACE=$(ip addr | grep -oE $i | head -1)
+	if [[ ${INTERFACE} == 'containerLANbr0' ]];
+  then 
+    LIBVIRT_NETWORK="bridge=containerLANbr0,model=virtio"
+    break
+  elif  [[ ${INTERFACE} == 'qubibr0' ]];
+  then
+    LIBVIRT_NETWORK="bridge=qubibr0,model=virtio"
+    break
+  else
+    echo "${array[@]}  not found please machine with one of the interfaces"
+  fi
+done
+
+if [ ! -z ${NEW_CLUSTER_ID} ] &&  [ ! -z ${WORKER_NAME} ] ;
+then 
+  echo "Adding  ${WORKER_NAME}  to cluster  ${NEW_CLUSTER_ID}"
+  if [ ! -f ${LIBVIRT_VM_PATH}/ai-liveiso-$NEW_CLUSTER_ID-$WORKER_NAME.iso ];
+  then 
+    sudo cp ${CLUSTER_DIR}/ai-liveiso-$NEW_CLUSTER_ID-$WORKER_NAME.iso  ${LIBVIRT_VM_PATH}/ai-liveiso-$NEW_CLUSTER_ID-$WORKER_NAME.iso 
+  fi 
+  LIBVIRT_LIKE_OPTIONS="--connect=qemu:///system -v --memballoon none --cpu host-passthrough --autostart --noautoconsole --virt-type kvm --features kvm_hidden=on --controller type=scsi,model=virtio-scsi --cdrom=${LIBVIRT_VM_PATH}/ai-liveiso-$NEW_CLUSTER_ID-$WORKER_NAME.iso    --os-variant=fedora-coreos-stable --events on_reboot=restart,on_poweroff=preserve --graphics vnc,listen=0.0.0.0,tlsport=,defaultMode='insecure' --network ${LIBVIRT_NETWORK} --console pty,target_type=serial"
+else
+  LIBVIRT_LIKE_OPTIONS="--connect=qemu:///system -v --memballoon none --cpu host-passthrough --autostart --noautoconsole --virt-type kvm --features kvm_hidden=on --controller type=scsi,model=virtio-scsi --cdrom=${LIBVIRT_VM_PATH}/ai-liveiso-$CLUSTER_ID.iso   --os-variant=fedora-coreos-stable --events on_reboot=restart,on_poweroff=preserve --graphics vnc,listen=0.0.0.0,tlsport=,defaultMode='insecure' --network ${LIBVIRT_NETWORK} --console pty,target_type=serial"
+fi 
 
 #########################################################
 ## Check to see if all the nodes have reported in

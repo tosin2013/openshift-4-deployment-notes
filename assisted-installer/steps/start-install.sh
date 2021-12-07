@@ -1,7 +1,8 @@
 #!/bin/bash
 
 set -e
-
+source cluster-vars.sh
+source authenticate-to-api.sh
 if [ ! -z "$CLUSTER_ID" ]; then
   TARGET_CLUSTER_ID="$CLUSTER_ID"
   API_ENDPOINT="${ASSISTED_SERVICE_V1_API}/clusters/$TARGET_CLUSTER_ID/actions/install"
