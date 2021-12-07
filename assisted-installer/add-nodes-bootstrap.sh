@@ -30,7 +30,7 @@ read -p "Enter Network Interface Example: enp1s0> " NETWORK_INTERFACE
 
 source ./authenticate-to-api.sh
 export NODE_CFG='{"name": "'${WORKER_NAME}'", "role": "application-node", "mac_address": "'${MAC_ADDRESS}'", "ipv4": {"address": "'${IPV4_ADDRESS}'", "gateway": "'${GATEWAY}'", "prefix": "'${PREFIX}'", "iface": "'${NETWORK_INTERFACE}'"}}'
-echo "NODE${WORKER_NAME}_CFG='{\"name\": \"'${WORKER_NAME}'\", \"role\": \"application-node\", \"mac_address\": \"${MAC_ADDRESS}\", \"ipv4\": {\"address\": \"${IPV4_ADDRESS}\", \"gateway\": \"${GATEWAY}\", \"prefix\": \"${PREFIX}\", \"iface\": \"${NETWORK_INTERFACE}\"}}'" > /tmp/${WORKER_NAME}.temp
+echo "NODE${WORKER_NAME}_CFG='{\"name\": \"${WORKER_NAME}\", \"role\": \"application-node\", \"mac_address\": \"${MAC_ADDRESS}\", \"ipv4\": {\"address\": \"${IPV4_ADDRESS}\", \"gateway\": \"${GATEWAY}\", \"prefix\": \"${PREFIX}\", \"iface\": \"${NETWORK_INTERFACE}\"}}'" > /tmp/${WORKER_NAME}.temp
 
 ###################################################
 ## NODE Check
