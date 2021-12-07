@@ -11,28 +11,37 @@ else
   source ./cluster-vars.sh
 fi
 
-##### Enter Worker Infofmation
-#read -p "Enter worker name > " WORKER_NAME
-#read -p "Enter woker MAC address > " MAC_ADDRESS
-#read -p "Enter IPV4 Address for worker> " IPV4_ADDRESS
-#read -p "Enter Gateway for worker> " GATEWAY
-#read -p "Enter Network Prefix > " PREFIX
-#read -p "Enter Network Interface > " NETWORK_INTERFACE
-
-source ./authenticate-to-api.sh
-#export NODE_CFG='{"name": "'${WORKER_NAME}'", "role": "application-node", "mac_address": "'${MAC_ADDRESS}'", "ipv4": {"address": "'${IPV4_ADDRESS}'", "gateway": "'${GATEWAY}'", "prefix": "'${PREFIX}'", "iface": "'${NETWORK_INTERFACE}'"}}'
 ###################################################
 ## For Testing 
-WORKER_NAME="ocp06"
-export NODE_CFG='{"name": "ocp06", "role": "application-node", "mac_address": "52:54:00:00:00:06", "ipv4": {"address": "10.0.1.56", "gateway": "10.0.1.1", "prefix": "24", "iface": "enp1s0"}}'
-echo "NODE6_CFG='{\"name\": \"ocp06\", \"role\": \"application-node\", \"mac_address\": \"52:54:00:00:00:06\", \"ipv4\": {\"address\": \"10.0.1.56\", \"gateway\": \"10.0.1.1\", \"prefix\": \"24\", \"iface\": \"enp1s0\"}}'" > /tmp/ocp06.temp
-if grep -oq "^NODE6_CFG" ./cluster-vars.sh 
+#WORKER_NAME="ocp06"
+#MAC_ADDRESS="52:54:00:00:00:06"
+#IPV4_ADDRESS=192.168.1.10
+#GATEWAY=192.168.1.1
+#PREFIX=24
+#NETWORK_INTERFACE=enp1s0
+
+##### Enter Worker Infofmation
+read -p "Enter worker name Example: ocp06> " WORKER_NAME
+read -p "Enter woker MAC address Example: 52:54:00:00:00:06> " MAC_ADDRESS
+read -p "Enter IPV4 Address for worker Example: 192.168.1.10> " IPV4_ADDRESS
+read -p "Enter Gateway for worker Example: 192.168.1.1> " GATEWAY
+read -p "Enter Network Prefix Example: 24> " PREFIX
+read -p "Enter Network Interface Example: enp1s0> " NETWORK_INTERFACE
+
+source ./authenticate-to-api.sh
+export NODE_CFG='{"name": "'${WORKER_NAME}'", "role": "application-node", "mac_address": "'${MAC_ADDRESS}'", "ipv4": {"address": "'${IPV4_ADDRESS}'", "gateway": "'${GATEWAY}'", "prefix": "'${PREFIX}'", "iface": "'${NETWORK_INTERFACE}'"}}'
+echo "NODE${WORKER_NAME}_CFG='{\"name\": \"'${WORKER_NAME}'\", \"role\": \"application-node\", \"mac_address\": \"${MAC_ADDRESS}\", \"ipv4\": {\"address\": \"${IPV4_ADDRESS}\", \"gateway\": \"${GATEWAY}\", \"prefix\": \"${PREFIX}\", \"iface\": \"${NETWORK_INTERFACE}\"}}'" > /tmp/${WORKER_NAME}.temp
+
+###################################################
+## NODE Check
+if grep -oq "^NODE${WORKER_NAME}_CFG" ./cluster-vars.sh 
 then 
-  echo "ocp06 found please remove from ./cluster-vars.sh and try again"
+  echo "${WORKER_NAME} found please remove from ./cluster-vars.sh and try again"
   exit $?
 else 
-  sed -i "/^####INSERT NEW NODES UNDER HERE*/a $(cat /tmp/ocp06.temp)" cluster-vars.sh
+  sed -i "/^####INSERT NEW NODES UNDER HERE*/a $(cat /tmp/${WORKER_NAME}.temp)" cluster-vars.sh
 fi 
+
 
 export NODE_CFGS='{ "nodes": [ '${NODE_CFG}' ] }'
 
