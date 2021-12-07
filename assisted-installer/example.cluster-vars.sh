@@ -31,7 +31,12 @@ NODE3_CFG='{"name": "ocp03", "role": "control-plane", "mac_address": "52:54:00:0
 
 NODE4_CFG='{"name": "ocp04", "role": "application-node", "mac_address": "52:54:00:00:00:04", "ipv4": {"address": "192.168.3.54", "gateway": "192.168.3.1", "prefix": "24", "iface": "enp5s0"}}'
 NODE5_CFG='{"name": "ocp05", "role": "application-node", "mac_address": "52:54:00:00:00:05", "ipv4": {"address": "192.168.3.55", "gateway": "192.168.3.1", "prefix": "24", "iface": "enp5s0"}}'
-NODE6_CFG='{"name": "ocp06", "role": "application-node", "mac_address": "52:54:00:00:00:06", "ipv4": {"address": "192.168.3.56", "gateway": "192.168.3.1", "prefix": "24", "iface": "enp5s0"}}'
+#########################################################
+## Remove _ front of variable below to add 3 workers on first install
+###_NODE6_CFG='{"name": "ocp06", "role": "application-node", "mac_address": "52:54:00:00:00:06", "ipv4": {"address": "10.0.1.56", "gateway": "10.0.1.1", "prefix": "24", "iface": "enp1s0"}}'
+
+#########################################################
+####INSERT NEW NODES UNDER HERE
 
 ## Add Nodes to the JSON array
 export NODE_CFGS='{ "nodes": [ '${NODE1_CFG}', '${NODE2_CFG}', '${NODE3_CFG}', '${NODE4_CFG}', '${NODE5_CFG}', '${NODE6_CFG}' ] }'
@@ -39,6 +44,11 @@ export NODE_CFGS='{ "nodes": [ '${NODE1_CFG}', '${NODE2_CFG}', '${NODE3_CFG}', '
 ### Deploy Controller and worker nodes
 ### Uncomment to deploy contoller nodes and workers
 # export NODE_CFGS='{ "nodes": [ '${NODE1_CFG}', '${NODE2_CFG}', '${NODE3_CFG}', '${NODE4_CFG}', '${NODE5_CFG}', '${NODE6_CFG}' ] }'
+
+
+#########################################################
+### NEW CLUSTER ID for new clusters
+###INSERT NEW CLUSTER ID HERE
 
 #########################################################
 ## Optional Configuration
