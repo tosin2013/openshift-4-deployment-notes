@@ -175,6 +175,7 @@ for csr in $(oc -n openshift-machine-api get csr | awk '/Pending/ {print $1}'); 
 * https://cloudcult.dev/creating-openshift-clusters-with-the-assisted-service-api/
 
 ## Branch Testing Cheat Code
+> Review [Hack-y](hack/README.md) scripts before start testing
 
 ```bash
 ## Clone & Checkout
@@ -198,14 +199,13 @@ vim cluster-vars.sh
 ./bootstrap-create.sh \
  && ./hack/create-kvm-vms.sh \
  && ./bootstrap-install.sh \
- && ./hack/watch-and-reboot-kvm-vms.sh \
+ && ./hack/watch-and-reboot-kvm-vms.sh #test for node addition \
  && ./bootstrap-post-install.sh
 
 
  ## to add aditional test vm 
- # update ccluster-vars.sh with new NODE Config line
-./hack/create-kvm-vms.sh \
-&& ./add-nodes-bootstrap.sh
+./add-nodes-bootstrap.sh
+./hack/create-kvm-vms.sh 
 
  ## To destory test vms
  ./hack/delete-kvm-vms.sh 
