@@ -31,6 +31,11 @@ function configure-tower(){
     then 
         cd ~/ansible-tower-openshift-setup-3.[0-9].[0-9]-* 
         cat roles/kubernetes/tasks/openshift_auth.yml | awk '{sub(/false/,"true")}1' | tee roles/kubernetes/tasks/openshift_auth.yml
+        if [ ! -f roles/kubernetes/tasks/openshift_auth.yml ];
+        then 
+          echo "roles/kubernetes/tasks/openshift_auth.yml not found"
+          exit 1
+        fi
         sed -i 's/task_cpu_request:.*/task_cpu_request: 500/g' roles/kubernetes/defaults/main.yml
         sed -i 's/task_mem_request:.*/task_mem_request: 1/g' roles/kubernetes/defaults/main.yml
         sed -i 's/redis_mem_request:.*/redis_mem_request: 1/g' roles/kubernetes/defaults/main.yml
