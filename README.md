@@ -30,7 +30,10 @@
 [Configure NFS Provisioner as Alternative Storage Class](https://github.com/tosin2013/nfs-provisioner-role)  
 [Deploy Red Hat Quay 3 on OpenShift 4.2](post-steps/deploy-red-hat-quay-3-on-openshift-4.2.md)  
 [Configure Ansible tower on OpenShift](post-steps/configure-ansible-tower.md)
+[Configure Cluster Resource Overrides](post-steps/cluster-resource-override.md)
 
+## Training links 
+[OCS Installation and Configuration](https://red-hat-storage.github.io/ocs-training/training/index.html)
 
 ## TO-DO 
 > Add the following notes
