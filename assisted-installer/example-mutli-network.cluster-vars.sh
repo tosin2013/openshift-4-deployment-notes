@@ -25,15 +25,15 @@ export MULTI_NETWORK=true
 export CLUSTER_NODE_NET_DNS_SERVERS=("192.168.42.9" "192.168.42.10")
 
 ## Set Node Network Configuration
-NODE1_CFG='{"name": "ocp01", "role": "control-plane", "mac_address_int1": "52:54:00:00:00:01",  "ipv4_int1": {"address": "192.168.3.51", "gateway": "192.168.3.1", "prefix": "24", "iface": "eth0"}", "mac_address_int2": "52:54:00:00:00:01", ipv4_int2": {"address": "192.168.3.51", "gateway": "192.168.3.1", "prefix": "24", "iface": "eth1"}}'
-NODE2_CFG='{"name": "ocp02", "role": "control-plane", "mac_address": "52:54:00:00:00:02", "ipv4": {"address": "192.168.3.52", "gateway": "192.168.3.1", "prefix": "24", "iface": "eth0"}}'
-NODE3_CFG='{"name": "ocp03", "role": "control-plane", "mac_address": "52:54:00:00:00:03", "ipv4": {"address": "192.168.3.53", "gateway": "192.168.3.1", "prefix": "24", "iface": "eth0"}}'
+NODE1_CFG='{"name": "ocp01", "role": "control-plane", "mac_address_int1": "52:54:00:00:00:01",  "ipv4_int1": {"address": "192.168.3.21", "gateway": "192.168.3.1", "prefix": "24", "iface": "eth0"}, "mac_address_int2": "52:54:00:00:00:11", "ipv4_int2": {"address": "10.0.3.21", "gateway": "10.0.3.1", "prefix": "24", "iface": "eth1"}}'
+NODE2_CFG='{"name": "ocp02", "role": "control-plane", "mac_address_int1": "52:54:00:00:00:02",  "ipv4_int1": {"address": "192.168.3.22", "gateway": "192.168.3.1", "prefix": "24", "iface": "eth0"}, "mac_address_int2": "52:54:00:00:00:22", "ipv4_int2": {"address": "10.0.3.22", "gateway": "10.0.3.1", "prefix": "24", "iface": "eth1"}}'
+NODE3_CFG='{"name": "ocp03", "role": "control-plane", "mac_address_int1": "52:54:00:00:00:03",  "ipv4_int1": {"address": "192.168.3.23", "gateway": "192.168.3.1", "prefix": "24", "iface": "eth0"}, "mac_address_int2": "52:54:00:00:00:33", "ipv4_int2": {"address": "10.0.3.23", "gateway": "10.0.3.1", "prefix": "24", "iface": "eth1"}}'
 
-NODE4_CFG='{"name": "ocp04", "role": "application-node", "mac_address": "52:54:00:00:00:04", "ipv4": {"address": "192.168.3.54", "gateway": "192.168.3.1", "prefix": "24", "iface": "eth0"}}'
-NODE5_CFG='{"name": "ocp05", "role": "application-node", "mac_address": "52:54:00:00:00:05", "ipv4": {"address": "192.168.3.55", "gateway": "192.168.3.1", "prefix": "24", "iface": "eth0"}}'
+NODE4_CFG='{"name": "ocp04", "role": "control-plane", "mac_address_int1": "52:54:00:00:00:04",  "ipv4_int1": {"address": "192.168.3.24", "gateway": "192.168.3.1", "prefix": "24", "iface": "eth0"}, "mac_address_int2": "52:54:00:00:00:44", "ipv4_int2": {"address": "10.0.3.24", "gateway": "10.0.3.1", "prefix": "24", "iface": "eth1"}}'
+NODE5_CFG='{"name": "ocp05", "role": "control-plane", "mac_address_int1": "52:54:00:00:00:05",  "ipv4_int1": {"address": "192.168.3.24", "gateway": "192.168.3.1", "prefix": "24", "iface": "eth0"}, "mac_address_int2": "52:54:00:00:00:55", "ipv4_int2": {"address": "10.0.3.25", "gateway": "10.0.3.1", "prefix": "24", "iface": "eth1"}}'
 #########################################################
 ## Remove _ front of variable below to add 3 workers on first install
-###_NODE6_CFG='{"name": "ocp06", "role": "application-node", "mac_address": "52:54:00:00:00:06", "ipv4": {"address": "10.0.1.56", "gateway": "10.0.1.1", "prefix": "24", "iface": "enp1s0"}}'
+###_NODE6_CFG='{"name": "ocp06", "role": "control-plane", "mac_address_int1": "52:54:00:00:00:06",  "ipv4_int1": {"address": "192.168.3.26", "gateway": "192.168.3.1", "prefix": "24", "iface": "eth0"}, "mac_address_int2": "52:54:00:00:00:66", "ipv4_int2": {"address": "10.0.3.26", "gateway": "10.0.3.1", "prefix": "24", "iface": "eth1"}}'
 
 #########################################################
 ####INSERT NEW NODES UNDER HERE

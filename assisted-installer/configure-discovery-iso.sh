@@ -44,14 +44,14 @@ for node in $(echo "${NODE_CFGS}" | jq -r '.nodes[] | @base64'); do
       "network_yaml": $NET_YAML,  
       "mac_interface_map": [
         {
-          mac_address: "'$(_jq '.mac_address_int1')'",
-          logical_nic_name: "'$(_jq '.ipv4_int1.iface')'"
+          "mac_address": "'$(_jq '.mac_address_int1')'",
+          "logical_nic_name": "'$(_jq '.ipv4_int1.iface')'"
         },
         {
-          mac_address: "'$(_jq '.mac_address_int2')'",
-          logical_nic_name: "'$(_jq '.ipv4_int2.iface')'"
+          "mac_address": "'$(_jq '.mac_address_int2')'",
+          "logical_nic_name": "'$(_jq '.ipv4_int2.iface')'"
         }
-    ]')
+    ]}')
   fi 
     echo "${ENCODED_JSON}${OPT_COM}" > $NODE_INFO
   cat $NODE_INFO >> $TEMP_ENSEMBLE
