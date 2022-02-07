@@ -30,12 +30,30 @@ for node in $(echo "${NODE_CFGS}" | jq -r '.nodes[] | @base64'); do
   NMSTATE_FILE=${CLUSTER_DIR}/$(_jq '.name').yaml
   NODE_INFO=$(mktemp -p $CLUSTER_DIR)
   # Encode the node's info
-  ENCODED_JSON=$(jq -n --arg NET_YAML "$(cat $NMSTATE_FILE)" --arg OPT_COM "$OPT_COM" \
-  '{
-    "network_yaml": $NET_YAML,
-    "mac_interface_map": [{"mac_address": "'$(_jq '.mac_address')'", "logical_nic_name": "'$(_jq '.ipv4.iface')'"}]
-  }')
-  echo "${ENCODED_JSON}${OPT_COM}" > $NODE_INFO
+  if [ $MULTI_NETWORK  == false ];
+  then 
+    ENCODED_JSON=$(jq -n --arg NET_YAML "$(cat $NMSTATE_FILE)" --arg OPT_COM "$OPT_COM" \
+    '{
+      "network_yaml": $NET_YAML,
+      "mac_interface_map": [{"mac_address": "'$(_jq '.mac_address')'", "logical_nic_name": "'$(_jq '.ipv4.iface')'"}]
+    }')
+  elif [ $MULTI_NETWORK  == true ];
+  then 
+    ENCODED_JSON=$(jq -n --arg NET_YAML "$(cat $NMSTATE_FILE)" --arg OPT_COM "$OPT_COM" \
+    '{
+      "network_yaml": $NET_YAML,  
+      "mac_interface_map": [
+        {
+          mac_address: "'$(_jq '.mac_address_int1')'",
+          logical_nic_name: "'$(_jq '.ipv4_int1.iface')'"
+        },
+        {
+          mac_address: "'$(_jq '.mac_address_int2')'",
+          logical_nic_name: "'$(_jq '.ipv4_int2.iface')'"
+        }
+    ]')
+  fi 
+    echo "${ENCODED_JSON}${OPT_COM}" > $NODE_INFO
   cat $NODE_INFO >> $TEMP_ENSEMBLE
   ## Cleanup
   rm $NODE_INFO

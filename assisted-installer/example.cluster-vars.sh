@@ -19,6 +19,7 @@ export CLUSTER_INGRESS_VIP="192.168.3.8"
 export CLUSTER_API_VIP="192.168.3.9"
 export CLUSTER_MACHINE_NETWORK="192.168.3.0/24"
 export NTP_SOURCE="time1.google.com"
+export MULTI_NETWORK=false
 
 #########################################################
 ## Additional Node + Network Configuration
@@ -39,7 +40,7 @@ NODE5_CFG='{"name": "ocp05", "role": "application-node", "mac_address": "52:54:0
 ####INSERT NEW NODES UNDER HERE
 
 ## Add Nodes to the JSON array
-export NODE_CFGS='{ "nodes": [ '${NODE1_CFG}', '${NODE2_CFG}', '${NODE3_CFG}', '${NODE4_CFG}', '${NODE5_CFG}', '${NODE6_CFG}' ] }'
+export NODE_CFGS='{ "nodes": [ '${NODE1_CFG}', '${NODE2_CFG}', '${NODE3_CFG}', '${NODE4_CFG}', '${NODE5_CFG}' ] }'
 
 ### Deploy Controller and worker nodes
 ### Uncomment to deploy contoller nodes and workers
