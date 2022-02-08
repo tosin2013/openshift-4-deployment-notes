@@ -38,6 +38,7 @@ elif [ $MULTI_NETWORK == true ];
   read -p "Enter IPV4 Address for worker Example: 192.168.100.10> " IPV4_ADDRESS_INT2
   read -p "Enter Gateway for worker Example: 192.168.100.1> " GATEWAY_INT2
   read -p "Enter Network Interface Example: enp1s1> " NETWORK_INTERFACE_INT2
+  read -p "Enter Network Prefix Example: 24> " PREFIX_INT2
   export NODE_CFG='{"name": "'${WORKER_NAME}'", "role": "application-node", "mac_address_int1": "'${MAC_ADDRESS}'", "ipv4_int1": {"address": "'${IPV4_ADDRESS}'", "gateway": "'${GATEWAY}'", "prefix": "'${PREFIX}'", "iface": "'${NETWORK_INTERFACE}'"}, "mac_address_int2": "'${MAC_ADDRESS_INT2}'", "ipv4_int2": {"address": "'${IPV4_ADDRESS_INT2}'", "gateway": "'${GATEWAY_INT2}'", "prefix": "'${PREFIX_INT2}'", "iface": "'${NETWORK_INTERFACE_INT2}'"}}'
   echo "NODE${WORKER_NAME}_CFG='{\"name\": \"${WORKER_NAME}\", \"role\": \"application-node\", \"mac_address_int1\": \"${MAC_ADDRESS}\", \"ipv4_int1\": {\"address\": \"${IPV4_ADDRESS}\", \"gateway\": \"${GATEWAY}\", \"prefix\": \"${PREFIX}\", \"iface\": \"${NETWORK_INTERFACE}\"}, \"mac_address_int2\": \"${MAC_ADDRESS_INT2}\", \"ipv4_int2\": {\"address\": \"${IPV4_ADDRESS_INT2}\", \"gateway\": \"${GATEWAY_INT2}\", \"prefix\": \"${PREFIX_INT2}\", \"iface\": \"${NETWORK_INTERFACE_INT2}\"}}'" > /tmp/${WORKER_NAME}.temp
 fi
