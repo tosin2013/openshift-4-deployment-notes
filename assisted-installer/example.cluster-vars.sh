@@ -18,7 +18,7 @@ export CLUSTER_BASE_DNS="lab.local"
 export CLUSTER_INGRESS_VIP="192.168.3.8"
 export CLUSTER_API_VIP="192.168.3.9"
 export CLUSTER_MACHINE_NETWORK="192.168.3.0/24"
-export NTP_SOURCE="time1.google.com"
+export NTP_SOURCE="0.rhel.pool.ntp.org"
 export MULTI_NETWORK=false
 
 #########################################################
