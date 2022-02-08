@@ -34,6 +34,7 @@ then
   export NODE_CFG='{"name": "'${WORKER_NAME}'", "role": "application-node", "mac_address": "'${MAC_ADDRESS}'", "ipv4": {"address": "'${IPV4_ADDRESS}'", "gateway": "'${GATEWAY}'", "prefix": "'${PREFIX}'", "iface": "'${NETWORK_INTERFACE}'"}}'
   echo "NODE${WORKER_NAME}_CFG='{\"name\": \"${WORKER_NAME}\", \"role\": \"application-node\", \"mac_address\": \"${MAC_ADDRESS}\", \"ipv4\": {\"address\": \"${IPV4_ADDRESS}\", \"gateway\": \"${GATEWAY}\", \"prefix\": \"${PREFIX}\", \"iface\": \"${NETWORK_INTERFACE}\"}}'" > /tmp/${WORKER_NAME}.temp
 elif [ $MULTI_NETWORK == true ];
+then 
   read -p "Enter worker MAC address Example: 52:54:00:00:00:07> " MAC_ADDRESS_INT2
   read -p "Enter IPV4 Address for worker Example: 192.168.100.10> " IPV4_ADDRESS_INT2
   read -p "Enter Gateway for worker Example: 192.168.100.1> " GATEWAY_INT2
