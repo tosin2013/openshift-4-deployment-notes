@@ -31,9 +31,14 @@ ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa
 ```
 
 4. Copy the cluster variables example file and modify as needed
-
+> Single NIC Deployments
 ```bash
 cp example.cluster-vars.sh cluster-vars.sh
+vim cluster-vars.sh
+```
+> Multi Nic Deployments
+```bash
+cp example-mutli-network.cluster-vars.sh cluster-vars.sh
 vim cluster-vars.sh
 ```
 
