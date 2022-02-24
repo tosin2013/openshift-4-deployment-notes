@@ -12,8 +12,8 @@
 
 4. Open the ***Cloud Shell*** by using the button in the top bar
 
-![Open the Cloud Shell](./images/cloud-shell-button.png | width=512px)
+<img src="./images/cloud-shell-button.png" alt="Open the Cloud Shell" width="512" />
 
 5. Make sure to use a ***Bash*** shell
 
-![Bash shell view](./images/opened-bash-cloud-shell.png =600x)
+<img src="./images/opened-bash-cloud-shell.png" alt="Bash shell view" width="600" />
