@@ -53,7 +53,6 @@ az provider register -n Microsoft.RedHatOpenShift --wait && \
   az provider register -n Microsoft.ContainerRegistry --wait && \
   az provider register -n Microsoft.Quota --wait && \
   az provider register -n Microsoft.Subscription --wait
-
 ```
 
 ### Azure Regions & Locations
@@ -76,7 +75,7 @@ For most general purposes, you can likely use `eastus` or `centralus`
 
 The basic Azure quota limits are quite low, and are per Subscription - it's a quick process to increase them, [read more about it here](https://docs.microsoft.com/en-us/azure/azure-portal/supportability/per-vm-quota-requests).
 
-There needs to be at least 40 cores available for ARO VMs and by default are of the `standardDSv3Family` type unless otherwise specified during cluster creation.  You can easily increase the limit to 100 without additional validation.
+There needs to be at least 40 cores available for ARO VMs and by default are of the `standardDSv3Family` and `standardDSv4Family` types unless otherwise specified during cluster creation.
 
 You can list your current quota limits with:
 
