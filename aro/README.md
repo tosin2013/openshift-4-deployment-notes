@@ -200,7 +200,54 @@ If you want the ARO cluster to be available over the Internet then create a Publ
 
 ```bash
 ## Create the ARO Cluster and make it publicly available
+az aro create \
+  --name $ARO_CLUSTER_NAME \
+  --resource-group $RESOURCE_GROUP \
+  --cluster-resource-group $INFRASTRUCTURE_RESOURCE_GROUP \
+  --vnet-resource-group $VNET_RESOURCE_GROUP \
+  --vnet $VNET_NAME \
+  --master-subnet $VNET_CONTROL_PLANE_SUBNET_NAME \
+  --worker-subnet $VNET_APP_NODE_SUBNET_NAME \
+  --apiserver-visibility Public \
+  --ingress-visibility Public
+```
 
+### Create a Private ARO Cluster
+
+If you want the ARO cluster to NOT be available over the Internet then you can create a Private ARO cluster knowing that you'll need some way to access the VNet resources such as an ExpressRoute or VPN of some sort.
+
+```bash
+## Create the Private ARO Cluster
+az aro create \
+  --name $ARO_CLUSTER_NAME \
+  --resource-group $RESOURCE_GROUP \
+  --cluster-resource-group $INFRASTRUCTURE_RESOURCE_GROUP \
+  --vnet-resource-group $VNET_RESOURCE_GROUP \
+  --vnet $VNET_NAME \
+  --master-subnet $VNET_CONTROL_PLANE_SUBNET_NAME \
+  --worker-subnet $VNET_APP_NODE_SUBNET_NAME \
+  --apiserver-visibility Private \
+  --ingress-visibility Private
+```
+
+### Get the ARO Cluster Details
+
+Once the ARO cluster has been provisioned you can get the details of that cluster such as the different Credentials, IPs, and URLs with the following command:
+
+```bash
+## Get cluster details
+az aro list-credentials \
+  --name $ARO_CLUSTER_NAME \
+  --resource-group $RESOURCE_GROUP
+```
+
+## Deleting an ARO Cluster
+
+In case things mess up or once you are done with the ARO cluster you can delete it and all the associated resources with the following command:
+
+```bash
+## Delete the ARO Cluster and resources
+az aro delete --resource-group $RESOURCE_GROUP --name $ARO_CLUSTER_NAME
 ```
 
 ---
@@ -277,4 +324,16 @@ az network vnet subnet update \
   --resource-group $VNET_RESOURCE_GROUP \
   --vnet-name $VNET_NAME \
   --disable-private-link-service-network-policies true
+
+## Create the ARO Cluster and make it publicly available
+az aro create \
+  --name $ARO_CLUSTER_NAME \
+  --resource-group $RESOURCE_GROUP \
+  --cluster-resource-group $INFRASTRUCTURE_RESOURCE_GROUP \
+  --vnet-resource-group $VNET_RESOURCE_GROUP \
+  --vnet $VNET_NAME \
+  --master-subnet $VNET_CONTROL_PLANE_SUBNET_NAME \
+  --worker-subnet $VNET_APP_NODE_SUBNET_NAME \
+  --apiserver-visibility Public \
+  --ingress-visibility Public
 ```
