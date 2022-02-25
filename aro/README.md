@@ -40,13 +40,20 @@ az provider register -n Microsoft.Compute --wait
 az provider register -n Microsoft.Storage --wait
 az provider register -n Microsoft.Network --wait
 az provider register -n Microsoft.Authorization --wait
+az provider register -n Microsoft.ContainerRegistry --wait
+az provider register -n Microsoft.Quota --wait
+az provider register -n Microsoft.Subscription --wait
 
 ## Enable them all together
 az provider register -n Microsoft.RedHatOpenShift --wait && \
   az provider register -n Microsoft.Compute --wait && \
   az provider register -n Microsoft.Storage --wait && \
   az provider register -n Microsoft.Network --wait && \
-  az provider register -n Microsoft.Authorization --wait
+  az provider register -n Microsoft.Authorization --wait && \
+  az provider register -n Microsoft.ContainerRegistry --wait && \
+  az provider register -n Microsoft.Quota --wait && \
+  az provider register -n Microsoft.Subscription --wait
+
 ```
 
 ### Azure Regions & Locations
@@ -289,6 +296,9 @@ az provider register -n Microsoft.Compute --wait
 az provider register -n Microsoft.Storage --wait
 az provider register -n Microsoft.Network --wait
 az provider register -n Microsoft.Authorization --wait
+az provider register -n Microsoft.ContainerRegistry --wait
+az provider register -n Microsoft.Quota --wait
+az provider register -n Microsoft.Subscription --wait
 
 ## Create the ARO Resource Group
 az group create --name $RESOURCE_GROUP --location $AZURE_LOCATION
