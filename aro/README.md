@@ -2,7 +2,28 @@
 
 > ***Note:*** Red Hat Open Environments will not work for deploying ARO manually due to not being able to create Resource Groups - this also does not work with the free Azure credits
 
-## One-time Azure Account Setup
+- [1. Preliminary Steps]
+  - [1.1. One-Time Azure Account Setup]
+  - [1.2. Initial Azure Subscription Setup]
+  - [1.3. Set Azure Region/Location]
+  - [1.4. Increase Azure Quota Limits]
+- [2. Obtain a Red Hat Pull Secret]
+- [3. Azure Resource Groups]
+  - [3.1. Create the Resource Groups]
+- [4. Create an Azure VNet & Subnets]
+- [5. Create the ARO Cluster]
+  - [5.1. Create a Public ARO Cluster]
+  - [5.2. Create a Private ARO Cluster]
+  - [5.3. Get the ARO Cluster Details]
+- [6. Deleting an ARO Cluster]
+- [7. Shotgun Approach]
+
+
+## 1. Preliminary Steps
+
+Before deploying an Azure Red Hat OpenShift (ARO) cluster there's a few things that need to be done.
+
+### 1.1. One-time Azure Account Setup
 
 1. Create an Azure account: https://portal.azure.com/
 2. Add a ***Payment Method*** in the **Cost Management + Billing** section of the Azure Portal.
@@ -10,7 +31,7 @@
 
 ![Subscription Creation Overview](./images/aro-subscription-view.png)
 
-### Initial Subscription Setup
+### 1.2. Initial Azure Subscription Setup
 
 1. Open the ***Cloud Shell*** by using the button in the top bar
 
@@ -55,9 +76,9 @@ az provider register -n Microsoft.RedHatOpenShift --wait && \
   az provider register -n Microsoft.Subscription --wait
 ```
 
-### Azure Regions & Locations
+### 1.3. Set Azure Region/Location
 
-Before begining you will need to decide which Azure Regional Location you want to deploy the ARO cluster to - list the Region Codes with the following command in the Azure Cloud Shell:
+Before beginning you will need to decide which Azure Regional Location you want to deploy the ARO cluster to - list the Region Codes with the following command in the Azure Cloud Shell:
 
 ```bash
 ## List the available location codes
@@ -71,7 +92,7 @@ For most general purposes, you can likely use `eastus` or `centralus`
 
 [Learn more about Azure Geographies](https://azure.microsoft.com/en-us/global-infrastructure/geographies/)
 
-### Increate Quota Limits
+### 1.4. Increase Azure Quota Limits
 
 The basic Azure quota limits are quite low, and are per Subscription - it's a quick process to increase them, [read more about it here](https://docs.microsoft.com/en-us/azure/azure-portal/supportability/per-vm-quota-requests).
 
@@ -93,7 +114,7 @@ Note that some times automatic quota increases are denied and a Support Ticket i
 
 ---
 
-## Obtain a Red Hat Pull Secret
+## 2. Obtain a Red Hat Pull Secret
 
 In order to have the cluster install with the Red Hat Marketplace, Operators, and Sample Workloads you will need to provide a Red Hat OpenShift Pull Secret.  This is optional but highly suggested.
 
@@ -109,7 +130,7 @@ echo "$RH_PULL_SECRET" > rh-pull-secret.json
 
 ---
 
-## Resource Groups
+## 3. Azure Resource Groups
 
 There are 1-3 possible Resource Group (RG) requirements:
 
@@ -117,7 +138,7 @@ There are 1-3 possible Resource Group (RG) requirements:
 - An **optional** VNet RG if you want to have the VNet and Subnets in a separate RG - this is provided with the `--vnet-resource-group` parameter when creating the cluster and needs to be created beforehand.
 - Another **optional** Infrastructure RG that will contain the VMs, Disks, Load Balancers, and other infrastructure components of the actual ARO cluster.  This RG needs to NOT be pre-created beforehand and is provided with the `--cluster-resource-group` parameter when creating the cluster.  If this RG is not defined when the cluster is created then an RG with a randomly generated name will be made.
 
-### Create the Resource Groups
+### 3.1. Create the Resource Groups
 
 In this example we will create a Resource Group for the ARO cluster and VNets:
 
@@ -141,7 +162,7 @@ az group create --name $VNET_RESOURCE_GROUP --location $AZURE_LOCATION
 
 ---
 
-## Create a VNet & Subnets
+## 4. Create an Azure VNet & Subnets
 
 Now that the Resource Groups are available, we can create the VNet - for customers, this may be something that is already created and can be skipped in all or some parts depending on how they have their networks managed.
 
@@ -194,13 +215,13 @@ az network vnet subnet update \
 
 ---
 
-## Create the ARO Cluster
+## 5. Create the ARO Cluster
 
 There are two primary configurations that can be used to create an ARO cluster, Public or Private.
 
 From here, it's highly suggested to observe the options provided by `az aro --help` and `az aro create --help`
 
-### Create a Public ARO Cluster
+### 5.1. Create a Public ARO Cluster
 
 If you want the ARO cluster to be available over the Internet then create a Public ARO cluster:
 
@@ -218,7 +239,7 @@ az aro create \
   --ingress-visibility Public
 ```
 
-### Create a Private ARO Cluster
+### 5.2. Create a Private ARO Cluster
 
 If you want the ARO cluster to NOT be available over the Internet then you can create a Private ARO cluster knowing that you'll need some way to access the VNet resources such as an ExpressRoute or VPN of some sort.
 
@@ -236,7 +257,7 @@ az aro create \
   --ingress-visibility Private
 ```
 
-### Get the ARO Cluster Details
+### 5.3. Get the ARO Cluster Details
 
 Once the ARO cluster has been provisioned you can get the details of that cluster such as the different Credentials, IPs, and URLs with the following command:
 
@@ -247,7 +268,7 @@ az aro list-credentials \
   --resource-group $RESOURCE_GROUP
 ```
 
-## Deleting an ARO Cluster
+## 6. Deleting an ARO Cluster
 
 In case things mess up or once you are done with the ARO cluster you can delete it and all the associated resources with the following command:
 
@@ -258,7 +279,7 @@ az aro delete --resource-group $RESOURCE_GROUP --name $ARO_CLUSTER_NAME
 
 ---
 
-# Shotgun Approach
+## 7. Shotgun Approach
 
 This is the complete set of Cloud Shell commands and variables defined above - make sure to substitute your own environmental variables:
 
