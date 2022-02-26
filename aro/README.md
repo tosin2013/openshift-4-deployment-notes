@@ -236,7 +236,8 @@ az aro create \
   --master-subnet $VNET_CONTROL_PLANE_SUBNET_NAME \
   --worker-subnet $VNET_APP_NODE_SUBNET_NAME \
   --apiserver-visibility Public \
-  --ingress-visibility Public
+  --ingress-visibility Public \
+  --pull-secret "@rh-pull-secret.json"
 ```
 
 ### 5.2. Create a Private ARO Cluster
@@ -254,7 +255,8 @@ az aro create \
   --master-subnet $VNET_CONTROL_PLANE_SUBNET_NAME \
   --worker-subnet $VNET_APP_NODE_SUBNET_NAME \
   --apiserver-visibility Private \
-  --ingress-visibility Private
+  --ingress-visibility Private \
+  --pull-secret "@rh-pull-secret.json"
 ```
 
 ### 5.3. Get the ARO Cluster Details
@@ -365,5 +367,6 @@ az aro create \
   --master-subnet $VNET_CONTROL_PLANE_SUBNET_NAME \
   --worker-subnet $VNET_APP_NODE_SUBNET_NAME \
   --apiserver-visibility Public \
-  --ingress-visibility Public
+  --ingress-visibility Public \
+  --pull-secret "@rh-pull-secret.json"
 ```
