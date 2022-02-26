@@ -2,21 +2,21 @@
 
 > ***Note:*** Red Hat Open Environments will not work for deploying ARO manually due to not being able to create Resource Groups - this also does not work with the free Azure credits
 
-- [1. Preliminary Steps]
-  - [1.1. One-Time Azure Account Setup]
-  - [1.2. Initial Azure Subscription Setup]
-  - [1.3. Set Azure Region/Location]
-  - [1.4. Increase Azure Quota Limits]
-- [2. Obtain a Red Hat Pull Secret]
-- [3. Azure Resource Groups]
-  - [3.1. Create the Resource Groups]
-- [4. Create an Azure VNet & Subnets]
-- [5. Create the ARO Cluster]
-  - [5.1. Create a Public ARO Cluster]
-  - [5.2. Create a Private ARO Cluster]
-  - [5.3. Get the ARO Cluster Details]
-- [6. Deleting an ARO Cluster]
-- [7. Shotgun Approach]
+- [1. Preliminary Steps](#1-preliminary-steps)
+  - [1.1. One-Time Azure Account Setup](#11-one-time-azure-account-setup)
+  - [1.2. Initial Azure Subscription Setup](#12-initial-azure-subscription-setup)
+  - [1.3. Set Azure Region/Location](#13-set-azure-regionlocation)
+  - [1.4. Increase Azure Quota Limits](#14-increase-azure-quota-limits)
+- [2. Obtain a Red Hat Pull Secret](#2-obtain-a-red-hat-pull-secret)
+- [3. Azure Resource Groups](#3-azure-resource-groups)
+  - [3.1. Create the Resource Groups](#31-create-the-resource-groups)
+- [4. Create an Azure VNet & Subnets](#4-create-an-azure-vnet--subnets)
+- [5. Create the ARO Cluster](#5-create-the-aro-cluster)
+  - [5.1. Create a Public ARO Cluster](#51-create-a-public-aro-cluster)
+  - [5.2. Create a Private ARO Cluster](#52-create-a-private-aro-cluster)
+  - [5.3. Get the ARO Cluster Details](#53-get-the-aro-cluster-details)
+- [6. Deleting an ARO Cluster](#6-deleting-an-aro-cluster)
+- [7. Shotgun Approach](#7-shotgun-approach)
 
 
 ## 1. Preliminary Steps
