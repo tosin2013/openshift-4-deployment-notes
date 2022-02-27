@@ -375,3 +375,4 @@ az aro create \
 
 - [Tutorial: Create an Azure Red Hat OpenShift 4 cluster](https://docs.microsoft.com/en-us/azure/openshift/tutorial-create-cluster)
 - [Create an Azure Red Hat OpenShift 4 private cluster](https://docs.microsoft.com/en-us/azure/openshift/howto-create-private-cluster-4x)
+- [Azure Red Hat Openshift (ARO) Deployment Code / Azure Devops](https://github.com/tosin2013/azure-aro)
