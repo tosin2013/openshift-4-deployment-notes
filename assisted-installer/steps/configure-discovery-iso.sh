@@ -49,6 +49,7 @@ cat << EOF
 {
   "ssh_public_key": "$CLUSTER_SSH_PUB_KEY",
   "image_type": "${ISO_TYPE}",
+  "pull_secret": ${PULL_SECRET},
   "static_network_config": [
     $(cat $TEMP_ENSEMBLE)
   ]
@@ -59,7 +60,7 @@ echo "$(generateStaticNetCfgJSON)" > ${CLUSTER_DIR}/add_host-${HOSTS_MD5}-iso_co
 rm $TEMP_ENSEMBLE
 
 echo -e "\n===== Patching Discovery ISO..."
-ISO_CONFIGURATION_REQ=$(curl -s -o /dev/null -w "%{http_code}" -X POST "${ASSISTED_SERVICE_V1_API}/clusters/$TARGET_CLUSTER_ID/downloads/image" \
+ISO_CONFIGURATION_REQ=$(curl -s -o /dev/null -w "%{http_code}" -X PATCH "${ASSISTED_SERVICE_V2_API}/infra-envs/$INFRAENV_ID" \
 -d @${CLUSTER_DIR}/add_host-${HOSTS_MD5}-iso_config.json \
 --header "Content-Type: application/json" \
 -H "Authorization: Bearer $ACTIVE_TOKEN")
