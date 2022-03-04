@@ -24,20 +24,20 @@ else
     --header "Authorization: Bearer $ACTIVE_TOKEN" \
     --header "Content-Type: application/json" \
     --request POST \
-  "${ASSISTED_SERVICE_V1_API}/clusters/$CLUSTER_ID/actions/cancel")
+  "${ASSISTED_SERVICE_V2_API}/clusters/$CLUSTER_ID/actions/cancel")
 
   ## Reset the cluster from the Assisted Service...
   RESET_CLUSTER_REQ=$(curl -s \
     --header "Authorization: Bearer $ACTIVE_TOKEN" \
     --header "Content-Type: application/json" \
     --request POST \
-  "${ASSISTED_SERVICE_V1_API}/clusters/$CLUSTER_ID/actions/reset")
+  "${ASSISTED_SERVICE_V2_API}/clusters/$CLUSTER_ID/actions/reset")
 
   ## Delete the cluster from the Assisted Service...
   DELETE_CLUSTER_REQ=$(curl -s \
     --header "Authorization: Bearer $ACTIVE_TOKEN" \
     --request DELETE \
-  "${ASSISTED_SERVICE_V1_API}/clusters/$CLUSTER_ID")
+  "${ASSISTED_SERVICE_V2_API}/clusters/$CLUSTER_ID")
 fi
 
 rm -rf ${CLUSTER_DIR}/
