@@ -84,6 +84,16 @@ YAML
 $ oc patch configs.imageregistry/cluster --type=merge --patch-file=patch-imageregistry.yaml
 ```
 
+**Set Registry managementState to Managed**
+```
+$ oc edit configs.imageregistry/cluster 
+```
+
+**Verify managementState**
+```
+$ oc get configs.imageregistry/cluster  -oyaml | grep managementState
+```
+
 **Verify status**
 ```
 $ oc get configs.imageregistry/cluster -o jsonpath='{.spec.storage}' | jq .
