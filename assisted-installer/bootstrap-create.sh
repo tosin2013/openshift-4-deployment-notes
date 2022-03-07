@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+#set -e
 
 #########################################################
 ## Check for required cluster-vars.sh file
@@ -25,6 +25,20 @@ else
   ## Cluster has already been created, ensure it is configured
   echo -e "===== Cluster ${CLUSTER_NAME}.${CLUSTER_BASE_DNS} has already been created, continuing with the configuration process..."
   echo "  CLUSTER_ID: ${CLUSTER_ID}"
+fi
+
+source ./cluster-vars.sh
+
+#########################################################
+## Check to see if the InfraEnv has already been created
+if [ -z "$INFRAENV_ID" ]; then
+  ## InfraEnv has not been created yet, add to the AI Service
+  echo -e "===== InfraEnv ${CLUSTER_NAME} not found, creating now...\n"
+  source $SCRIPT_DIR/steps/create-infraenv.sh
+else
+  ## Cluster has already been created, ensure it is configured
+  echo -e "===== Cluster ${CLUSTER_NAME} has already been created, continuing with the configuration process..."
+  echo "  INFRAENV_ID: ${INFRAENV_ID}"
 fi
 
 source ./cluster-vars.sh

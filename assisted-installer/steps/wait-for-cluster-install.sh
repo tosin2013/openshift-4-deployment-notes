@@ -24,7 +24,7 @@ while [ $LOOP_ON = "true" ]; do
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --request GET \
-  "${ASSISTED_SERVICE_V1_API}/clusters/$TARGET_CLUSTER_ID")
+  "${ASSISTED_SERVICE_V2_API}/clusters/$TARGET_CLUSTER_ID")
 
   CLUSTER_STATUS=$(echo $CLUSTER_INFO_REQ | jq -r '.status')
 

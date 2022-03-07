@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+#set -e
 
 generatePatchData() {
 cat << EOF
@@ -13,8 +13,8 @@ cat << EOF
   "hyperthreading": "all",
   "ingress_vip": "${CLUSTER_INGRESS_VIP}",
   "api_vip": "${CLUSTER_API_VIP}",
-  "schedulable_masters": false,
-  "high_availability_mode": "Full",
+  "schedulable_masters": ${SCHEDULABLE_MASTERS},
+  "high_availability_mode": "${HA_MODE}",
   "user_managed_networking": false,
   "platform": {
     "type": "baremetal"
@@ -55,7 +55,7 @@ CREATE_CLUSTER_REQUEST=$(curl -s --fail \
 --header "Accept: application/json" \
 --request POST \
 --data "$(generatePatchData)" \
-"${ASSISTED_SERVICE_V1_API}/clusters")
+"${ASSISTED_SERVICE_V2_API}/clusters")
 
 if [ -z "$CREATE_CLUSTER_REQUEST" ]; then
   echo "===== Failed to create cluster!"

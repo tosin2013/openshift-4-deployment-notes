@@ -93,7 +93,7 @@ else
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --request GET \
-  "${ASSISTED_SERVICE_V1_API}/clusters/$NEW_CLUSTER_ID")
+  "${ASSISTED_SERVICE_V2_API}/clusters/$NEW_CLUSTER_ID")
 
   ## Debug
   #echo "${NEW_CLUSTER_INFO_REQ}" | python3 -m json.tool

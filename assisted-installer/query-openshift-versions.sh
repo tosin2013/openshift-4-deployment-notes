@@ -10,7 +10,7 @@ QUERY_CLUSTER_VERSIONS_REQUEST=$(curl -s --fail \
 --header "Content-Type: application/json" \
 --header "Accept: application/json" \
 --request GET \
-"${ASSISTED_SERVICE_V1_API}/openshift_versions")
+"${ASSISTED_SERVICE_V2_API}/openshift-versions")
 
 if [ -z "$QUERY_CLUSTER_VERSIONS_REQUEST" ]; then
   echo "===== Failed to find supported cluster release version!"
