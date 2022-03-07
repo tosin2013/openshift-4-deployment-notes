@@ -29,7 +29,7 @@ cd openshift-4-deployment-notes/assisted-installer/
 ```
 
 ### Build the ISO using the Assisted Installer Scripts
-[Assisted Installer Scripts](../../)
+[Assisted Installer Scripts](../)
 
 ### Call these scripts from the main `assisted-installer/` directory, like: `./hack/create-kvm-vms.sh`
 
