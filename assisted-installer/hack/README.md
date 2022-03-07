@@ -3,7 +3,7 @@
 > See [Configure System](https://github.com/kenmoini/ocp4-ai-svc-libvirt/tree/main/scripts) to configure single node server for testing.
 
 ### Download and extract the qubinode-installer as a non root user.
-
+> qubinode will quickly configure a kvm enviornment to test with. 
 ```
 cd $HOME
 wget https://github.com/Qubinode/qubinode-installer/archive/master.zip
@@ -27,6 +27,9 @@ cd $HOME
 git clone https://github.com/tosin2013/openshift-4-deployment-notes.git
 cd openshift-4-deployment-notes/assisted-installer/
 ```
+
+### Build the ISO using the Assisted Installer Scripts
+[Assisted Installer Scripts](../../)
 
 ### Call these scripts from the main `assisted-installer/` directory, like: `./hack/create-kvm-vms.sh`
 
