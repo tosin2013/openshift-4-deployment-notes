@@ -18,7 +18,7 @@ CLUSTER_KUBEADMIN_REQ=$(curl -s \
   --header "Content-Type: application/json" \
   --header "Accept: application/json" \
   --request GET \
-"${ASSISTED_SERVICE_V1_API}/clusters/$TARGET_CLUSTER_ID/credentials")
+"${ASSISTED_SERVICE_V2_API}/clusters/$TARGET_CLUSTER_ID/credentials")
 
 
 if [ -z "$CLUSTER_KUBEADMIN_REQ" ]; then

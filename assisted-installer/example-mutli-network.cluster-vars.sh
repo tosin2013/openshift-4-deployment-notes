@@ -86,6 +86,12 @@ if [ -f "${CLUSTER_DIR}/.cluster-id.nfo" ]; then
   export CLUSTER_ID=$(cat ${CLUSTER_DIR}/.cluster-id.nfo)
 fi
 
+## Set InfraEnv ID
+export INFRAENV_ID=""
+if [ -f "${CLUSTER_DIR}/.infraenv-id.nfo" ]; then
+  export INFRAENV_ID=$(cat ${CLUSTER_DIR}/.infraenv-id.nfo)
+fi
+
 ## Check/load SSH Public Key
 if [ -f "$SSH_PUB_KEY_PATH" ]; then
   export CLUSTER_SSH_PUB_KEY=$(cat ${SSH_PUB_KEY_PATH})
@@ -93,17 +99,36 @@ else
   echo "No SSH Public Key found!  Looking for ${SSH_PUB_KEY_PATH}"
   exit 1
 fi
+
 ## Check/load Pull Secret
 if [ -f "$PULL_SECRET_PATH" ]; then
-  export PULL_SECRET=$(cat ${PULL_SECRET_PATH} | jq -R .)
+  export PULL_SECRET=$(jq -c '. |= tostring' ${PULL_SECRET_PATH})
 else
   echo "No Pull Secret found!  Looking for ${PULL_SECRET_PATH}"
   exit 1
 fi
+
 ## Check/load Offline Token
 if [ -f "$RH_OFFLINE_TOKEN_PATH" ]; then
   export RH_OFFLINE_TOKEN=$(cat ${RH_OFFLINE_TOKEN_PATH})
 else
   echo "No RH API Offline Token found!  Looking for ${RH_OFFLINE_TOKEN_PATH}"
   exit 1
+fi
+
+## Set HA and Master Workload Scheduling
+NODE_COUNT=$(echo $NODE_CFGS | jq -r '.nodes | length')
+export HA_MODE="Full"
+export SCHEDULABLE_MASTERS="false"
+
+## SNO Setting Overrides
+if [ "$NODE_COUNT" -eq "1" ]; then
+  export HA_MODE="None"
+  export CLUSTER_API_VIP=""
+  export CLUSTER_INGRESS_VIP=""
+fi
+
+## Converged 3 Node Setting Overrides
+if [ "$NODE_COUNT" -eq "3" ]; then
+  export SCHEDULABLE_MASTERS="true"
 fi

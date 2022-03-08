@@ -60,7 +60,7 @@ for node in $(echo "${NODE_CFGS}" | jq -r '.nodes[] | @base64'); do
 done
 
 generateStaticNetCfgJSON() {
-export PULL_SECRET=$(cat ${PULL_SECRET_PATH} | jq -R .)
+#export PULL_SECRET=$(cat ${PULL_SECRET_PATH} | jq -R .)
 cat << EOF
 {
   "ssh_public_key": "$CLUSTER_SSH_PUB_KEY",
@@ -79,7 +79,7 @@ then
   echo "$(generateStaticNetCfgJSON)" > ${CLUSTER_DIR}/iso_config.json
   rm $TEMP_ENSEMBLE
   echo -e "\n===== Patching Discovery ISO..."
-  ISO_CONFIGURATION_REQ=$(curl -s -o /dev/null -w "%{http_code}" -X POST "${ASSISTED_SERVICE_V1_API}/clusters/$CLUSTER_ID/downloads/image" \
+  ISO_CONFIGURATION_REQ=$(curl -s -o /dev/null -w "%{http_code}" -X PATCH "${ASSISTED_SERVICE_V2_API}/infra-envs/$INFRAENV_ID" \
   -d @${CLUSTER_DIR}/iso_config.json \
   --header "Content-Type: application/json" \
   -H "Authorization: Bearer $ACTIVE_TOKEN")
@@ -91,7 +91,7 @@ then
 else
   echo "$(generateStaticNetCfgJSON)" > ${CLUSTER_DIR}/iso_${WORKER_NAME}_config.json
   rm $TEMP_ENSEMBLE
-  ISO_CONFIGURATION_REQ=$(curl -s -o /dev/null -w "%{http_code}" -X PATCH "${ASSISTED_SERVICE_V1_API}/clusters/${2}" \
+  ISO_CONFIGURATION_REQ=$(curl -s -o /dev/null -w "%{http_code}" -X PATCH "${ASSISTED_SERVICE_V2_API}/infra-envs/${2}" \
       -d @${CLUSTER_DIR}/iso_${WORKER_NAME}_config.json \
       --header "Content-Type: application/json" \
       -H "Authorization: Bearer $ACTIVE_TOKEN")
@@ -100,7 +100,7 @@ else
     exit 1
   fi
   ####create and download new ISO ####
-  CREATE_DISCOVERY_ISO=$(curl -s -o /dev/null -w "%{http_code}" -X POST "${ASSISTED_SERVICE_V1_API}/clusters/${2}/downloads/image" \
+  CREATE_DISCOVERY_ISO=$(curl -s -o /dev/null -w "%{http_code}" -X PATCH "${ASSISTED_SERVICE_V1_API}/infra-envs/${2}" \
     -H "Authorization: Bearer $ACTIVE_TOKEN" \
     -d @${CLUSTER_DIR}/iso_${WORKER_NAME}_config.json \
     --header "Content-Type: application/json")

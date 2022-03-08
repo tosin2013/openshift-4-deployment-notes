@@ -3,7 +3,7 @@
 set -e
 
 ## Download the discovery.ign file from the AI Svc
-DISCOVERY_IGN_URL=${ASSISTED_SERVICE_V1_API}/clusters/${CLUSTER_ID}/downloads/'files?file_name=discovery.ign'
+DISCOVERY_IGN_URL=${ASSISTED_SERVICE_V2_API}/infra-envs/${INFRAENV_ID}/downloads/'files?file_name=discovery.ign'
 
 ORIGINAL_IGNITION=$(curl -s --fail \
 --header "Authorization: Bearer $ACTIVE_TOKEN" \
@@ -30,7 +30,7 @@ echo '{"config": "replaceme"}' | jq --arg ignition "$(cat $NEW_IGNITION_FILE)" '
 
 ## Patch the API with the patched discovery.ign
 PATCH_CURL_FILE=$(mktemp -p $CLUSTER_DIR)
-PATCH_CORE_USER_PASSWORD_REQ=$(curl -s -o $PATCH_CURL_FILE -w "%{http_code}" --header "Authorization: Bearer $ACTIVE_TOKEN" --header "Content-Type: application/json" --request PATCH --data @$PATCHED_IGN_FILE ${ASSISTED_SERVICE_V1_API}/clusters/${CLUSTER_ID}/discovery-ignition)
+PATCH_CORE_USER_PASSWORD_REQ=$(curl -s -o $PATCH_CURL_FILE -w "%{http_code}" --header "Authorization: Bearer $ACTIVE_TOKEN" --header "Content-Type: application/json" --request PATCH --data @$PATCHED_IGN_FILE ${ASSISTED_SERVICE_V2_API}/infra-envs/${INFRAENV_ID})
 
 if [ "$PATCH_CORE_USER_PASSWORD_REQ" -ne "201" ]; then
   echo "===== Failed to patch discovery ignition file with core user password!"
