@@ -43,7 +43,7 @@ vim cluster-vars.sh
 ```
 
 5. Run the bootstrap script to create the cluster, configure it, and download the ISO
-
+> the bootstrap-create.sh script may also be used. 
 ```bash
 ./bootstrap.sh
 ```
