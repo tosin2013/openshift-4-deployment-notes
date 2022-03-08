@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+#set -e
 
 LOOP_ON="true"
 CYCLE_TIME_IN_SECONDS="10"
@@ -26,10 +26,10 @@ while [ $LOOP_ON = "true" ]; do
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --request GET \
-  "${ASSISTED_SERVICE_V1_API}/clusters/$TARGET_CLUSTER_ID")
+  "${ASSISTED_SERVICE_V2_API}/clusters/$TARGET_CLUSTER_ID")
 
   ## Debug
-  ## echo $CLUSTER_INFO_REQ | python3 -m json.tool
+  echo $CLUSTER_INFO_REQ | python3 -m json.tool
 
   ## Set variables
   CLUSTER_STATUS=$(echo $CLUSTER_INFO_REQ | jq -r '.status')
@@ -68,13 +68,15 @@ while [ $LOOP_ON = "true" ]; do
       echo -e "  Cluster installed with all nodes!  Continuing with cluster post-configuration...\n"
       export CLUSTER_HAS_ALL_HOSTS="true"
       export CLUSTER_INSTALLED_STARTED="true"
+      LOOP_ON="false"
     else
       ## Not all nodes have reported in
       echo -e "  Not all nodes have reported in! Found ${NUMBER_OF_HOSTS}/${NUMBER_OF_CFG_NODES} hosts reported into the API...continuing with scaling action..."
       export CLUSTER_HAS_ALL_HOSTS="false"
       export CLUSTER_INSTALLED_STARTED="true"
+      sleep 15s
     fi
-    LOOP_ON="false"
+
   fi
 
 done

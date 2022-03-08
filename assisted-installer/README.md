@@ -101,7 +101,16 @@ python3                                                                  PASSED!
 
 6. Boot each machine with downloaded ISO
 
-7. Run the `./bootstrap-install.sh` to start deployment
+7. Run the `./bootstrap-install.sh` to start deployment to automate the tasks below. 
+
+## Running bootstrap install manually  
+> The bootstrap install script calls the scripts below in order. If you would like to walk thru the script call the scripts below. 
+* `source cluster-vars.sh && source authenticate-to-api.sh` - sources variables to run scripts below.
+* `steps/check-nodes-ready.sh` - Checks to see if all the nodes have reported in
+* `steps/set-node-hostnames-and-roles.sh` - Set node hostnames and roles
+* `steps/set-networking.sh` - configures network and other settings TBH
+* `steps/check-cluster-ready-to-install.sh` - Check to see if the cluster is ready to install
+* `steps/start-install.sh` -  Starts the Installation
 
 ## Bootstrap Execution Overview
 
@@ -178,8 +187,9 @@ for csr in $(oc -n openshift-machine-api get csr | awk '/Pending/ {print $1}'); 
 * [Assisted Installer on premise deep dive](https://github.com/latouchek/assisted-installer-deepdive)
 * https://github.com/kenmoini/ocp4-ai-svc-libvirt
 * https://cloudcult.dev/creating-openshift-clusters-with-the-assisted-service-api/
+* https://kenmoini.com/post/2022/01/disconnected-openshift-assisted-installer-service/
 
-## Branch Testing Cheat Code
+## Branch Testing for Developers
 > Review [Hack-y](hack/README.md) scripts before start testing
 
 ```bash
@@ -201,7 +211,7 @@ vim cluster-vars.sh
 ## - [Optional Hack] Watch virsh and restart VMs when needed
 ## - Post-Install Cluster Configuration & Output
 
-./bootstrap-create.sh \
+./bootstrap.sh \
  && ./hack/create-kvm-vms.sh \
  && ./bootstrap-install.sh \
  && ./hack/watch-and-reboot-kvm-vms.sh #test for node addition \
@@ -214,5 +224,7 @@ vim cluster-vars.sh
 
  ## To destory test vms
  ./hack/delete-kvm-vms.sh 
- ./destory.sh
+ ./destroy.sh
 ```
+
+

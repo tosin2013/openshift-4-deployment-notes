@@ -26,15 +26,15 @@ export MULTI_NETWORK=false
 export CLUSTER_NODE_NET_DNS_SERVERS=("192.168.42.9" "192.168.42.10")
 
 ## Set Node Network Configuration
-NODE1_CFG='{"name": "ocp01", "role": "control-plane", "mac_address": "52:54:00:00:00:01", "ipv4": {"address": "192.168.3.51", "gateway": "192.168.3.1", "prefix": "24", "iface": "enp5s0"}}'
-NODE2_CFG='{"name": "ocp02", "role": "control-plane", "mac_address": "52:54:00:00:00:02", "ipv4": {"address": "192.168.3.52", "gateway": "192.168.3.1", "prefix": "24", "iface": "enp5s0"}}'
-NODE3_CFG='{"name": "ocp03", "role": "control-plane", "mac_address": "52:54:00:00:00:03", "ipv4": {"address": "192.168.3.53", "gateway": "192.168.3.1", "prefix": "24", "iface": "enp5s0"}}'
+NODE1_CFG='{"name": "ocp01", "role": "control-plane", "mac_address": "52:54:00:00:00:01", "ipv4": {"address": "192.168.3.51", "gateway": "192.168.3.1", "prefix": "24", "iface": "enp1s0"}}'
+NODE2_CFG='{"name": "ocp02", "role": "control-plane", "mac_address": "52:54:00:00:00:02", "ipv4": {"address": "192.168.3.52", "gateway": "192.168.3.1", "prefix": "24", "iface": "enp1s0"}}'
+NODE3_CFG='{"name": "ocp03", "role": "control-plane", "mac_address": "52:54:00:00:00:03", "ipv4": {"address": "192.168.3.53", "gateway": "192.168.3.1", "prefix": "24", "iface": "enp1s0"}}'
 
-NODE4_CFG='{"name": "ocp04", "role": "application-node", "mac_address": "52:54:00:00:00:04", "ipv4": {"address": "192.168.3.54", "gateway": "192.168.3.1", "prefix": "24", "iface": "enp5s0"}}'
-NODE5_CFG='{"name": "ocp05", "role": "application-node", "mac_address": "52:54:00:00:00:05", "ipv4": {"address": "192.168.3.55", "gateway": "192.168.3.1", "prefix": "24", "iface": "enp5s0"}}'
+NODE4_CFG='{"name": "ocp04", "role": "application-node", "mac_address": "52:54:00:00:00:04", "ipv4": {"address": "192.168.3.54", "gateway": "192.168.3.1", "prefix": "24", "iface": "enp1s0"}}'
+NODE5_CFG='{"name": "ocp05", "role": "application-node", "mac_address": "52:54:00:00:00:05", "ipv4": {"address": "192.168.3.55", "gateway": "192.168.3.1", "prefix": "24", "iface": "enp1s0"}}'
 #########################################################
 ## Remove _ front of variable below to add 3 workers on first install
-###_NODE6_CFG='{"name": "ocp06", "role": "application-node", "mac_address": "52:54:00:00:00:06", "ipv4": {"address": "10.0.1.56", "gateway": "10.0.1.1", "prefix": "24", "iface": "enp1s0"}}'
+###_NODE6_CFG='{"name": "ocp06", "role": "application-node", "mac_address": "52:54:00:00:00:06", "ipv4": {"address": "192.168.3.56", "gateway": "192.168.3.1", "prefix": "24", "iface": "enp1s0"}}'
 
 #########################################################
 ####INSERT NEW NODES UNDER HERE

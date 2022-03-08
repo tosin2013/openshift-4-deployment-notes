@@ -2,6 +2,9 @@
 
 set -e
 
+source cluster-vars.sh
+source authenticate-to-api.sh
+
 if [ ! -z "$CLUSTER_ID" ]; then
   TARGET_CLUSTER_ID="$CLUSTER_ID"
 fi
@@ -29,7 +32,7 @@ SET_HOST_INFO_REQ=$(curl -s --fail \
   --header "Accept: application/json" \
   --request PATCH \
   --data "$(generatePatchData)" \
-"${ASSISTED_SERVICE_V1_API}/clusters/$TARGET_CLUSTER_ID")
+"${ASSISTED_SERVICE_V2_API}/clusters/$TARGET_CLUSTER_ID")
 
 if [ -z "$SET_HOST_INFO_REQ" ]; then
   echo "ERROR: Failed to set cluster networking information"

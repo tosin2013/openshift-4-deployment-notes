@@ -12,11 +12,13 @@ if [ ! -z "$NEW_CLUSTER_ID" ]; then
 fi
 
 echo -e "\n===== Setting Node Hostnames and Roles for ${TARGET_CLUSTER_ID}..."
+export CLUSER_HOSTS_RENAMED="false"
+export CLUSER_ROLE_TAGGED="false"
 
 echo "  Tesing URL.."
-URL_VALIDATION=$(curl -s -X GET   --header "Content-Type: application/json"   \
+URL_VALIDATION=$(curl -I -s -X GET   --header "Content-Type: application/json"   \
   --header "Authorization: Bearer $ACTIVE_TOKEN" \
-  "${ASSISTED_SERVICE_V1_API}/clusters/$TARGET_CLUSTER_ID")
+  "${ASSISTED_SERVICE_V2_API}/clusters/$TARGET_CLUSTER_ID" | grep -o 200)
 
 if [ "$URL_VALIDATION" -ne "200" ]; then
   echo "===== Failed get cluster URL!"
@@ -25,7 +27,7 @@ fi
 
 CHECK_HOST=$(curl -s -X GET   --header "Content-Type: application/json"   \
   --header "Authorization: Bearer $ACTIVE_TOKEN" \
-  "${ASSISTED_SERVICE_V1_API}/clusters/$TARGET_CLUSTER_ID"   | jq -r .hosts[].requested_hostname)
+  "${ASSISTED_SERVICE_V2_API}/infra-envs/${INFRAENV_ID}/hosts"   | jq -r .[].requested_hostname)
 COUNT=1
 while [ -z "$CHECK_HOST" ] || [ "$CHECK_HOST" == "null" ]; do
   echo "waiting for $COUNT"
@@ -39,7 +41,7 @@ while [ -z "$CHECK_HOST" ] || [ "$CHECK_HOST" == "null" ]; do
   sleep 10s
   CHECK_HOST=$(curl -s -X GET   --header "Content-Type: application/json"   \
     --header "Authorization: Bearer $ACTIVE_TOKEN" \
-    "${ASSISTED_SERVICE_V1_API}/clusters/$TARGET_CLUSTER_ID"   | jq -r .hosts[].requested_hostname)
+    "${ASSISTED_SERVICE_V2_API}/infra-envs/${INFRAENV_ID}/hosts"  | jq -r .[].requested_hostname)
 done
 
 
@@ -48,7 +50,7 @@ HOSTS=$(curl -s \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --request GET \
-    "${ASSISTED_SERVICE_V1_API}/clusters/${TARGET_CLUSTER_ID}/hosts")
+    "${ASSISTED_SERVICE_V2_API}/infra-envs/${INFRAENV_ID}/hosts")
 ## Create temporary files
 TEMP_HOST_ENSEMBLE=$(mktemp -p $CLUSTER_DIR)
 TEMP_ROLE_ENSEMBLE=$(mktemp -p $CLUSTER_DIR)
@@ -129,22 +131,54 @@ cat <<EOF
 EOF
 }
 
-#echo $(generateHostPatchData)
+echo $(generateHostPatchData) > /tmp/results.json
 
-# Set the Hostnames and Host Roles
+
+
+# Assign hostnames 
 echo "  Setting Host information..."
-SET_HOST_INFO_REQ=$(curl -s -o /dev/null -w "%{http_code}" \
+readarray -t hostname_array < <(jq -c '.hosts_names[]' /tmp/results.json)
+for item in "${hostname_array[@]}"; do
+  HOST_ID=$(jq '.id' <<< "$item" | tr -d '"')
+  OCP_HOST_NAME=$(jq '.hostname' <<< "$item" | tr -d '"')
+  echo "CURRENT ID: ${HOST_ID}"
+  echo "CURRENT HOSTNAME: ${OCP_HOST_NAME}"
+  SET_HOST_INFO_REQ=$(curl -s -o /dev/null -w "%{http_code}" \
   --header "Authorization: Bearer $ACTIVE_TOKEN" \
   --header "Content-Type: application/json" \
   --header "Accept: application/json" \
   --request PATCH \
-  --data "$(generateHostPatchData)" \
-  "${ASSISTED_SERVICE_V1_API}/clusters/${TARGET_CLUSTER_ID}")
+  --data-raw '{ "host_name": "'${OCP_HOST_NAME}'"}' \
+  "${ASSISTED_SERVICE_V2_API}/infra-envs/${INFRAENV_ID}/hosts/${HOST_ID}")
+  if [ "$SET_HOST_INFO_REQ" -ne "201" ]; then
+    echo "===== Failed to configure host names and roles! ERROR CODE: $SET_HOST_INFO_REQ"
+    exit 1
+  fi
+  export CLUSER_ROLE_TAGGED="true"
+done
+
+# Label nodes roles 
+readarray -t roles_array < <(jq -c '.hosts_roles[]' /tmp/results.json)
+for item in "${roles_array[@]}"; do
+  HOST_ID=$(jq '.id' <<< "$item" | tr -d '"')
+  ROLE=$(jq '.role' <<< "$item" | tr -d '"')
+  echo "CURRENT ID: ${HOST_ID}"
+  echo "CURRENT ROLE: ${ROLE}"
+  SET_ROLE_INFO_REQ=$(curl -s -o /dev/null -w "%{http_code}" \
+  --header "Authorization: Bearer $ACTIVE_TOKEN" \
+  --header "Content-Type: application/json" \
+  --header "Accept: application/json" \
+  --request PATCH \
+  --data-raw '{ "host_role": "'${ROLE}'"}' \
+  "${ASSISTED_SERVICE_V2_API}/infra-envs/${INFRAENV_ID}/hosts/${HOST_ID}")
+  if [ "$SET_ROLE_INFO_REQ" -ne "201" ]; then
+    echo "===== Failed to configure host names and roles! ERROR CODE: $SET_ROLE_INFO_REQ"
+    exit 1
+  fi
+  export CLUSER_HOSTS_RENAMED="true"
+done
+
 
 rm $TEMP_HOST_ENSEMBLE
 rm $TEMP_ROLE_ENSEMBLE
 
-if [ "$SET_HOST_INFO_REQ" -ne "201" ]; then
-  echo "===== Failed to configure host names and roles!"
-  exit 1
-fi

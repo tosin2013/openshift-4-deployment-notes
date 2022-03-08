@@ -1,6 +1,8 @@
 #!/bin/bash
 
 set -e
+source cluster-vars.sh
+source authenticate-to-api.sh
 
 if [ ! -z "$CLUSTER_ID" ]; then
   TARGET_CLUSTER_ID="$CLUSTER_ID"
@@ -25,10 +27,10 @@ while [ $LOOP_ON = "true" ]; do
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --request GET \
-  "${ASSISTED_SERVICE_V1_API}/clusters/$TARGET_CLUSTER_ID")
+  "${ASSISTED_SERVICE_V2_API}/clusters/$TARGET_CLUSTER_ID")
 
   if [ -z "$CLUSTER_INFO_REQ" ]; then
-    echo "ERROR: Failed to get cluster information"
+    echo "ERROR ${CLUSTER_INFO_REQ}: Failed to get cluster information "
     exit 1
   fi
 
