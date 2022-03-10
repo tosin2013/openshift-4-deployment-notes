@@ -27,7 +27,7 @@ for node in $(echo "${NODE_CFGS}" | jq -r '.nodes[] | @base64'); do
   }
   echo "  Creating NMState config for $(_jq '.name')..."
 
-  if [ $MULTI_NETWORK  == false && $USE_DHCP == false ];
+  if [ $MULTI_NETWORK  == false ]  && [ $USE_DHCP == false ];
   then 
     cat << EOF > ${CLUSTER_DIR}/$(_jq '.name').yaml
 dns-resolver:
@@ -51,7 +51,7 @@ routes:
     next-hop-interface: $(_jq '.ipv4.iface')
     table-id: 254
 EOF
-  elif [ $MULTI_NETWORK == false && $USE_DHCP == true ];
+  elif [ $MULTI_NETWORK == false ]  && [ $USE_DHCP == true ];
   then 
       cat << EOF > ${CLUSTER_DIR}/$(_jq '.name').yaml
 dns-resolver:
@@ -67,7 +67,7 @@ interfaces:
   state: up
   type: ethernet
 EOF
-  elif [ $MULTI_NETWORK == true && $USE_DHCP == true ];
+  elif [ $MULTI_NETWORK == true ]  && [ $USE_DHCP == true ];
   then 
     cat << EOF > ${CLUSTER_DIR}/$(_jq '.name').yaml
 dns-resolver:
@@ -90,7 +90,7 @@ interfaces:
   state: up
   type: ethernet
 EOF
-  elif [ $MULTI_NETWORK == true && $USE_DHCP == false ];
+  elif [ $MULTI_NETWORK == true ]  && [ $USE_DHCP == false ];
   then 
     cat << EOF > ${CLUSTER_DIR}/$(_jq '.name').yaml
 dns-resolver:
