@@ -22,7 +22,10 @@ user.max_user_namespaces=28633
 EOT
 # sudo sysctl -p /etc/sysctl.d/userns.conf
 ```
-
+* jq 
+```
+sudo dnf install jq
+```
 
 ## Quay Mirror Registry Script
 > https://github.com/quay/mirror-registry/releases
