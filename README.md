@@ -16,7 +16,7 @@
 [PXE Configuration](pxe-configuration/)  
 [HAProxy Configuration](haproxy-configuration/)  
 [Configure OpenShift Installer](configure-installers/)  
-[Configure OpenShift ignition Configs](configure-ignitionfiles/) 
+[Configure OpenShift ignition Configs](configure-ignitionfiles/)   
 [Disconnected Scripts to be used for disconnected clusters](disconnected-scripts/)
 
 ## Notes
