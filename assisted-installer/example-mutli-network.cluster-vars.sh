@@ -21,6 +21,16 @@ export CLUSTER_MACHINE_NETWORK="192.168.3.0/24"
 export NTP_SOURCE="0.rhel.pool.ntp.org"
 export MULTI_NETWORK=true
 #########################################################
+## if you enable or disable dhcp both interfaces will use the samae options
+## cp example-mutli-network.cluster-vars.sh cluster-vars.sh
+## edit nmstate-generator.sh if you want one interface to have static and the other dhcp
+export MULTI_NETWORK=false
+#########################################################
+## Enable or disable DHCP 
+export USE_DHCP=false 
+
+
+#########################################################
 ## Additional Node + Network Configuration
 export CLUSTER_NODE_NET_DNS_SERVERS=("192.168.42.9" "192.168.42.10")
 
