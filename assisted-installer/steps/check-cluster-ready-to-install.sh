@@ -43,13 +43,14 @@ while [ $LOOP_ON = "true" ]; do
   NUMBER_OF_HOSTS_READY=$(echo $CLUSTER_INFO_REQ | jq -r '.ready_host_count')
 
   ## Check if cluster has already been installed (date check)
-  if [ $CLUSTER_INSTALL_STARTED == "2000-01-01T00:00:00.000Z" ]; then
+  if [ $CLUSTER_INSTALL_STARTED == "0001-01-01T00:00:00.000Z" ]; then
     echo "  Cluster has not been installed yet..."
     ## Check if all nodes have reported in
     if [ $NUMBER_OF_HOSTS_READY -eq $NUMBER_OF_CFG_NODES ]; then
       echo "  All nodes have reported in!"
       if [ $CLUSTER_STATUS == "ready" ]; then
         echo "  Cluster is ready to install!"
+        echo "  Call steps/start-install.sh"
         LOOP_ON="false"
       else
         echo "  Cluster is not ready to install..."
@@ -61,7 +62,7 @@ while [ $LOOP_ON = "true" ]; do
     fi
   else
     echo "  Cluster install has already started!"
-    if [ $CLUSTER_INSTALL_COMPLETED != "2000-01-01T00:00:00.000Z" ]; then
+    if [ $CLUSTER_INSTALL_COMPLETED != "0001-01-01T00:00:00.000Z" ]; then
       echo "  Cluster installed on ${CLUSTER_INSTALL_COMPLETED}"
     else
       echo "  Cluster is still installing..."
