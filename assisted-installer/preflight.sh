@@ -23,9 +23,12 @@ echo -e "===== Checking for needed programs..."
 checkForProgramAndExit curl
 checkForProgramAndExit jq
 checkForProgramAndExit python3
+checkForProgramAndExit dig
 
 source $SCRIPT_DIR/authenticate-to-api.sh
 
 source $SCRIPT_DIR/query-openshift-versions.sh
+
+source $SCRIPT_DIR/validate-environment.sh
 
 echo -e "===== Preflight passed...\n"
