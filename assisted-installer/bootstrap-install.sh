@@ -83,6 +83,9 @@ else
     elif [[ $CLUSTER_STATUS == "pending-for-input" ]];
     then 
       prompt_confirm "The Current status is pending-for-input would you like to automatially resolve?" 
+    elif [[ $CLUSTER_STATUS == "ready" ]];
+    then 
+      source $SCRIPT_DIR/steps/start-install.sh
     elif [[ $CLUSTER_HAS_ALL_HOSTS == "false"  ||  $CLUSER_HOSTS_RENAMED == "false"  || $CLUSER_ROLE_TAGGED == "false" ]];
     then 
       cluster_install_steps
