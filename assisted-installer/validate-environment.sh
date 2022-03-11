@@ -1,8 +1,10 @@
 #!/bin/bash 
 # scripts to validate enviornment
 #set -x 
+echo -e "===== Validating DNS servers.."
 
 echo "Current CLUSTER_INGRESS_VIP=${CLUSTER_INGRESS_VIP}"
+echo -e "===== Testing CLUSTER_INGRESS_VIP..."
 TEST_CLUSTER_INGRESS_VIP=$(dig +short test.apps.${CLUSTER_NAME}.${CLUSTER_BASE_DNS} |  grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b" |  head -1)
 if [ ${CLUSTER_INGRESS_VIP} != ${TEST_CLUSTER_INGRESS_VIP} ];
 then 
@@ -15,6 +17,7 @@ else
 fi 
 
 echo "Current CLUSTER_API_VIP=${CLUSTER_API_VIP}"
+echo -e "===== Testing CLUSTER_API_VIP..."
 TEST_CLUSTER_API_VIP=$(dig +short api.${CLUSTER_NAME}.${CLUSTER_BASE_DNS} |  grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b" |  head -1)
 if [ ${CLUSTER_API_VIP} != ${TEST_CLUSTER_API_VIP} ];
 then 
