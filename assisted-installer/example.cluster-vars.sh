@@ -19,7 +19,13 @@ export CLUSTER_INGRESS_VIP="192.168.3.8"
 export CLUSTER_API_VIP="192.168.3.9"
 export CLUSTER_MACHINE_NETWORK="192.168.3.0/24"
 export NTP_SOURCE="0.rhel.pool.ntp.org"
+#########################################################
+## if you enable or disable dhcp both interfaces will use the samae options
+## edit nmstate-generator.sh if you want one interface to have static and the other dhcp
 export MULTI_NETWORK=false
+#########################################################
+## Enable or disable DHCP 
+export USE_DHCP=false 
 
 #########################################################
 ## Additional Node + Network Configuration
