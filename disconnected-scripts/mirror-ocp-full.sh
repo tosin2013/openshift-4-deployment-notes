@@ -6,8 +6,6 @@ export LOCAL_SECRET_JSON=~/merged-pull-secret.json
 export PORT=8443 #5000
 export LOCAL_REGISTRY=$(hostname):${PORT}
 export LOCAL_REPOSITORY=ocp4
-#https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/latest/release.txt
-export OCP_RELEASE=4.9.23-x86_64
 export OCP_REGISTRY=quay.io/openshift-release-dev/ocp-release
 export EMAIL="admin@changeme.com"
 export PASSWORD="CHANGEME"
@@ -61,6 +59,10 @@ function download_oc_client() {
 		curl -OL https://raw.githubusercontent.com/tosin2013/openshift-4-deployment-notes/master/pre-steps/configure-openshift-packages.sh
         chmod +x configure-openshift-packages.sh
         ./configure-openshift-packages.sh -i
+		#https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/latest/release.txt
+		export OCP_RELEASE=$(oc version | awk '{print $3}')-x86_64
+	else 
+		export OCP_RELEASE=$(oc version | awk '{print $3}')-x86_64
 	fi
 }
 

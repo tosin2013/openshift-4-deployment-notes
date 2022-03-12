@@ -38,6 +38,7 @@ tar -zxvf mirror-registry-offline.tar.gz
 ```
 ### install mirror registry
 ```
+mkdir -p /registry/
 sudo ./mirror-registry install \
   --quayHostname $(hostname) \
   --quayRoot /registry/
@@ -65,13 +66,23 @@ sudo ./mirror-registry uninstall -v
 
 
 # To mirror an OpenShift release to Quay
-* edit and run the mirror-ocp-release.sh script
+* replace password with generated password for output
+```
+sed -i 's/PASSWORD="CHANGEME"/PASSWORD=PASSWORD_OUTPUT/g' mirror-ocp-release.sh
+```
+
+* run the mirror-ocp-release.sh script
 ```
 ./mirror-ocp-release.sh
 ```
 
 # To mirror an OpenShift release and host OpenShift Binaries for assisted installer or UBI deployments
-* edit and run the ./mirror-ocp-full.sh script
+* replace password with generated password for output
+```
+sed -i 's/PASSWORD="CHANGEME"/PASSWORD=PASSWORD_OUTPUT/g' mirror-ocp-full.sh
+```
+
+* run the ./mirror-ocp-full.sh
 ```
 ./mirror-ocp-full.sh
 ```

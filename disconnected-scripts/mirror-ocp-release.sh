@@ -60,7 +60,12 @@ function download_oc_client() {
 		curl -OL https://raw.githubusercontent.com/tosin2013/openshift-4-deployment-notes/master/pre-steps/configure-openshift-packages.sh
         chmod +x configure-openshift-packages.sh
         ./configure-openshift-packages.sh -i
+		#https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/latest/release.txt
+		export OCP_RELEASE=$(oc version | awk '{print $3}')-x86_64
+	else 
+		export OCP_RELEASE=$(oc version | awk '{print $3}')-x86_64
 	fi
+}
 }
 
 create_merge_secret
