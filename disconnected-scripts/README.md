@@ -24,9 +24,12 @@ EOT
 ```
 * jq 
 ```
-sudo dnf install jq
+sudo dnf install jq -y
 ```
-
+* libvirt for mirror-ocp-full.sh 
+```
+sudo dnf install libvirt -y
+```
 ## Quay Mirror Registry Script
 > https://github.com/quay/mirror-registry/releases
 
