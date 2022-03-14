@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
-
+if [ -z $VERSION ];
+then
+    export VERSION=latest
+fi 
 
 function download_binaries(){
 
@@ -16,11 +19,11 @@ function download_binaries(){
     )
     else
        echo "*******************************"
-       echo "Installing latest binaries" 
+       echo "Installing ${VERSION} binaries" 
        echo "*******************************"
-       URL="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/"
-       LATEST_CLI=$(curl -sL https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/  | grep -o openshift-client-linux-4.[0-9].[0-9].tar.gz | head -1)
-       LATEST_INSTALLER=$(curl -sL https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/  | grep -o openshift-install-linux-4.[0-9].[0-9].tar.gz | head -1)
+       URL="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${VERSION}/"
+       LATEST_CLI=$(curl -sL https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${VERSION}/  | grep -o openshift-client-linux-4.[0-9].[0-9].tar.gz | head -1)
+       LATEST_INSTALLER=$(curl -sL https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${VERSION}/  | grep -o openshift-install-linux-4.[0-9].[0-9].tar.gz | head -1)
     fi
 
     SUDO=''
@@ -96,8 +99,15 @@ usage() {
   -d, --delete      Remove oc client and openshift-install
   -h, --help        Display this help and exit
 
+  To install OpenShift latest binaries
+  ${0}  --install
+
   To install OpenShift pre-release binaries
   ${0}  --install -v pre-release
+
+  To install specific OpenShift Version
+  export VERSION=latest-4.9
+  ${0} -i
 "
 }
 

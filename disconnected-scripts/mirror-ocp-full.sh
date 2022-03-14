@@ -12,7 +12,7 @@ export PASSWORD="CHANGEME"
 export USERNAME="init"
 export AUTH="$(echo -n 'init:${PASSWORD}' | base64 -w0)" # in base 64
 export TLS_VERIFY=false
-
+export VERSION=latest # latest-4.9
 # Functional
 
 function create_merge_secret(){
@@ -54,7 +54,7 @@ function ocp_mirror_release() {
 		--to-release-image=${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}:${OCP_RELEASE} --insecure=${USE_INSECURE}
 }
 
-function download_oc_client() {
+function download_oc_latest_client() {
 	if [[ ! -f /usr/bin/oc ]]; then
 		curl -OL https://raw.githubusercontent.com/tosin2013/openshift-4-deployment-notes/master/pre-steps/configure-openshift-packages.sh
         chmod +x configure-openshift-packages.sh
@@ -138,7 +138,11 @@ function configure_webserver(){
 
 create_merge_secret
 login_to_registry
-download_oc_client
+if [ VERSION == "latest" ];
+download_oc_latest_client
+else 
+fi 
+
 ocp_mirror_release
 configure_webserver
 download_ipi_installer
