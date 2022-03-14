@@ -12,7 +12,7 @@ export PASSWORD="CHANGEME"
 export USERNAME="init"
 export AUTH="$(echo -n 'init:${PASSWORD}' | base64 -w0)" # in base 64
 export TLS_VERIFY=false
-export VERSION=latest # latest-4.9
+export VERSION=latest # for 4.9 release use latest-4.9
 # Functional
 
 function create_merge_secret(){
@@ -99,8 +99,8 @@ function download_rhcos() {
 	echo "RHCOS_QEMU_SHA_UNCOMPRESSED: $RHCOS_QEMU_SHA_UNCOMPRESSED"
 	echo "RHCOS_ISO_URI: $RHCOS_ISO_URI"
 	echo "RHCOS_ROOT_FS: $RHCOS_ROOT_FS"
-	echo "Press Enter to continue or Ctrl-C to cancel download"
-	read
+	#echo "Press Enter to continue or Ctrl-C to cancel download"
+	#read
 
 	if [[ ! -d ${OCP_RELEASE_DOWN_PATH} ]]; then
 		echo "----> Downloading RHCOS resources to ${OCP_RELEASE_DOWN_PATH}"
@@ -138,11 +138,7 @@ function configure_webserver(){
 
 create_merge_secret
 login_to_registry
-if [ VERSION == "latest" ];
 download_oc_latest_client
-else 
-fi 
-
 ocp_mirror_release
 configure_webserver
 download_ipi_installer
