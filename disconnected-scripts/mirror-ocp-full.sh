@@ -13,6 +13,7 @@ export USERNAME="init"
 export AUTH="$(echo -n 'init:${PASSWORD}' | base64 -w0)" # in base 64
 export TLS_VERIFY=false
 export VERSION=latest # for 4.9 release use latest-4.9
+
 # Functional
 
 function create_merge_secret(){
@@ -60,9 +61,26 @@ function download_oc_latest_client() {
         chmod +x configure-openshift-packages.sh
         ./configure-openshift-packages.sh -i
 		#https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/latest/release.txt
-		export OCP_RELEASE=$(oc version | awk '{print $3}')-x86_64
+
+		if [ -f ${HOME}/cluster-versions.json ];
+		then 
+			VARIABLE=$(oc version | awk '{print $3}')
+			echo ${VARIABLE::4}
+			AI_OC_RELEASE=$(cat cluster-versions.json | jq '.[]|.display_name'  | grep ${VARIABLE::4} | head -1 | tr -d '"')
+			export OCP_RELEASE=${AI_OC_RELEASE}-x86_64
+		else 
+			export OCP_RELEASE=$(oc version | awk '{print $3}')-x86_64
+		fi 	
 	else 
-		export OCP_RELEASE=$(oc version | awk '{print $3}')-x86_64
+		if [ -f ${HOME}/cluster-versions.json ];
+		then 
+			VARIABLE=$(oc version | awk '{print $3}')
+			echo ${VARIABLE::3}
+			AI_OC_RELEASE=$(cat cluster-versions.json | jq '.[]|.display_name'  | grep ${VARIABLE::3} | head -1 | tr -d '"')
+			export OCP_RELEASE=${AI_OC_RELEASE}-x86_64
+		else 
+			export OCP_RELEASE=$(oc version | awk '{print $3}')-x86_64
+		fi 
 	fi
 }
 

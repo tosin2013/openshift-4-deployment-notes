@@ -13,5 +13,5 @@ mkfs.ext4 /dev/${DRIVE} 2>/dev/null
 mkdir -p /registry/
 
 #mount for start up
-echo "/dev/${DRIVE}1 /registry auto noatime,noexec,nodiratime 0 0" >> /etc/fstab
+echo "/dev/${DRIVE} /registry auto noatime,noexec,nodiratime 0 0" >> /etc/fstab
 mount -a /dev/${DRIVE} /registry
