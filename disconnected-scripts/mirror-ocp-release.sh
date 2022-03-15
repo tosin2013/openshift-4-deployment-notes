@@ -48,6 +48,8 @@ function ocp_mirror_release() {
     if [ ${TLS_VERIFY} == "false" ];
     then 
        USE_INSECURE="true"
+	else
+       USE_INSECURE="false"	
     fi 
 	oc adm -a ${LOCAL_SECRET_JSON} release mirror \
 		--from=${OCP_REGISTRY}:${OCP_RELEASE} \
