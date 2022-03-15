@@ -21,7 +21,7 @@ function create_merge_secret(){
     then 
 
         cat <<EOF > ~/reg-secret.txt
-"${LOCAL_REG}": {
+"${LOCAL_REGISTRY}": {
     "email":  "${EMAIL}",
     "auth": "${AUTH}"
 }
