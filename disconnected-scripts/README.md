@@ -1,4 +1,4 @@
-# Script to configure disconnected enviornments
+# Script to configure disconnected environments
 
 ## Requirements
 * Configure FQDN for hostname 
