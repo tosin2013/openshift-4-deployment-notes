@@ -79,10 +79,25 @@ sed -i 's/PASSWORD="CHANGEME"/PASSWORD=PASSWORD_OUTPUT/g' mirror-ocp-release.sh
 ./mirror-ocp-release.sh
 ```
 
-# To mirror an OpenShift release and host OpenShift Binaries for assisted installer or UBI deployments
+# To mirror an OpenShift release and host OpenShift Binaries for UBI deployments
 * replace password with generated password for output
 ```
 sed -i 's/PASSWORD="CHANGEME"/PASSWORD=PASSWORD_OUTPUT/g' mirror-ocp-full.sh
+```
+
+* run the ./mirror-ocp-full.sh
+```
+./mirror-ocp-full.sh
+```
+
+# To mirror an OpenShift release and host OpenShift Binaries for assisted installer deployments
+* replace password with generated password for output
+```
+sed -i 's/PASSWORD="CHANGEME"/PASSWORD=PASSWORD_OUTPUT/g' mirror-ocp-full.sh
+```
+* run the get-ai-svc-version.sh
+```
+./get-ai-svc-version.sh
 ```
 
 * run the ./mirror-ocp-full.sh
