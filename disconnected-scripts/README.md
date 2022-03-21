@@ -35,7 +35,8 @@ sudo dnf install libvirt -y
 
 ### Download mirror registry
 ```
-VERSION=1.1.0
+VERSION=1.1.0 # Testing
+VERSION=1.0.0  #Stable
 curl -OL https://github.com/quay/mirror-registry/releases/download/${VERSION}/mirror-registry-offline.tar.gz
 tar -zxvf mirror-registry-offline.tar.gz
 ```
