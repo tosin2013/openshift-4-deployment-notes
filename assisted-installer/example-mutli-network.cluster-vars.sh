@@ -28,7 +28,8 @@ export MULTI_NETWORK=false
 #########################################################
 ## Enable or disable DHCP 
 export USE_DHCP=false 
-
+## Enable auto dns
+export USE_AUTO_DNS=false 
 
 #########################################################
 ## Additional Node + Network Configuration

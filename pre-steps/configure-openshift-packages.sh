@@ -59,13 +59,12 @@ function download_binaries(){
       openshift-install completion bash > openshift-install
       $SUDO mv openshift-install /etc/bash_completion.d/
     else
-      oc completion bash > /etc/bash_completion.d/openshift
-      openshift-install completion bash > /etc/bash_completion.d/openshift-install
+      oc completion bash | sudo tee /etc/bash_completion.d/openshift > /dev/null
+      . /usr/share/bash-completion/bash_completion
     fi 
 
 
-    source /etc/bash_completion.d/openshift
-    source /etc/bash_completion.d/openshift-install
+    . /usr/share/bash-completion/bash_completion
 
     echo "*******************************"
     echo "run the following to source the openshift auto complete"

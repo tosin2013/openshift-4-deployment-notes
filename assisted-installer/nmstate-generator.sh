@@ -57,11 +57,10 @@ EOF
 dns-resolver:
   config:
     server:
-$(generateDNSServerEntries 4)
 interfaces:
 - name: $(_jq '.ipv4.iface')
   ipv4:
-    auto-dns: false
+    auto-dns: ${USE_AUTO_DNS}
     dhcp: true
     enabled: true
   state: up
@@ -77,14 +76,14 @@ $(generateDNSServerEntries 4)
 interfaces:
 - name: $(_jq '.ipv4_int1.iface')
   ipv4:
-    auto-dns: false
+    auto-dns: ${USE_AUTO_DNS}
     dhcp: true
     enabled: true
   state: up
   type: ethernet
 - name: $(_jq '.ipv4_int2.iface')
   ipv4:
-    auto-dns: false
+    auto-dns: ${USE_AUTO_DNS}
     dhcp: true
     enabled: true
   state: up
