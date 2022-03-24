@@ -106,3 +106,8 @@ sed -i 's/PASSWORD="CHANGEME"/PASSWORD=PASSWORD_OUTPUT/g' mirror-ocp-full.sh
 ```
 ./mirror-ocp-full.sh
 ```
+
+# Location of Quay Cerificate after deployment
+```
+cat /registry/quay-rootCA/rootCA.pem
+```
