@@ -1,0 +1,61 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: policy-cluster-replicaset-worker-us-east-2a-enforce
+  namespace: cluster-machine-config-policy
+  annotations:
+    policy.open-cluster-management.io/standards: 
+    policy.open-cluster-management.io/categories: 
+    policy.open-cluster-management.io/controls: 
+spec:
+  remediationAction: inform
+  disabled: false
+  policy-templates:
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: policy-replicaset-worker-us-east-2a-channel-subscription
+        spec:
+          remediationAction: inform
+          severity: med
+          namespaceSelector:
+            include: ["openshift-machine-api"]
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: machine.openshift.io/v1beta1
+                kind: MachineSet
+                metadata:
+                  name: cluster-f2cxn-5tbj8-worker-us-east-2a
+                  namespace: openshift-machine-api
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: binding-policy-cluster-replicaset-worker-us-east-2a-enforce
+  namespace: cluster-machine-config-policy
+placementRef:
+  name: placement-policy-cluster-replicaset-worker-us-east-2a-enforce
+  kind: PlacementRule
+  apiGroup: apps.open-cluster-management.io
+subjects:
+- name: policy-cluster-replicaset-worker-us-east-2a-enforce
+  kind: Policy
+  apiGroup: policy.open-cluster-management.io
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  name: placement-policy-cluster-replicaset-worker-us-east-2a-enforce
+  namespace: cluster-machine-config-policy
+spec:
+  clusterConditions:
+  - status: "True"
+    type: ManagedClusterConditionAvailable
+  clusterSelector:
+    matchExpressions:
+      - key: environment
+        operator: In
+        values:
+          - staging
