@@ -1,10 +1,10 @@
-# Operator Lifecycle Manager on restricted networks - WIP
+# Operator Lifecycle Manager on restricted networks
 
 
 ## Requirements 
 
-gRPCurl
-https://github.com/fullstorydev/grpcurl/releases/
+**gRPCurl**
+* https://github.com/fullstorydev/grpcurl/releases/
 ```
 curl -OL https://github.com/fullstorydev/grpcurl/releases/download/v1.8.6/grpcurl_1.8.6_linux_x86_64.tar.gz
 tar -zxvf grpcurl_1.8.6_linux_x86_64.tar.gz
@@ -12,12 +12,8 @@ sudo mv grpcurl /usr/local/bin/
 ```
 
 
-opm
-```
+**opm**
 https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/
-```
-
-
 
 
 Disable the sources for the default catalogs by adding disableAllDefaultSources: true to the OperatorHub object:
@@ -73,6 +69,7 @@ $ podman login --authfile ~/merged-pull-secret.json \
   ${LOCAL_REGISTRY} \
   --tls-verify=${TLS_VERIFY} 
 $ podman push ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-index:v${OPENSHIFT_VERSION}
+```
 
 ## Adding a catalog source to a cluster
 **Create Catalog source for registry**
@@ -93,6 +90,7 @@ spec:
       interval: 30m
 EOF
 ```
+                             
 **Apply the changes**
 ```
 oc apply -f catalogSource.yaml
