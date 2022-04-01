@@ -56,7 +56,10 @@ Run the following command to prune the source index of all but the specified pac
 ```
 $ export PORT=8443
 $ export LOCAL_REGISTRY=${INTERNAL_REGISTRY}
+# For Quay Registry 
 $ export LOCAL_REPOSITORY=olm-mirror
+# For Artifactory Example: jfrog
+$ export LOCAL_REPOSITORY=olm-mirror/olm-mirror
 $ opm index prune \
     -f registry.redhat.io/redhat/redhat-operator-index:v${OPENSHIFT_VERSION} \
     -p $(cat saved-packages.log | paste -d ',' -s) \
@@ -68,6 +71,38 @@ Run the following command to push the new index image to your target registry:
 $ export TLS_VERIFY=false
 $ podman login --authfile ~/merged-pull-secret.json \
   ${LOCAL_REGISTRY} \
-  --tls-podverify=${TLS_VERIFY} 
-$ podman push ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-index:v${OPENSHIFT_VERSION}   --tls-verify  ${TLS_VERIFY}
+  --tls-verify=${TLS_VERIFY} 
+$ podman push ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-index:v${OPENSHIFT_VERSION}
+
+## Adding a catalog source to a cluster
+**Create Catalog source for registry**
 ```
+cat >catalogSource.yaml<<EOF
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  name: my-operator-catalog 
+  namespace: openshift-marketplace 
+spec:
+  sourceType: grpc
+  image: ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-index:v4.9 
+  displayName: Custom Operator Catalog
+  publisher: Red Hat
+  updateStrategy:
+    registryPoll: 
+      interval: 30m
+EOF
+```
+**Apply the changes**
+```
+oc apply -f catalogSource.yaml
+```
+
+**Check the status in OpenShift Marketplace**
+```
+$ oc get pods -n openshift-marketplace
+NAME                                    READY   STATUS              RESTARTS   AGE
+marketplace-operator-74657cd4bd-jqrpj   1/1     Running             0          5h59m
+my-operator-catalog-gx4gg               0/1     ContainerCreating   0          4s
+```
+                             
