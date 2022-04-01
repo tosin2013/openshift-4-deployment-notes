@@ -97,10 +97,6 @@ vim manifests-olm-mirror/$MANIFEST_DIRECTORY/catalogSource.yaml
 oc create -f  manifests-olm-mirror/$MANIFEST_DIRECTORY/catalogSource.yaml
 ```
                              
-**Apply the changes**
-```
-oc apply -f catalogSource.yaml
-```
 
 **Check the status in OpenShift Marketplace**
 ```
