@@ -70,7 +70,11 @@ $ podman login --authfile ~/merged-pull-secret.json \
   --tls-verify=${TLS_VERIFY} 
 $ podman push ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-index:v${OPENSHIFT_VERSION}
 ```
-
+## Run the following command to mirror the content
+>  If your mirror registry is on the same network as your workstation with unrestricted network access 
+```
+oc adm catalog mirror  registry.redhat.io/redhat/redhat-operator-index:v${OPENSHIFT_VERSION}  ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-index:v${OPENSHIFT_VERSION} -a ~/merged-pull-secret.json
+```
 ## Adding a catalog source to a cluster
 **Create Catalog source for registry**
 ```
