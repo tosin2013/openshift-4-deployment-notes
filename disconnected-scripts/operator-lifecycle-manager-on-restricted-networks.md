@@ -75,6 +75,10 @@ $ podman push ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-index:v${OPE
 ```
 oc adm catalog mirror  registry.redhat.io/redhat/redhat-operator-index:v${OPENSHIFT_VERSION}  ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-index:v${OPENSHIFT_VERSION} -a ~/merged-pull-secret.json
 ```
+
+## add ImageContentSourcePolicy to cluster
+
+
 ## Adding a catalog source to a cluster
 **Create Catalog source for registry**
 ```
@@ -108,3 +112,5 @@ marketplace-operator-74657cd4bd-jqrpj   1/1     Running             0          5
 my-operator-catalog-gx4gg               0/1     ContainerCreating   0          4s
 ```
                              
+Links: 
+* https://docs.openshift.com/container-platform/4.10/operators/admin/olm-managing-custom-catalogs.html#olm-accessing-images-private-registries_olm-managing-custom-catalogs
