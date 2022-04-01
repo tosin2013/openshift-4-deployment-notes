@@ -73,30 +73,28 @@ $ podman push ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-index:v${OPE
 ## Run the following command to mirror the content
 >  If your mirror registry is on the same network as your workstation with unrestricted network access 
 ```
-oc adm catalog mirror  registry.redhat.io/redhat/redhat-operator-index:v${OPENSHIFT_VERSION}  ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-index:v${OPENSHIFT_VERSION} -a ~/merged-pull-secret.json
+oc adm catalog mirror  ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-index:v${OPENSHIFT_VERSION}  ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY} -a ~/merged-pull-secret.json
 ```
-
+# Generate imagecontent source ploicy and catalog source
+```
+oc adm catalog mirror  ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-index:v4.10  ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY} --registry-config=${PULL_SECRET} --max-per-registry=100 --manifests-only  | tee -a mainfest.txt
+MANIFEST_DIRECTORY=$(cat mainfest.txt | grep -oE redhat-operator-index-[0-9]{10})
+```
 ## add ImageContentSourcePolicy to cluster
-
+```
+oc create -f  manifests-olm-mirror/$MANIFEST_DIRECTORY/imageContentSourcePolicy.yaml 
+```
 
 ## Adding a catalog source to a cluster
+**Rename `name:`**
+```
+vim manifests-olm-mirror/$MANIFEST_DIRECTORY/catalogSource.yaml
+```
+
 **Create Catalog source for registry**
 ```
-cat >catalogSource.yaml<<EOF
-apiVersion: operators.coreos.com/v1alpha1
-kind: CatalogSource
-metadata:
-  name: my-operator-catalog 
-  namespace: openshift-marketplace 
-spec:
-  sourceType: grpc
-  image: ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-index:v${OPENSHIFT_VERSION} 
-  displayName: Custom Operator Catalog
-  publisher: Red Hat
-  updateStrategy:
-    registryPoll: 
-      interval: 30m
-EOF
+
+oc create -f  manifests-olm-mirror/$MANIFEST_DIRECTORY/catalogSource.yaml
 ```
                              
 **Apply the changes**
