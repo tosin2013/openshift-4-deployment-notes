@@ -82,7 +82,7 @@ metadata:
   namespace: openshift-marketplace 
 spec:
   sourceType: grpc
-  image: ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-index:v4.9 
+  image: ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-index:v${OPENSHIFT_VERSION} 
   displayName: Custom Operator Catalog
   publisher: Red Hat
   updateStrategy:
