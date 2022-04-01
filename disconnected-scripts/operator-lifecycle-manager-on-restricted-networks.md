@@ -13,7 +13,7 @@ sudo mv grpcurl /usr/local/bin/
 
 
 **opm**
-https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/
+* https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/
 
 
 Disable the sources for the default catalogs by adding disableAllDefaultSources: true to the OperatorHub object:
