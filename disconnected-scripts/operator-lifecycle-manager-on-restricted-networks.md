@@ -45,7 +45,7 @@ grpcurl -plaintext localhost:50051 api.Registry/ListPackages > packages.out
 
 **Select packages from market place**
 ```
-cat packages.out | grep -E 'local-storage|odf|ocs'  | awk '{print $2}' | tr '"' ' '  | sed 's/ //g' | tee -a saved-packages.log
+cat packages.out | grep -E 'local-storage|odf|ocs'  | awk '{print $2}' | tr '"' ' '  | sed 's/ //g' | tee saved-packages.log
 ```
 
 Run the following command to prune the source index of all but the specified packages:
