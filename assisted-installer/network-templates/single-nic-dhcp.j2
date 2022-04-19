@@ -1,0 +1,11 @@
+dns-resolver:
+  config:
+    server:
+interfaces:
+- name: {{ interface_name }}
+  ipv4:
+    auto-dns: {{ auto_dns }}
+    dhcp: true
+    enabled: true
+  state: up
+  type: ethernet

@@ -1,0 +1,25 @@
+dns-resolver:
+config:
+    server:
+{% for dns_entry in dns_entries %}
+- {{ dns_entry }};
+{% endfor %}
+interfaces:
+- name: {{ interface_name }}.20
+type: vlan
+state: up
+ipv4:
+    enabled: true
+    address:
+    - ip: {{ static_ipv4_address }}
+    prefix-length: {{ static_ipv4_prefix }}
+    dhcp: false
+vlan:
+    base-iface: {{ interface_name }}
+    id: 20
+routes:
+config:
+- destination: 0.0.0.0/0
+    next-hop-address: $(_jq '.ipv4.gateway')
+    next-hop-interface: {{ interface_name }}.20
+    table-id: 254

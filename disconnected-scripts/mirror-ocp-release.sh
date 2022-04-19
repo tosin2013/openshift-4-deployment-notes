@@ -68,7 +68,6 @@ function download_oc_client() {
 		export OCP_RELEASE=$(oc version | awk '{print $3}')-x86_64
 	fi
 }
-}
 
 create_merge_secret
 login_to_registry

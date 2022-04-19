@@ -1,0 +1,21 @@
+dns-resolver:
+  config:
+    server:
+{% for dns_entry in dns_entries %}
+- {{ dns_entry }};
+{% endfor %}
+interfaces:
+- name: $(_jq '.ipv4_int1.iface')
+  ipv4:
+    auto-dns: {{ auto_dns }}
+    dhcp: true
+    enabled: true
+  state: up
+  type: ethernet
+- name: $(_jq '.ipv4_int2.iface')
+  ipv4:
+    auto-dns: {{ auto_dns }}
+    dhcp: true
+    enabled: true
+  state: up
+  type: ethernet

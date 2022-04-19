@@ -1,0 +1,22 @@
+dns-resolver:
+  config:
+    server:
+{% for dns_entry in dns_entries %}
+- {{ dns_entry }};
+{% endfor %}
+interfaces:
+- name: {{ interface_name }}
+  ipv4:
+    address:
+    - ip: {{ static_ipv4_address }}
+      prefix-length: {{ static_ipv4_prefix }}
+    dhcp: false
+    enabled: true
+  state: up
+  type: ethernet
+routes:
+  config:
+  - destination: 0.0.0.0/0
+    next-hop-address: $(_jq '.ipv4.gateway')
+    next-hop-interface: {{ interface_name }}
+    table-id: 254

@@ -1,0 +1,31 @@
+dns-resolver:
+  config:
+    server:
+{% for dns_entry in dns_entries %}
+- {{ dns_entry }};
+{% endfor %}
+interfaces:
+- name: $(_jq '.ipv4_int1.iface')
+  ipv4:
+    address:
+    - ip: $(_jq '.ipv4_int1.address')
+      prefix-length: $(_jq '.ipv4_int1.prefix')
+    dhcp: false
+    enabled: true
+  state: up
+  type: ethernet
+- name: $(_jq '.ipv4_int2.iface')
+  ipv4:
+    address:
+    - ip: $(_jq '.ipv4_int2.address')
+      prefix-length: $(_jq '.ipv4_int2.prefix')
+    dhcp: false
+    enabled: true
+  state: up
+  type: ethernet
+routes:
+  config:
+  - destination: 0.0.0.0/0
+    next-hop-address: $(_jq '.ipv4_int1.gateway')
+    next-hop-interface: $(_jq '.ipv4_int1.iface')
+    table-id: 254

@@ -35,7 +35,8 @@ sudo dnf install libvirt -y
 
 ### Download mirror registry
 ```
-VERSION=1.0.0
+VERSION=1.1.0 # Testing
+VERSION=1.0.0  #Stable
 curl -OL https://github.com/quay/mirror-registry/releases/download/${VERSION}/mirror-registry-offline.tar.gz
 tar -zxvf mirror-registry-offline.tar.gz
 ```
@@ -104,4 +105,9 @@ sed -i 's/PASSWORD="CHANGEME"/PASSWORD=PASSWORD_OUTPUT/g' mirror-ocp-full.sh
 * run the ./mirror-ocp-full.sh
 ```
 ./mirror-ocp-full.sh
+```
+
+# Location of Quay Cerificate after deployment
+```
+cat /registry/quay-rootCA/rootCA.pem
 ```

@@ -26,13 +26,16 @@
           echo ${node} | base64 --decode | jq -r ${1}
         }
         echo "  Creating NMState config for $(_jq '.name')..."
-        dns_entries=$(generateDNSServerEntries 4)
+        dns_entries=${CLUSTER_NODE_NET_DNS_SERVERS[@]}
         interface_name=$(_jq '.ipv4.iface')
         static_ipv4_address=$(_jq '.ipv4.address')
         static_ipv4_prefix=$(_jq '.ipv4.prefix')
         auto_dns=${USE_AUTO_DNS}
-        echo ${dns_entries}
-        echo ${interface_name}
-        echo ${static_ipv4_address}
-        echo ${static_ipv4_prefix}
+        echo  dns_entries=${dns_entries}
+        echo interface_name=${interface_name}
+        echo static_ipv4_address=${static_ipv4_address}
+        echo static_ipv4_prefix=${static_ipv4_prefix}
+        echo auto_dns=${USE_AUTO_DNS}
+        j2 network-templates/single-nic-static.j2
+        exit $?
       done

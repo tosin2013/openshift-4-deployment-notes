@@ -26,10 +26,14 @@ export MULTI_NETWORK=false
 #########################################################
 ## Enable or disable DHCP 
 export USE_DHCP=false 
+#########################################################
+## Enable or disable VLAN
+export USE_VLAN=false 
+export VLAN_ID="10"
 
 #########################################################
 ## Additional Node + Network Configuration
-export CLUSTER_NODE_NET_DNS_SERVERS=("192.168.42.9" "192.168.42.10")
+export CLUSTER_NODE_NET_DNS_SERVERS=("192.168.42.9", "192.168.42.10")
 
 ## Set Node Network Configuration
 NODE1_CFG='{"name": "ocp01", "role": "control-plane", "mac_address": "52:54:00:00:00:01", "ipv4": {"address": "192.168.3.51", "gateway": "192.168.3.1", "prefix": "24", "iface": "enp1s0"}}'
@@ -62,7 +66,7 @@ export NODE_CFGS='{ "nodes": [ '${NODE1_CFG}', '${NODE2_CFG}', '${NODE3_CFG}', '
 export ISO_TYPE="full-iso"
 
 ## CLUSTER_VERSION just needs to be MAJOR.MINOR - actual release is queried from the API
-export CLUSTER_VERSION="4.9"
+export CLUSTER_VERSION="4.10.3"
 ## CLUSTER_RELEASE has been moved to query-supported-versions.sh
 #export CLUSTER_RELEASE="4.9.6"
 
