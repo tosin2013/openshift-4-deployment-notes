@@ -29,7 +29,11 @@ export MULTI_NETWORK=false
 ## Enable or disable DHCP 
 export USE_DHCP=false 
 ## Enable auto dns
-export USE_AUTO_DNS=false 
+export USE_AUTO_DNS=false
+#########################################################
+## Enable or disable VLAN
+export USE_VLAN=false 
+export VLAN_ID="10"
 
 #########################################################
 ## Additional Node + Network Configuration
