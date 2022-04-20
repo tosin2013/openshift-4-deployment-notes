@@ -24,7 +24,7 @@ export MULTI_NETWORK=true
 ## if you enable or disable dhcp both interfaces will use the samae options
 ## cp example-mutli-network.cluster-vars.sh cluster-vars.sh
 ## edit nmstate-generator.sh if you want one interface to have static and the other dhcp
-export MULTI_NETWORK=false
+export MULTI_NETWORK=true
 #########################################################
 ## Enable or disable DHCP 
 export USE_DHCP=false 
@@ -34,6 +34,7 @@ export USE_AUTO_DNS=false
 ## Enable or disable VLAN
 export USE_VLAN=false 
 export VLAN_ID="10"
+export VLAN_ID_TWO="20"
 
 #########################################################
 ## Additional Node + Network Configuration
