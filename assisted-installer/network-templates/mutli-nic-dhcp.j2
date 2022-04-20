@@ -1,18 +1,19 @@
 dns-resolver:
   config:
     server:
+{% set dns_entries = parse_dns_vars.split(',') %}
 {% for dns_entry in dns_entries %}
-- {{ dns_entry }};
+      - {{ dns_entry }}
 {% endfor %}
 interfaces:
-- name: $(_jq '.ipv4_int1.iface')
+- name: {{ interface_one_name }}
   ipv4:
     auto-dns: {{ auto_dns }}
     dhcp: true
     enabled: true
   state: up
   type: ethernet
-- name: $(_jq '.ipv4_int2.iface')
+- name: {{ interface_two_name }}
   ipv4:
     auto-dns: {{ auto_dns }}
     dhcp: true

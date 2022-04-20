@@ -1,8 +1,9 @@
 dns-resolver:
   config:
     server:
+{% set dns_entries = parse_dns_vars.split(',') %}
 {% for dns_entry in dns_entries %}
-- {{ dns_entry }};
+      - {{ dns_entry }}
 {% endfor %}
 interfaces:
 - name: {{ interface_name }}
@@ -17,6 +18,6 @@ interfaces:
 routes:
   config:
   - destination: 0.0.0.0/0
-    next-hop-address: $(_jq '.ipv4.gateway')
+    next-hop-address: {{ static_ipv4_gateway }}
     next-hop-interface: {{ interface_name }}
     table-id: 254
