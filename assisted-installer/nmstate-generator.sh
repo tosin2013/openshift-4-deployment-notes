@@ -44,7 +44,6 @@
           elif [ $USE_DHCP == true ] && [ $USE_VLAN == false ]; # Single Network VLAN NIC with Static IPS
           then 
             j2 network-templates/single-nic-dhcp.j2 | sed '/^$/d' | tee ${CLUSTER_DIR}/$(_jq '.name').yaml
-          fi
           elif [ $USE_DHCP == false ] && [ $USE_VLAN == true ]; # Single Network VLAN NIC with Static IPS
           then 
             j2 network-templates/single-nic-vlan-static.j2 | sed '/^$/d' | tee ${CLUSTER_DIR}/$(_jq '.name').yaml
