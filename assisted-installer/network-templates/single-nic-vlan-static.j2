@@ -13,7 +13,7 @@ interfaces:
     enabled: true
     address:
     - ip: {{ static_ipv4_address }}
-    prefix-length: {{ static_ipv4_prefix }}
+      prefix-length: {{ static_ipv4_prefix }}
     dhcp: false
   vlan:
     base-iface: {{ interface_name }}
