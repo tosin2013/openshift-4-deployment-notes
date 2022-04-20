@@ -1,0 +1,24 @@
+dns-resolver:
+config:
+    server:
+{% set dns_entries = parse_dns_vars.split(',') %}
+{% for dns_entry in dns_entries %}
+      - {{ dns_entry }}
+{% endfor %}
+interfaces:
+- name: {{ interface_name }}.{{ vlan_id }}
+  type: vlan
+  state: up
+  ipv4:
+    auto-dns: {{ auto_dns }}
+    dhcp: true
+    enabled: true
+vlan:
+    base-iface: {{ interface_name }}
+    id: {{ vlan_id }}
+routes:
+  config:
+  - destination: 0.0.0.0/0
+    next-hop-address: {{ static_ipv4_gateway }}
+    next-hop-interface: {{ interface_name }}.{{ vlan_id }}
+    table-id: 254
