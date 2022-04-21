@@ -1,4 +1,5 @@
  #!/bin/bash
+ # https://gist.github.com/cdoan1/6ec6a5b3f57764caeb22e015a109e4b7
 set -x 
 ## Variables
 export PULL_SECRET_JSON=~/pull_secret.json
