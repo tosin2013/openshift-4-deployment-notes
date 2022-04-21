@@ -64,16 +64,16 @@
           export vlan_id_two=${VLAN_ID_TWO}
           if  [ $USE_DHCP == false ] && [ $USE_VLAN == true ] && [ $USE_BOND == true ];  # Bond Network Static
           then 
-            j2 network-templates/mutli-nic-vlan-static-bond.j2 | sed '/^$/d' | tee ${CLUSTER_DIR}/$(_jq '.name').yaml 
+            j2 network-templates/multi-nic-vlan-static-bond.j2 | sed '/^$/d' | tee ${CLUSTER_DIR}/$(_jq '.name').yaml 
           elif [ $USE_DHCP == true ] && [ $USE_VLAN == false ];  # Multi Network DHCP
           then 
-            j2 network-templates/mutli-nic-dhcp.j2 | sed '/^$/d' | tee ${CLUSTER_DIR}/$(_jq '.name').yaml 
+            j2 network-templates/multi-nic-dhcp.j2 | sed '/^$/d' | tee ${CLUSTER_DIR}/$(_jq '.name').yaml 
           elif [ $USE_DHCP == false ] && [ $USE_VLAN == false ]; # Multi Network Static IPs
           then 
-            j2 network-templates/mutli-nic-static.j2 | sed '/^$/d' | tee ${CLUSTER_DIR}/$(_jq '.name').yaml 
+            j2 network-templates/multi-nic-static.j2 | sed '/^$/d' | tee ${CLUSTER_DIR}/$(_jq '.name').yaml 
           elif [ $USE_DHCP == false ] && [ $USE_VLAN == true ]; # Single Network VLAN NIC with Static IPS
           then 
-            j2 network-templates/mutli-nic-vlan-static.j2 | sed '/^$/d' | tee ${CLUSTER_DIR}/$(_jq '.name').yaml
+            j2 network-templates/multi-nic-vlan-static.j2 | sed '/^$/d' | tee ${CLUSTER_DIR}/$(_jq '.name').yaml
           elif [ $USE_DHCP == true ] && [ $USE_VLAN == true ]; # DHCP Network VLAN NIC with Static IPS
           then 
             j2 network-templates/single-nic-vlan-dhcp.j2 | sed '/^$/d' | tee ${CLUSTER_DIR}/$(_jq '.name').yaml
