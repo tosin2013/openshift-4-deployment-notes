@@ -31,6 +31,8 @@ export USE_DHCP=false
 export USE_AUTO_DNS=false
 #########################################################
 ## Enable or disable BOND
+## Review Bonding types below
+## https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_and_managing_networking/configuring-network-bonding_configuring-and-managing-networking#upstream-switch-configuration-depending-on-the-bonding-modes_configuring-network-bonding
 export USE_BOND=false
 #########################################################
 ## Enable or disable VLAN
