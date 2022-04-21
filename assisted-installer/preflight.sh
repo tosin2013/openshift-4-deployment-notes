@@ -24,6 +24,7 @@ checkForProgramAndExit curl
 checkForProgramAndExit jq
 checkForProgramAndExit python3
 checkForProgramAndExit dig
+checkForProgramAndExit j2cli
 
 source $SCRIPT_DIR/authenticate-to-api.sh
 

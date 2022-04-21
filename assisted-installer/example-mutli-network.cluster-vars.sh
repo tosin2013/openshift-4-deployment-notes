@@ -19,7 +19,6 @@ export CLUSTER_INGRESS_VIP="192.168.3.8"
 export CLUSTER_API_VIP="192.168.3.9"
 export CLUSTER_MACHINE_NETWORK="192.168.3.0/24"
 export NTP_SOURCE="0.rhel.pool.ntp.org"
-export MULTI_NETWORK=true
 #########################################################
 ## if you enable or disable dhcp both interfaces will use the samae options
 ## cp example-mutli-network.cluster-vars.sh cluster-vars.sh
@@ -30,6 +29,9 @@ export MULTI_NETWORK=true
 export USE_DHCP=false 
 ## Enable auto dns
 export USE_AUTO_DNS=false
+#########################################################
+## Enable or disable BOND
+export USE_BOND=false
 #########################################################
 ## Enable or disable VLAN
 export USE_VLAN=false 

@@ -62,7 +62,10 @@
           export interface_two_prefix=$(_jq '.ipv4_int2.prefix')
           export vlan_id=${VLAN_ID}
           export vlan_id_two=${VLAN_ID_TWO}
-          if  [ $USE_DHCP == true ] && [ $USE_VLAN == false ];  # Multi Network DHCP
+          if  [ $USE_DHCP == false ] && [ $USE_VLAN == true ] && [ $USE_BOND == true ];  # Bond Network Static
+          then 
+            j2 network-templates/mutli-nic-vlan-static-bond.j2 | sed '/^$/d' | tee ${CLUSTER_DIR}/$(_jq '.name').yaml 
+          elif [ $USE_DHCP == true ] && [ $USE_VLAN == false ];  # Multi Network DHCP
           then 
             j2 network-templates/mutli-nic-dhcp.j2 | sed '/^$/d' | tee ${CLUSTER_DIR}/$(_jq '.name').yaml 
           elif [ $USE_DHCP == false ] && [ $USE_VLAN == false ]; # Multi Network Static IPs
