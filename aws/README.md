@@ -27,7 +27,7 @@ chmod +x configure-openshift-packages.sh
 ```
 ssh-keygen -t rsa -b 4096 -f ~/.ssh/cluster-key -N ''
 
-chmod 400 ~/.ssh/cluster-key .pub
+chmod 400 ~/.ssh/cluster-key.pub
 cat  ~/.ssh/cluster-key.pub
 
 eval "$(ssh-agent -s)"
