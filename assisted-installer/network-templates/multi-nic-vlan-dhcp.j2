@@ -1,0 +1,34 @@
+dns-resolver:
+  config:
+    server:
+{% set dns_entries = parse_dns_vars.split(',') %}
+{% for dns_entry in dns_entries %}
+      - {{ dns_entry }}
+{% endfor %}
+interfaces:
+- name: {{ interface_one_name }}.{{ vlan_id }}
+  ipv4:
+    auto-dns: {{ auto_dns }}
+    dhcp: true
+    enabled: true
+  state: up
+  type: vlan
+  vlan:
+    base-iface: {{ interface_one_address }}
+    id: {{ vlan_id }}
+- name: {{ interface_two_name }}.{{ vlan_id_two }}
+  ipv4:
+    auto-dns: {{ auto_dns }}
+    dhcp: true
+    enabled: true
+  state: up
+  type: vlan
+  vlan:
+    base-iface: {{ interface_two_name }}
+    id: {{ vlan_id_two }}
+routes:
+  config:
+  - destination: 0.0.0.0/0
+    next-hop-address: {{ interface_one_gateway }}
+    next-hop-interface: {{ interface_one_name }}.{{ vlan_id }}
+    table-id: 254

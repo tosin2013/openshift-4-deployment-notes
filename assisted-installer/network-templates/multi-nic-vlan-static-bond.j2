@@ -1,0 +1,39 @@
+dns-resolver:
+  config:
+    server:
+{% set dns_entries = parse_dns_vars.split(',') %}
+{% for dns_entry in dns_entries %}
+      - {{ dns_entry }}
+{% endfor %}
+interfaces:
+- name: bond0
+  type: bond
+  state: up
+  ipv4:
+    dhcp: true
+    enabled: true
+  link-aggregation:
+    mode: balance-rr
+    options:
+      miimon: '140'
+    port:
+    - {{ interface_one_name }}
+    - {{ interface_two_name }}
+- name: bond0.{{ vlan_id }}
+  type: vlan
+  state: up
+  ipv4:
+    address:
+    - ip: {{ interface_one_address }}
+      prefix-length: {{ interface_one_prefix }}
+    dhcp: false
+    enabled: true
+  vlan:
+    base-iface: bond0
+    id: {{ vlan_id }}
+routes:
+  config:
+  - destination: 0.0.0.0/0
+    next-hop-address: {{ interface_one_gateway }}
+    next-hop-interface: bond0.{{ vlan_id }}
+    table-id: 254
