@@ -63,7 +63,7 @@ generateStaticNetCfgJSON() {
 #export PULL_SECRET=$(cat ${PULL_SECRET_PATH} | jq -R .)
 cat << EOF
 {
-  "ssh_public_key": "$CLUSTER_SSH_PUB_KEY",
+  "ssh_authorized_key": "$CLUSTER_SSH_PUB_KEY",
   "image_type": "${ISO_TYPE}",
   "pull_secret": ${PULL_SECRET},
   "static_network_config": [
