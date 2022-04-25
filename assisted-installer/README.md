@@ -8,6 +8,9 @@ The following binaries need to be included in the system $PATH:
 - jq
 - python3
 - j2cli
+```
+pip3 install j2cli
+```
 
 ## Assisted Installer Steps for Bare Metal machines with Static IPs
 
