@@ -156,6 +156,9 @@ function configure_webserver(){
     sudo systemctl restart httpd
 }
 
+#sudo scp utilityvm.example.com:/opt/registry/certs/ca.pem /etc/pki/ca-trust/source/anchors
+#sudo update-ca-trust
+#curl -u openshift:redhat https://utilityvm.example.com:5000/v2/_catalog
 create_merge_secret
 login_to_registry
 download_oc_latest_client

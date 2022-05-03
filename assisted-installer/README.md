@@ -184,6 +184,47 @@ oc get csr|grep Pending
 for csr in $(oc -n openshift-machine-api get csr | awk '/Pending/ {print $1}'); do oc adm certificate approve $csr;done
 ```
 
+## VMWARE Govc commands 
+> You may use this to quickly upload iso to vSphere
+
+### Install Govc
+```
+$ curl -L https://github.com/vmware/govmomi/releases/download/v0.28.0/govc_Linux_x86_64.tar.gz  | tar -C /usr/local/bin -xvzf - govc
+$ chmod +x /usr/local/bin/govc
+$ govc
+```
+
+
+### Import OVA template 
+**Download trusted root CA certificates from the vSphere Web Services SDK**
+```
+export vcenter_fqdn=my_vcenter_fqdn
+curl -OL -k https://$vcenter_fqdn/certs/download.zip
+```
+
+**unzip the certs**
+```
+unzip download.zip 
+```
+
+**Copy the certs into the anchors directory**
+```
+cp certs/lin/* /etc/pki/ca-trust/source/anchors
+```
+
+**Update the ca-trust**
+```
+update-ca-trust extract
+```
+**Push ISO to vSphere**
+```
+# Create iso folder in vSphere Datastore 
+$ export GOVC_URL=https://${vcenter_fqdn}/sdk
+$ export GOVC_USERNAME=administrator@vsphere.local
+$ export GOVC_PASSWORD="vsphere-password"
+$ govc datastore.upload -ds Datastore1 ./.generated/ocp4.example.com/ai-liveiso-7cf94369-8b3d-4e73-afa1-aac911a00948.iso ISOs/ai-liveiso-7cf94369-8b3d-4e73-afa1-aac911a00948.iso
+```
+
 ## Links
 
 * [Assisted Installer API Swagger Documentation](https://generator.swagger.io/?url=https://raw.githubusercontent.com/openshift/assisted-service/master/swagger.yaml)

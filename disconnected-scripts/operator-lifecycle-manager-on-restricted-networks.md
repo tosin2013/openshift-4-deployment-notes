@@ -45,7 +45,7 @@ grpcurl -plaintext localhost:50051 api.Registry/ListPackages > packages.out
 
 **Select packages from market place**
 ```
-cat packages.out | grep -E 'local-storage|odf|ocs'  | awk '{print $2}' | tr '"' ' '  | sed 's/ //g' | tee saved-packages.log
+cat packages.out | grep -E 'local-storage|odf|ocs'  | awk '{print $2}' | tr '"' ' '  | sed 's/ //g' | tee -a saved-packages.log
 ```
 
 Run the following command to prune the source index of all but the specified packages:
@@ -77,7 +77,7 @@ oc adm catalog mirror  ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-ind
 ```
 # Generate imagecontent source ploicy and catalog source
 ```
-oc adm catalog mirror  ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-index:v4.10  ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY} --registry-config=${PULL_SECRET} --max-per-registry=100 --manifests-only -a ~/merged-pull-secret.json | tee mainfest.txt
+oc adm catalog mirror  ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-index:v4.10  ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY} --registry-config=${PULL_SECRET} --max-per-registry=100 --manifests-only  | tee -a mainfest.txt
 MANIFEST_DIRECTORY=$(cat mainfest.txt | grep -oE redhat-operator-index-[0-9]{10})
 ```
 ## add ImageContentSourcePolicy to cluster
@@ -105,6 +105,13 @@ NAME                                    READY   STATUS              RESTARTS   A
 marketplace-operator-74657cd4bd-jqrpj   1/1     Running             0          5h59m
 my-operator-catalog-gx4gg               0/1     ContainerCreating   0          4s
 ```
-                             
+### Updating an index image
+```
+opm index add \
+    --bundles <registry>/<namespace>/<new_bundle_image>@sha256:<digest> \
+    --from-index <registry>/<namespace>/<existing_index_image>:<existing_tag> \
+    --tag <registry>/<namespace>/<existing_index_image>:<updated_tag> \
+    --pull-tool podman 
+```
 Links: 
 * https://docs.openshift.com/container-platform/4.10/operators/admin/olm-managing-custom-catalogs.html#olm-accessing-images-private-registries_olm-managing-custom-catalogs
