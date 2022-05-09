@@ -15,11 +15,18 @@ kind: ObjectBucketClaim
 metadata:
   name: noobaa-registry
   namespace: openshift-image-registry 
+  finalizers:
+    - objectbucket.io/finalizer
+  labels:
+    app: noobaa
+    bucket-provisioner: openshift-storage.noobaa.io-obc
+    noobaa-domain: openshift-storage.noobaa.io
 spec:
   additionalConfig:
     bucketclass: noobaa-default-bucket-class
-  generateBucketName: noobaa-registry 
+  objectBucketName: noobaa-registry-bucket
   storageClassName: openshift-storage.noobaa.io
+  bucketName: noobaa-registry-bucket
 YAML
 
 $ oc create -f odf-registry.yaml
