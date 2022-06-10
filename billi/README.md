@@ -60,12 +60,6 @@ $ git checkout agent-installer
 $ hack/build.sh
 ```
 
-**Copy custom ocp-install.tar.gz**
-```
-curl -OL http://10.0.0.240/ocp-install.tar.gz
-sudo tar xzvf ocp-install.tar.gz -C ~/.local/bin
-```
-
 **install nmstatgectl**
 ```
 sudo dnf install /usr/bin/nmstatectl -y
