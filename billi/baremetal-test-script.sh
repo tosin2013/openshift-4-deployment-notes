@@ -11,7 +11,7 @@ WORKER_MEMORY=32768
 MASTER_MEMORY=16384
 MASTER_CPU=4
 CPU_FLAGS="--cpu=host-passthrough"
-NETWORK="ztpfw"
+NETWORK="bare-net"
 OS_VARIANT="rhel8.5"
 LIBVIRT_VM_PATH="/var/lib/libvirt/images"
 

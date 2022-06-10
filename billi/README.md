@@ -99,7 +99,7 @@ EOF
 
 **2. Create agent-cluster-install.yaml**
 ```
-$ cat << EOF > ./cluster-manifests/cluster-deployment.yaml
+cat << EOF > ./cluster-manifests/cluster-deployment.yaml
 apiVersion: hive.openshift.io/v1
 kind: ClusterDeployment
 metadata:
