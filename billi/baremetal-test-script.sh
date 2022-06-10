@@ -21,3 +21,8 @@ sudo virt-install --virt-type kvm --ram $MASTER_MEMORY --vcpus $MASTER_CPU --os-
 sudo virsh define ocp4-master1.xml 
 sudo virsh define ocp4-master2.xml 
 sudo virsh define ocp4-master3.xml
+
+echo "[INFO] starting vms"
+sudo virsh start ocp4-master1
+sudo virsh start ocp4-master2
+sudo virsh start ocp4-master3
