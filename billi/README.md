@@ -299,6 +299,11 @@ bin/openshift-install agent create image
 bash -x baremetal-test-script.sh
 ```
 
+**Get deployment status**
+> we are using the ip for the ocp4-master1 in script
+```
+curl --silent http://192.168.150.116:8090//api/assisted-install/v2/clusters | jq .
+```
 
 # Links:
 https://schmaustech.blogspot.com/2022/05/install-openshift-with-agent-installer.html
