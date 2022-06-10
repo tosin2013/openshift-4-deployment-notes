@@ -1,8 +1,10 @@
 # BILLI/Agent-based Installer early access
 
 ## Required Files
+```
 export SSH_PUB_KEY_PATH="$HOME/.ssh/id_rsa.pub"
 export PULL_SECRET_PATH="$HOME/ocp-pull-secret"
+```
 
 ## Configure Rhel 8.5 system 
 ```
@@ -38,8 +40,7 @@ cd ~/qubinode-installer
 ```
 curl -OL https://raw.githubusercontent.com/tosin2013/openshift-4-deployment-notes/master/pre-steps/configure-openshift-packages.sh
 chmod +x configure-openshift-packages.sh
-export VERSION=latest-4.9
-./configure-openshift-packages.sh --install -v pre-release
+./configure-openshift-packages.sh -i
 sudo rm -rf /usr/bin/openshift-install
 ```
 
@@ -71,7 +72,7 @@ sudo dnf install /usr/bin/nmstatectl -y
 ```
 **create Cluster manifest directory**
 ```
-mkdir ./cluster-manifests
+mkdir cluster-manifests
 ```
 
 **1. Create agent-cluster-install.yaml**
