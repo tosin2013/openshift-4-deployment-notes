@@ -282,8 +282,9 @@ EOF
 
 **Generate agent.iso**
 ```
+cp -avi cluster-manifests/ ~/cluster-mainfests
 ls -l ./cluster-manifests/
- bin/openshift-install agent create image 
+bin/openshift-install agent create image 
 ```
 
 ### Optional steps
