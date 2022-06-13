@@ -44,6 +44,8 @@ chmod +x configure-openshift-packages.sh
 sudo rm -rf /usr/bin/openshift-install
 ```
 
+[Centos Jumpbox Deployment](https://github.com/tosin2013/qubinode-installer/blob/cleanup/docs/qubinode/rdpjumpbox.md)
+
 **install golang**
 ```
 wget https://storage.googleapis.com/golang/getgo/installer_linux
