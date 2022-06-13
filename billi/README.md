@@ -299,14 +299,19 @@ bin/openshift-install agent create image
 bash -x baremetal-test-script.sh
 ```
 
+**start VMS**
+
 **Load the OpenShift with the Assisted Installer UI**
 > use the ip address of the first node 
 ![20220613113231](https://i.imgur.com/lwaV3Mr.png)
 
-> wait for the other nodes to populate 
+> wait for the other nodes to populate manually change the hostnames to change the Insuffcient tag
+![20220613114406](https://i.imgur.com/iZCIzWn.png)
 
+> wait for deployment to complete
+![20220613114432](https://i.imgur.com/Hl0ERwa.png)
 
-**Get deployment status**
+**Get deployment status using curl**
 > we are using the ip for the ocp4-master1 in script
 ```
 curl --silent http://192.168.150.116:8090//api/assisted-install/v2/clusters | jq .
