@@ -325,7 +325,7 @@ curl --silent http://192.168.150.116:8090//api/assisted-install/v2/clusters | jq
 ![20220613153833](https://i.imgur.com/fsHpVyh.png)
 
 **Reset OpenShift password**
-[Rotating the OpenShift kubeadmin Password](https://blog.andyserver.com/2021/07/rotating-the-openshift-kubeadmin-password/)
+* [Rotating the OpenShift kubeadmin Password](https://blog.andyserver.com/2021/07/rotating-the-openshift-kubeadmin-password/)
 
 **You bnow should have access to the cluster**
 ![20220613154017](https://i.imgur.com/1uVPU9j.png)
