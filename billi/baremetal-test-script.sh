@@ -22,7 +22,7 @@ sudo virsh define ocp4-master1.xml
 sudo virsh define ocp4-master2.xml 
 sudo virsh define ocp4-master3.xml
 
-echo "[INFO] starting vms"
-sudo virsh start ocp4-master1
-sudo virsh start ocp4-master2
-sudo virsh start ocp4-master3
+#echo "[INFO] starting vms"
+#nohup sudo virsh start ocp4-master1 &
+#nohup sudo virsh start ocp4-master2 &
+#nohup sudo virsh start ocp4-master3 &

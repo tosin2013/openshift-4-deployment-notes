@@ -131,9 +131,9 @@ cat << EOF > ./cluster-manifests/cluster-image-set.yaml
 apiVersion: hive.openshift.io/v1
 kind: ClusterImageSet
 metadata:
-  name: ocp-release-4.10.10-x86-64-for-4.10.0-0-to-4.11.0-0
+  name: ocp-release-4.11
 spec:
-  releaseImage: quay.io/openshift-release-dev/ocp-release:4.10.10-x86_64
+  releaseImage: registry.ci.openshift.org/ocp/release:4.11.0-0.nightly-2022-06-06-025509
 EOF
 ```
 
@@ -274,7 +274,7 @@ kind: Secret
 type: kubernetes.io/dockerconfigjson
 metadata:
   name: pull-secret
-  namespace: kni22
+  namespace: ocp4-cluster
 stringData:
   .dockerconfigjson: '$(cat ${PULL_SECRET_PATH})'
 EOF
@@ -298,6 +298,13 @@ bin/openshift-install agent create image
 ```
 bash -x baremetal-test-script.sh
 ```
+
+**Load the OpenShift with the Assisted Installer UI**
+> use the ip address of the first node 
+![20220613113231](https://i.imgur.com/lwaV3Mr.png)
+
+> wait for the other nodes to populate 
+
 
 **Get deployment status**
 > we are using the ip for the ocp4-master1 in script
