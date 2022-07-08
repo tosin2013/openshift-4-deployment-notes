@@ -23,6 +23,8 @@ CP_RAM_GB="16"
 CP_CPU_SOCKETS="1"
 DISK_SIZE="130"
 LIBVIRT_VM_PATH="/var/lib/libvirt/images"
+# uncomment POWEROFF if RHEL 8.5 or less
+# POWEROFF=",on_poweroff=preserve"
 if [ ! -f ${LIBVIRT_VM_PATH}/ai-liveiso-$CLUSTER_ID.iso ];
 then 
   sudo cp ${CLUSTER_DIR}/ai-liveiso-$CLUSTER_ID.iso  ${LIBVIRT_VM_PATH}/ai-liveiso-$CLUSTER_ID.iso 
@@ -63,16 +65,16 @@ then
   fi 
 
   if [ $MULTI_NETWORK  == false ]; then 
-    LIBVIRT_LIKE_OPTIONS="--connect=qemu:///system -v --memballoon none --cpu host-passthrough --autostart --noautoconsole --virt-type kvm --features kvm_hidden=on --controller type=scsi,model=virtio-scsi --cdrom=${LIBVIRT_VM_PATH}/ai-liveiso-$NEW_CLUSTER_ID-$WORKER_NAME.iso    --os-variant=fedora-coreos-stable --events on_reboot=restart,on_poweroff=preserve --graphics vnc,listen=0.0.0.0,tlsport=,defaultMode='insecure' --network ${LIBVIRT_NETWORK} --console pty,target_type=serial"
+    LIBVIRT_LIKE_OPTIONS="--connect=qemu:///system -v --memballoon none --cpu host-passthrough --autostart --noautoconsole --virt-type kvm --features kvm_hidden=on --controller type=scsi,model=virtio-scsi --cdrom=${LIBVIRT_VM_PATH}/ai-liveiso-$NEW_CLUSTER_ID-$WORKER_NAME.iso    --os-variant=fedora-coreos-stable --events on_reboot=restart${POWEROFF} --graphics vnc,listen=0.0.0.0,tlsport=,defaultMode='insecure' --network ${LIBVIRT_NETWORK} --console pty,target_type=serial"
   elif [ $MULTI_NETWORK  == true ]; then 
-    LIBVIRT_LIKE_OPTIONS="--connect=qemu:///system -v --memballoon none --cpu host-passthrough --autostart --noautoconsole --virt-type kvm --features kvm_hidden=on --controller type=scsi,model=virtio-scsi --cdrom=${LIBVIRT_VM_PATH}/ai-liveiso-$NEW_CLUSTER_ID-$WORKER_NAME.iso    --os-variant=fedora-coreos-stable --events on_reboot=restart,on_poweroff=preserve --graphics vnc,listen=0.0.0.0,tlsport=,defaultMode='insecure' --network ${LIBVIRT_NETWORK}  --console pty,target_type=serial"
+    LIBVIRT_LIKE_OPTIONS="--connect=qemu:///system -v --memballoon none --cpu host-passthrough --autostart --noautoconsole --virt-type kvm --features kvm_hidden=on --controller type=scsi,model=virtio-scsi --cdrom=${LIBVIRT_VM_PATH}/ai-liveiso-$NEW_CLUSTER_ID-$WORKER_NAME.iso    --os-variant=fedora-coreos-stable --events on_reboot=restart${POWEROFF} --graphics vnc,listen=0.0.0.0,tlsport=,defaultMode='insecure' --network ${LIBVIRT_NETWORK}  --console pty,target_type=serial"
   fi 
 
 else
   if [ $MULTI_NETWORK  == false ]; then 
-    LIBVIRT_LIKE_OPTIONS="--connect=qemu:///system -v --memballoon none --cpu host-passthrough --autostart --noautoconsole --virt-type kvm --features kvm_hidden=on --controller type=scsi,model=virtio-scsi --cdrom=${LIBVIRT_VM_PATH}/ai-liveiso-$CLUSTER_ID.iso   --os-variant=fedora-coreos-stable --events on_reboot=restart,on_poweroff=preserve --graphics vnc,listen=0.0.0.0,tlsport=,defaultMode='insecure' --network ${LIBVIRT_NETWORK} --console pty,target_type=serial"
+    LIBVIRT_LIKE_OPTIONS="--connect=qemu:///system -v --memballoon none --cpu host-passthrough --autostart --noautoconsole --virt-type kvm --features kvm_hidden=on --controller type=scsi,model=virtio-scsi --cdrom=${LIBVIRT_VM_PATH}/ai-liveiso-$CLUSTER_ID.iso   --os-variant=fedora-coreos-stable --events on_reboot=restart${POWEROFF} --graphics vnc,listen=0.0.0.0,tlsport=,defaultMode='insecure' --network ${LIBVIRT_NETWORK} --console pty,target_type=serial"
   elif [ $MULTI_NETWORK  == true ]; then 
-    LIBVIRT_LIKE_OPTIONS="--connect=qemu:///system -v --memballoon none --cpu host-passthrough --autostart --noautoconsole --virt-type kvm --features kvm_hidden=on --controller type=scsi,model=virtio-scsi --cdrom=${LIBVIRT_VM_PATH}/ai-liveiso-$CLUSTER_ID.iso   --os-variant=fedora-coreos-stable --events on_reboot=restart,on_poweroff=preserve --graphics vnc,listen=0.0.0.0,tlsport=,defaultMode='insecure' --network ${LIBVIRT_NETWORK} --console pty,target_type=serial"
+    LIBVIRT_LIKE_OPTIONS="--connect=qemu:///system -v --memballoon none --cpu host-passthrough --autostart --noautoconsole --virt-type kvm --features kvm_hidden=on --controller type=scsi,model=virtio-scsi --cdrom=${LIBVIRT_VM_PATH}/ai-liveiso-$CLUSTER_ID.iso   --os-variant=fedora-coreos-stable --events on_reboot=restart${POWEROFF} --graphics vnc,listen=0.0.0.0,tlsport=,defaultMode='insecure' --network ${LIBVIRT_NETWORK} --console pty,target_type=serial"
   fi 
 fi 
 
@@ -103,8 +105,15 @@ for node in $(echo "${NODE_CFGS}" | jq -r '.nodes[] | @base64'); do
     if [ $MULTI_NETWORK  == false ]; then 
       nohup sudo virt-install ${LIBVIRT_LIKE_OPTIONS} --mac="$(_jq '.mac_address')" --name=${CLUSTER_NAME}-$(_jq '.name') --vcpus "sockets=${CP_CPU_SOCKETS},cores=${CP_CPU_CORES},threads=1" --memory="$(expr ${CP_RAM_GB} \* 1024)" --disk "size=${DISK_SIZE},path=${LIBVIRT_VM_PATH}/${CLUSTER_NAME}-$(_jq '.name').qcow2,cache=none,format=qcow2" &
     elif [ $MULTI_NETWORK  == true ]; then 
-      nohup sudo virt-install ${LIBVIRT_LIKE_OPTIONS} --mac="$(_jq '.mac_address_int1')" --mac="$(_jq '.mac_address_int2')" --name=${CLUSTER_NAME}-$(_jq '.name') --vcpus "sockets=${CP_CPU_SOCKETS},cores=${CP_CPU_CORES},threads=1" --memory="$(expr ${CP_RAM_GB} \* 1024)" --disk "size=${DISK_SIZE},path=${LIBVIRT_VM_PATH}/${CLUSTER_NAME}-$(_jq '.name').qcow2,cache=none,format=qcow2" &
-      echo sudo virt-install ${LIBVIRT_LIKE_OPTIONS} --mac="$(_jq '.mac_address_int1')" --network ${LIBVIRT_NETWORK} --mac="$(_jq '.mac_address_int2')" --name=${CLUSTER_NAME}-$(_jq '.name') --vcpus "sockets=${CP_CPU_SOCKETS},cores=${CP_CPU_CORES},threads=1" --memory="$(expr ${CP_RAM_GB} \* 1024)" --disk "size=${DISK_SIZE},path=${LIBVIRT_VM_PATH}/${CLUSTER_NAME}-$(_jq '.name').qcow2,cache=none,format=qcow2"
+      #nohup sudo virt-install ${LIBVIRT_LIKE_OPTIONS} --mac="$(_jq '.mac_address_int1')" --mac="$(_jq '.mac_address_int2')" --name=${CLUSTER_NAME}-$(_jq '.name') --vcpus "sockets=${CP_CPU_SOCKETS},cores=${CP_CPU_CORES},threads=1" --memory="$(expr ${CP_RAM_GB} \* 1024)" --disk "size=${DISK_SIZE},path=${LIBVIRT_VM_PATH}/${CLUSTER_NAME}-$(_jq '.name').qcow2,cache=none,format=qcow2" &
+      sudo virt-install -n ${CLUSTER_NAME}-$(_jq '.name')  --memory="$(expr ${CP_RAM_GB} \* 1024)" \
+        --disk "size=${DISK_SIZE},path=${LIBVIRT_VM_PATH}/${CLUSTER_NAME}-$(_jq '.name').qcow2,cache=none,format=qcow2" \
+        --cdrom=${LIBVIRT_VM_PATH}/ai-liveiso-$CLUSTER_ID.iso \
+        --network bridge=qubibr0,model=virtio,mac=$(_jq '.mac_address_int1') \
+        --network bridge=qubibr0,model=virtio,mac=$(_jq '.mac_address_int2') \
+        --connect=qemu:///system -v --memballoon none --cpu host-passthrough --autostart --noautoconsole --virt-type kvm --features kvm_hidden=on --controller type=scsi,model=virtio-scsi \
+        --graphics vnc,listen=0.0.0.0 --noautoconsole -v --vcpus "sockets=${CP_CPU_SOCKETS},cores=${CP_CPU_CORES},threads=1"
+      #echo sudo virt-install ${LIBVIRT_LIKE_OPTIONS} --mac="$(_jq '.mac_address_int1')" --network ${LIBVIRT_NETWORK} --mac="$(_jq '.mac_address_int2')" --name=${CLUSTER_NAME}-$(_jq '.name') --vcpus "sockets=${CP_CPU_SOCKETS},cores=${CP_CPU_CORES},threads=1" --memory="$(expr ${CP_RAM_GB} \* 1024)" --disk "size=${DISK_SIZE},path=${LIBVIRT_VM_PATH}/${CLUSTER_NAME}-$(_jq '.name').qcow2,cache=none,format=qcow2"
     fi 
     sleep 3
   else
