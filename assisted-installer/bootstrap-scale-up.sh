@@ -96,12 +96,19 @@ else
   "${ASSISTED_SERVICE_V2_API}/clusters/$NEW_CLUSTER_ID")
 
   ## Debug
-  #echo "${NEW_CLUSTER_INFO_REQ}" | python3 -m json.tool
+  echo "${NEW_CLUSTER_INFO_REQ}" | python3 -m json.tool
 
   if [ -z "$NEW_CLUSTER_INFO_REQ" ]; then
     echo "ERROR: Failed to get cluster information"
     exit 1
   fi
+
+  if grep -oq "^export NEW_CLUSTER_ID=.*" ./cluster-vars.sh 
+  then 
+    sed -i "s/^export NEW_CLUSTER_ID=.*/export NEW_CLUSTER_ID='${NEW_CLUSTER_ID}'/g" cluster-vars.sh
+  else 
+    sed -i "/^###INSERT NEW CLUSTER ID HERE.*/a export NEW_CLUSTER_ID=\'${NEW_CLUSTER_ID}\'" cluster-vars.sh
+  fi 
 
   #########################################################
   ## TODO: At this point NEW_CLUSTER_INFO_REQ should be

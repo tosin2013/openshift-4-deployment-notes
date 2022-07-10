@@ -1,5 +1,4 @@
 #!/bin/bash
-
 set -e
 
 echo -e "\n===== Creating Add Hosts cluster..."
@@ -55,7 +54,7 @@ if [ -z $NEW_CLUSTER_ID ]; then
   --header "Accept: application/json" \
   --request POST \
   --data "$(generatePatchData)" \
-  "${ASSISTED_SERVICE_V1_API}/clusters")
+  "${ASSISTED_SERVICE_V2_API}/clusters")
 
   if [ -z "$CREATE_ADD_HOST_CLUSTER_REQ" ]; then
     echo "===== Failed to create AddHosts cluster!"
@@ -68,22 +67,25 @@ if [ -z $NEW_CLUSTER_ID ]; then
   echo "  NEW_CLUSTER_ID: ${NEW_CLUSTER_ID}"
   echo $NEW_CLUSTER_ID > ${CLUSTER_DIR}/.new-cluster-id-${HOSTS_MD5}.nfo
   
-  DELETE_ADD_HOST_CLUSTER_REQ=$(curl -s -o /dev/null -w "%{http_code}" \
-  --header "Authorization: Bearer $ACTIVE_TOKEN" \
-  --header "Content-Type: application/json" \
-  --header "Accept: application/json" \
-  --request DELETE \
-  "${ASSISTED_SERVICE_V1_API}/clusters/${NEW_CLUSTER_ID}")
+  #DELETE_ADD_HOST_CLUSTER_REQ=$(curl -s -o /dev/null -w "%{http_code}" \
+  #--header "Authorization: Bearer $ACTIVE_TOKEN" \
+  #--header "Content-Type: application/json" \
+  #--header "Accept: application/json" \
+  #--request DELETE \
+  #"${ASSISTED_SERVICE_V2_API}/clusters/${NEW_CLUSTER_ID}")
 
-  if [ "$DELETE_ADD_HOST_CLUSTER_REQ" -ne "204" ]; then
-    echo "===== Failed to delete AddHosts cluster!"
-    rm ${CLUSTER_DIR}/.new-cluster-id-${HOSTS_MD5}.nfo
-    exit 1
-  fi
+  #if [ "$DELETE_ADD_HOST_CLUSTER_REQ" -ne "204" ]; then
+  #  echo "===== Failed to delete AddHosts cluster!"
+  #  rm ${CLUSTER_DIR}/.new-cluster-id-${HOSTS_MD5}.nfo
+  #  exit 1
+  #fi
 
   echo "  Setting new cluster as AddHost cluster..."
   
   echo $(generateAddHostPatchData) > ${CLUSTER_DIR}/.new-cluster-${HOSTS_MD5}-addHosts.json
+
+
+#curl <HOST>:<PORT>/api/assisted-install/v2/infra-envs/<infra_env_id>/hosts  | jq '.'
 
   ADD_HOST_CLUSTER_REQ=$(curl -s --fail \
     --header "Authorization: Bearer $ACTIVE_TOKEN" \
@@ -91,7 +93,7 @@ if [ -z $NEW_CLUSTER_ID ]; then
     --header "Accept: application/json" \
     --request POST \
     --data "$(generateAddHostPatchData)" \
-    "${ASSISTED_SERVICE_V1_API}/add_hosts_clusters")
+    "${ASSISTED_SERVICE_V2_API}}/clusters/$NEW_CLUSTER_ID/actions/install_hosts")
 
   if [ -z "$ADD_HOST_CLUSTER_REQ" ]; then
     echo $ADD_HOST_CLUSTER_REQ | python3 -m json.tool
@@ -108,7 +110,7 @@ if [ -z $NEW_CLUSTER_ID ]; then
   --header "Accept: application/json" \
   --request PATCH \
   --data "$(generateAddHostBasicPatchData)" \
-  "${ASSISTED_SERVICE_V1_API}/clusters/${NEW_CLUSTER_ID}")
+  "${ASSISTED_SERVICE_V2_API}/clusters/${NEW_CLUSTER_ID}")
 
   if [ "$BASIC_PATCH_ADD_HOST_CLUSTER_REQ" -ne "201" ]; then
     echo "===== Failed to set basic AddHosts cluster config!"

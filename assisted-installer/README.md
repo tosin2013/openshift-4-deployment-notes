@@ -12,6 +12,9 @@ The following binaries need to be included in the system $PATH:
 pip3 install j2cli
 ```
 
+## Swagger API
+> https://app.swaggerhub.com/apis/TOSINAKINOSHO/assisted-install/1.0.0
+
 ## Assisted Installer Steps for Bare Metal machines with Static IPs
 
 1. Get offline token and save it to `~/rh-api-offline-token`

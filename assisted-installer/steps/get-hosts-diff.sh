@@ -10,7 +10,7 @@ CLUSTER_INFO_REQ=$(curl -s \
   --header "Content-Type: application/json" \
   --header "Accept: application/json" \
   --request GET \
-"${ASSISTED_SERVICE_V1_API}/clusters/$CLUSTER_ID")
+"${ASSISTED_SERVICE_V2_API}/clusters/$CLUSTER_ID")
 
 #echo $CLUSTER_INFO_REQ | python3 -m json.tool
 

@@ -30,11 +30,11 @@ then
   sudo cp ${CLUSTER_DIR}/ai-liveiso-$CLUSTER_ID.iso  ${LIBVIRT_VM_PATH}/ai-liveiso-$CLUSTER_ID.iso 
 fi 
 
-if [ ! -z ${NEW_CLUSTER_ID} ] &&  [ ! -z ${WORKER_NAME} ] ;
+if [ ! -z ${NEW_CLUSTER_ID} ] &&  [ ! -f ${LIBVIRT_VM_PATH}/ai-liveiso-addhosts-$NEW_CLUSTER_ID.iso ];
 then 
-  if [ ! -f ${LIBVIRT_VM_PATH}/ai-liveiso-$NEW_CLUSTER_ID-$WORKER_NAME.iso ];
+  if [ ! -f ${LIBVIRT_VM_PATH}/ai-liveiso-addhosts-$NEW_CLUSTER_ID.iso ];
   then 
-    sudo cp ${CLUSTER_DIR}/ai-liveiso-$NEW_CLUSTER_ID-$WORKER_NAME.iso  ${LIBVIRT_VM_PATH}/ai-liveiso-$NEW_CLUSTER_ID-$WORKER_NAME.iso 
+    sudo cp ${CLUSTER_DIR}/ai-liveiso-addhosts-$NEW_CLUSTER_ID.iso  ${LIBVIRT_VM_PATH}/ai-liveiso-addhosts-$NEW_CLUSTER_ID.iso 
   fi 
 fi 
 
@@ -56,18 +56,18 @@ do
   fi
 done
 
-if [ ! -z ${NEW_CLUSTER_ID} ] &&  [ ! -z ${WORKER_NAME} ] ;
+if [ ! -z ${NEW_CLUSTER_ID} ] && [ ! -f ${LIBVIRT_VM_PATH}/ai-liveiso-addhosts-$NEW_CLUSTER_ID.iso ];
 then 
-  echo "Adding  ${WORKER_NAME}  to cluster  ${NEW_CLUSTER_ID}"
-  if [ ! -f ${LIBVIRT_VM_PATH}/ai-liveiso-$NEW_CLUSTER_ID-$WORKER_NAME.iso ];
+  echo "Adding  New worker  to cluster  ${NEW_CLUSTER_ID}"
+  if [ ! -f ${LIBVIRT_VM_PATH}/ai-liveiso-addhosts-$NEW_CLUSTER_ID.iso ];
   then 
-    sudo cp ${CLUSTER_DIR}/ai-liveiso-$NEW_CLUSTER_ID-$WORKER_NAME.iso  ${LIBVIRT_VM_PATH}/ai-liveiso-$NEW_CLUSTER_ID-$WORKER_NAME.iso 
+    sudo cp ${CLUSTER_DIR}/ai-liveiso-addhosts-$NEW_CLUSTER_ID.iso   ${LIBVIRT_VM_PATH}/ai-liveiso-addhosts-$NEW_CLUSTER_ID.iso 
   fi 
 
   if [ $MULTI_NETWORK  == false ]; then 
-    LIBVIRT_LIKE_OPTIONS="--connect=qemu:///system -v --memballoon none --cpu host-passthrough --autostart --noautoconsole --virt-type kvm --features kvm_hidden=on --controller type=scsi,model=virtio-scsi --cdrom=${LIBVIRT_VM_PATH}/ai-liveiso-$NEW_CLUSTER_ID-$WORKER_NAME.iso    --os-variant=fedora-coreos-stable --events on_reboot=restart${POWEROFF} --graphics vnc,listen=0.0.0.0,tlsport=,defaultMode='insecure' --network ${LIBVIRT_NETWORK} --console pty,target_type=serial"
+    LIBVIRT_LIKE_OPTIONS="--connect=qemu:///system -v --memballoon none --cpu host-passthrough --autostart --noautoconsole --virt-type kvm --features kvm_hidden=on --controller type=scsi,model=virtio-scsi --cdrom=${LIBVIRT_VM_PATH}/ai-liveiso-addhosts-$NEW_CLUSTER_ID.iso    --os-variant=fedora-coreos-stable --events on_reboot=restart${POWEROFF} --graphics vnc,listen=0.0.0.0,tlsport=,defaultMode='insecure' --network ${LIBVIRT_NETWORK} --console pty,target_type=serial"
   elif [ $MULTI_NETWORK  == true ]; then 
-    LIBVIRT_LIKE_OPTIONS="--connect=qemu:///system -v --memballoon none --cpu host-passthrough --autostart --noautoconsole --virt-type kvm --features kvm_hidden=on --controller type=scsi,model=virtio-scsi --cdrom=${LIBVIRT_VM_PATH}/ai-liveiso-$NEW_CLUSTER_ID-$WORKER_NAME.iso    --os-variant=fedora-coreos-stable --events on_reboot=restart${POWEROFF} --graphics vnc,listen=0.0.0.0,tlsport=,defaultMode='insecure' --network ${LIBVIRT_NETWORK}  --console pty,target_type=serial"
+    LIBVIRT_LIKE_OPTIONS="--connect=qemu:///system -v --memballoon none --cpu host-passthrough --autostart --noautoconsole --virt-type kvm --features kvm_hidden=on --controller type=scsi,model=virtio-scsi --cdrom=${LIBVIRT_VM_PATH}/ai-liveiso-addhosts-$NEW_CLUSTER_ID.iso     --os-variant=fedora-coreos-stable --events on_reboot=restart${POWEROFF} --graphics vnc,listen=0.0.0.0,tlsport=,defaultMode='insecure' --network ${LIBVIRT_NETWORK}  --console pty,target_type=serial"
   fi 
 
 else

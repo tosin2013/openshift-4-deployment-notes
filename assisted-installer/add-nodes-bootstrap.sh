@@ -80,7 +80,7 @@ else
   sed -i "/^###INSERT NEW CLUSTER ID HERE.*/a export NEW_CLUSTER_ID=\'${NEW_CLUSTER_ID}\'" cluster-vars.sh
 fi 
 
-POST_NEW_WORKER=$(curl -s -o /dev/null -w "%{http_code}" -X POST  "${ASSISTED_SERVICE_ENDPOINT}/api/assisted-install/v1/add_hosts_clusters" \
+POST_NEW_WORKER=$(curl -s -o /dev/null -w "%{http_code}" -X POST  "${ASSISTED_SERVICE_ENDPOINT}/api/assisted-install/v2/infra-envs/${NEW_CLUSTER_ID}/hosts" \
     -d "{ \"id\": \"${NEW_CLUSTER_ID}\", \"name\": \"${WORKER_NAME}\", \"api_vip_dnsname\": \"api.${CLUSTER_NAME}.${CLUSTER_BASE_DNS}\", \"openshift_version\": \"${CLUSTER_VERSION}\"}" \
     --header "Content-Type: application/json" \
     -H "Authorization: Bearer $ACTIVE_TOKEN")
