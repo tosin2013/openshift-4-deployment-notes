@@ -67,18 +67,18 @@ if [ -z $NEW_CLUSTER_ID ]; then
   echo "  NEW_CLUSTER_ID: ${NEW_CLUSTER_ID}"
   echo $NEW_CLUSTER_ID > ${CLUSTER_DIR}/.new-cluster-id-${HOSTS_MD5}.nfo
   
-  #DELETE_ADD_HOST_CLUSTER_REQ=$(curl -s -o /dev/null -w "%{http_code}" \
-  #--header "Authorization: Bearer $ACTIVE_TOKEN" \
-  #--header "Content-Type: application/json" \
-  #--header "Accept: application/json" \
-  #--request DELETE \
-  #"${ASSISTED_SERVICE_V2_API}/clusters/${NEW_CLUSTER_ID}")
+  DELETE_ADD_HOST_CLUSTER_REQ=$(curl -s -o /dev/null -w "%{http_code}" \
+  --header "Authorization: Bearer $ACTIVE_TOKEN" \
+  --header "Content-Type: application/json" \
+  --header "Accept: application/json" \
+  --request DELETE \
+  "${ASSISTED_SERVICE_V2_API}/clusters/${NEW_CLUSTER_ID}")
 
-  #if [ "$DELETE_ADD_HOST_CLUSTER_REQ" -ne "204" ]; then
-  #  echo "===== Failed to delete AddHosts cluster!"
-  #  rm ${CLUSTER_DIR}/.new-cluster-id-${HOSTS_MD5}.nfo
-  #  exit 1
-  #fi
+  if [ "$DELETE_ADD_HOST_CLUSTER_REQ" -ne "204" ]; then
+    echo "===== Failed to delete AddHosts cluster!"
+    rm ${CLUSTER_DIR}/.new-cluster-id-${HOSTS_MD5}.nfo
+    exit 1
+  fi
 
   echo "  Setting new cluster as AddHost cluster..."
   

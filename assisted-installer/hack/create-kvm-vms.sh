@@ -56,13 +56,9 @@ do
   fi
 done
 
-if [ ! -z ${NEW_CLUSTER_ID} ] && [ ! -f ${LIBVIRT_VM_PATH}/ai-liveiso-addhosts-$NEW_CLUSTER_ID.iso ];
+if [ ! -z ${NEW_CLUSTER_ID} ];
 then 
   echo "Adding  New worker  to cluster  ${NEW_CLUSTER_ID}"
-  if [ ! -f ${LIBVIRT_VM_PATH}/ai-liveiso-addhosts-$NEW_CLUSTER_ID.iso ];
-  then 
-    sudo cp ${CLUSTER_DIR}/ai-liveiso-addhosts-$NEW_CLUSTER_ID.iso   ${LIBVIRT_VM_PATH}/ai-liveiso-addhosts-$NEW_CLUSTER_ID.iso 
-  fi 
 
   if [ $MULTI_NETWORK  == false ]; then 
     LIBVIRT_LIKE_OPTIONS="--connect=qemu:///system -v --memballoon none --cpu host-passthrough --autostart --noautoconsole --virt-type kvm --features kvm_hidden=on --controller type=scsi,model=virtio-scsi --cdrom=${LIBVIRT_VM_PATH}/ai-liveiso-addhosts-$NEW_CLUSTER_ID.iso    --os-variant=fedora-coreos-stable --events on_reboot=restart${POWEROFF} --graphics vnc,listen=0.0.0.0,tlsport=,defaultMode='insecure' --network ${LIBVIRT_NETWORK} --console pty,target_type=serial"
