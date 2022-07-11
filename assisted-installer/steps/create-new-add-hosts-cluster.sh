@@ -93,7 +93,7 @@ if [ -z $NEW_CLUSTER_ID ]; then
     --header "Accept: application/json" \
     --request POST \
     --data "$(generateAddHostPatchData)" \
-    "${ASSISTED_SERVICE_V2_API}}/clusters/$NEW_CLUSTER_ID/actions/install_hosts")
+    "${ASSISTED_SERVICE_V2_API}}/clusters/$NEW_CLUSTER_ID/actions/install")
 
   if [ -z "$ADD_HOST_CLUSTER_REQ" ]; then
     echo $ADD_HOST_CLUSTER_REQ | python3 -m json.tool
