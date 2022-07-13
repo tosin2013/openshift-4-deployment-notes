@@ -1,14 +1,17 @@
 #!/bin/bash
 
 set -e
-source cluster-vars.sh
-source authenticate-to-api.sh
+#source cluster-vars.sh
+#source authenticate-to-api.sh
+
 if [ ! -z "$CLUSTER_ID" ]; then
   TARGET_CLUSTER_ID="$CLUSTER_ID"
+  echo "Using CLUSTER_ID: $TARGET_CLUSTER_ID"
 fi
 
 if [ ! -z "$NEW_CLUSTER_ID" ]; then
   TARGET_CLUSTER_ID="$NEW_CLUSTER_ID"
+  echo "Using NEW_CLUSTER_ID: $TARGET_CLUSTER_ID"
 fi
 
 
@@ -25,6 +28,8 @@ while [ $LOOP_ON = "true" ]; do
     --header "Accept: application/json" \
     --request GET \
   "${ASSISTED_SERVICE_V2_API}/clusters/$TARGET_CLUSTER_ID")
+
+  # echo $CLUSTER_INFO_REQ | python3 -m json.tool
 
   CLUSTER_STATUS=$(echo $CLUSTER_INFO_REQ | jq -r '.status')
 
