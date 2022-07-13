@@ -133,8 +133,12 @@ python3                                                                  PASSED!
 Generated assets can be found in `./.generated/${CLUSTER_NAME}.${CLUSTER_BASE_DNS}/`
 
 ## Add worker nodes to deployment
-* Run the `add-nodes-bootstrap.sh` script
-* After node reboots run the `./hack/auto-approve-certs.sh` script
+
+- Modify your `cluster-vars.sh` file to add the worker nodes you want to add to the cluster.
+- Run the `bootstrap-scale-up.sh` script to generated the cluster expansion configuration
+- Boot the additional worker nodes with the downloaded Discovery ISO
+- Run the `start-new-host-installation.sh` script to start the installation of the new hosts
+* After node reboots run the `./hack/auto-approve-certs.sh` script to approve the CSRs - or approve the nodes manually
 
 ## Destroy Cluster
 
@@ -161,21 +165,12 @@ export NODE_CFGS='{ "nodes": [ '${NODE1_CFG}', '${NODE2_CFG}', '${NODE3_CFG}', '
 # ...
 ```
 
-Then run the bootstrap-scale-up script:
-
-```bash
-./bootstrap-scale-up.sh
-```
-
-You'll find a new Discovery ISO downloaded in the generated assets folder.
+- Run the `bootstrap-scale-up.sh` script to generated the cluster expansion configuration
+- Boot the additional worker nodes with the downloaded Discovery ISO
+- Run the `start-new-host-installation.sh` script to start the installation of the new hosts
+* After node reboots run the `./hack/auto-approve-certs.sh` script to approve the CSRs - or approve the nodes manually
 
 > ***Note:*** You won't see the additional hosts cluster defined in the Web UI - additional node actions are performed via the API and oc CLI
-
-Once the additional hosts have booted and reported in, you can run the bootstrap-scale-up script again and it should kick off the installation process.
-
-```bash
-./bootstrap-scale-up.sh
-```
 
 Having already `oc login`'d to the original cluster, wait for the host to report in as a node's CertificateSigningRequest and approve it:
 > See `./hack/auto-approve-certs.sh`
