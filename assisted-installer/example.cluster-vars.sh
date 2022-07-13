@@ -68,7 +68,7 @@ export NODE_CFGS='{ "nodes": [ '${NODE1_CFG}', '${NODE2_CFG}', '${NODE3_CFG}', '
 export ISO_TYPE="full-iso"
 
 ## CLUSTER_VERSION just needs to be MAJOR.MINOR - actual release is queried from the API
-export CLUSTER_VERSION="4.10.5"
+export CLUSTER_VERSION="4.10"
 ## CLUSTER_RELEASE has been moved to query-supported-versions.sh
 #export CLUSTER_RELEASE="4.9.6"
 
