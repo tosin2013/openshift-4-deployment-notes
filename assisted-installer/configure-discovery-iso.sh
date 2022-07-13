@@ -100,7 +100,7 @@ else
     exit 1
   fi
   ####create and download new ISO ####
-  CREATE_DISCOVERY_ISO=$(curl -s -o /dev/null -w "%{http_code}" -X PATCH "${ASSISTED_SERVICE_V1_API}/infra-envs/${2}" \
+  CREATE_DISCOVERY_ISO=$(curl -s -o /dev/null -w "%{http_code}" -X PATCH "${ASSISTED_SERVICE_V2_API}/infra-envs/${2}" \
     -H "Authorization: Bearer $ACTIVE_TOKEN" \
     -d @${CLUSTER_DIR}/iso_${WORKER_NAME}_config.json \
     --header "Content-Type: application/json")

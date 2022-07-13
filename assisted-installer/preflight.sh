@@ -19,12 +19,17 @@ function checkForProgramAndExit() {
     fi
 }
 
+set +e
+
 echo -e "===== Checking for needed programs..."
 checkForProgramAndExit curl
 checkForProgramAndExit jq
 checkForProgramAndExit python3
 checkForProgramAndExit dig
+# - sudo python3 -m pip install j2cli
+checkForProgramAndExit j2
 
+set -e
 
 source $SCRIPT_DIR/authenticate-to-api.sh
 

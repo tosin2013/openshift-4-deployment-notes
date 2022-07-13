@@ -4,12 +4,12 @@ set -e
 
 echo -e "\n===== Configuring Discovery ISO..."
 
-if [ ! -z "$CLUSTER_ID" ]; then
-  TARGET_CLUSTER_ID="$CLUSTER_ID"
+if [ ! -z "$INFRAENV_ID" ]; then
+  TARGET_INFRAENV_ID="$INFRAENV_ID"
 fi
 
-if [ ! -z "$NEW_CLUSTER_ID" ]; then
-  TARGET_CLUSTER_ID="$NEW_CLUSTER_ID"
+if [ ! -z "$NEW_INFRAENV_ID" ]; then
+  TARGET_INFRAENV_ID="$NEW_INFRAENV_ID"
 fi
 
 TEMP_ENSEMBLE=$(mktemp -p $CLUSTER_DIR)
@@ -60,7 +60,7 @@ echo "$(generateStaticNetCfgJSON)" > ${CLUSTER_DIR}/add_host-${HOSTS_MD5}-iso_co
 rm $TEMP_ENSEMBLE
 
 echo -e "\n===== Patching Discovery ISO..."
-ISO_CONFIGURATION_REQ=$(curl -s -o /dev/null -w "%{http_code}" -X PATCH "${ASSISTED_SERVICE_V2_API}/infra-envs/$INFRAENV_ID" \
+ISO_CONFIGURATION_REQ=$(curl -s -o /dev/null -w "%{http_code}" -X PATCH "${ASSISTED_SERVICE_V2_API}/infra-envs/$TARGET_INFRAENV_ID" \
 -d @${CLUSTER_DIR}/add_host-${HOSTS_MD5}-iso_config.json \
 --header "Content-Type: application/json" \
 -H "Authorization: Bearer $ACTIVE_TOKEN")

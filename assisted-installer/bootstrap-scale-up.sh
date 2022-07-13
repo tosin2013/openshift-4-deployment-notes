@@ -30,12 +30,12 @@ source $SCRIPT_DIR/steps/get-hosts-diff.sh
 
 #########################################################
 ## Create MD5 hash of added hosts, use as suffix for idempotent IDs
-export HOSTS_MD5=$(echo -n "${UNMATCHED_HOSTS[@]}" | md5sum | awk '{print $1}')
+#export HOSTS_MD5=$(echo -n "${UNMATCHED_HOSTS[@]}" | md5sum | awk '{print $1}')
 
 #########################################################
 ## Process Scaling or Reporting action
 if [ "$CLUSTER_ALL_HOSTS_REPORTED" == "true" ]; then
-  if [ $CLUSTER_ALL_HOSTS_INSTALLED == "true" ]; then
+  if [ "$CLUSTER_ALL_HOSTS_INSTALLED" == "true" ]; then
     echo -e "===== All hosts have reported in and are installed!"
     echo -e "  Nothing else to do, exiting...\n"
     exit 0
@@ -69,7 +69,7 @@ if [ "$CLUSTER_ALL_HOSTS_REPORTED" == "true" ]; then
     else
       #########################################################
       ## Check to see if the installation has completed
-      if [ $CLUSTER_INSTALL_COMPLETED != "2000-01-01T00:00:00.000Z" ]; then
+      if [ "$CLUSTER_INSTALL_COMPLETED" != "2000-01-01T00:00:00.000Z" ]; then
         echo "  Cluster installed on ${CLUSTER_INSTALL_COMPLETED}"
 
         #########################################################
@@ -84,11 +84,13 @@ if [ "$CLUSTER_ALL_HOSTS_REPORTED" == "true" ]; then
   fi
 else
   echo -e "===== Not all hosts have been added, scaling up...\n"
-  source $SCRIPT_DIR/steps/create-new-add-hosts-cluster.sh
+  #source $SCRIPT_DIR/steps/create-new-add-hosts-cluster.sh
+  source $SCRIPT_DIR/steps/new-add-new-hosts.sh
 
   ###########################################################
   ## Get cluster info
-  NEW_CLUSTER_INFO_REQ=$(curl -s --fail \
+  echo -e "\n===== Getting cluster info..."
+  NEW_CLUSTER_INFO_REQ=$(curl -s \
     --header "Authorization: Bearer $ACTIVE_TOKEN" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -96,19 +98,28 @@ else
   "${ASSISTED_SERVICE_V2_API}/clusters/$NEW_CLUSTER_ID")
 
   ## Debug
-  echo "${NEW_CLUSTER_INFO_REQ}" | python3 -m json.tool
+  #echo "${NEW_CLUSTER_INFO_REQ}" | python3 -m json.tool
 
   if [ -z "$NEW_CLUSTER_INFO_REQ" ]; then
     echo "ERROR: Failed to get cluster information"
     exit 1
+  else
+    # Make sure that the NEW_CLUSTER_ID matches the cluster id - 404 foolproofing
+    PULLED_CLUSTER_ID=$(printf '%s' "$NEW_CLUSTER_INFO_REQ" | jq -r '.id')
+    if [ "$PULLED_CLUSTER_ID" != "$NEW_CLUSTER_ID" ]; then
+      echo "ERROR: Cluster ID mismatch"
+      exit 1
+    fi
   fi
 
-  if grep -oq "^export NEW_CLUSTER_ID=.*" ./cluster-vars.sh 
-  then 
-    sed -i "s/^export NEW_CLUSTER_ID=.*/export NEW_CLUSTER_ID='${NEW_CLUSTER_ID}'/g" cluster-vars.sh
-  else 
-    sed -i "/^###INSERT NEW CLUSTER ID HERE.*/a export NEW_CLUSTER_ID=\'${NEW_CLUSTER_ID}\'" cluster-vars.sh
-  fi 
+  #exit 1
+
+  #if grep -oq "^export NEW_CLUSTER_ID=.*" ./cluster-vars.sh 
+  #then 
+  #  sed -i "s/^export NEW_CLUSTER_ID=.*/export NEW_CLUSTER_ID='${NEW_CLUSTER_ID}'/g" cluster-vars.sh
+  #else 
+  #  sed -i "/^###INSERT NEW CLUSTER ID HERE.*/a export NEW_CLUSTER_ID=\'${NEW_CLUSTER_ID}\'" cluster-vars.sh
+  #fi 
 
   #########################################################
   ## TODO: At this point NEW_CLUSTER_INFO_REQ should be
@@ -137,6 +148,7 @@ else
 
   #########################################################
   ## Download the ISO
-  source $SCRIPT_DIR/steps/download-iso.sh
+  #source $SCRIPT_DIR/steps/download-iso.sh
+  source $SCRIPT_DIR/steps/download-iso-from-infraenv.sh
 
 fi

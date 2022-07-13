@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -ex
 
 echo -e "\n===== Creating Add Hosts cluster..."
 
@@ -46,7 +46,7 @@ if [ -f "${CLUSTER_DIR}/.new-cluster-id-${HOSTS_MD5}.nfo" ]; then
 fi
 
 ## Check to see if the cluster id is already set
-if [ -z $NEW_CLUSTER_ID ]; then
+if [ -z "$NEW_CLUSTER_ID" ]; then
   echo -e "  No NEW_CLUSTER_ID found, creating new cluster..."
   
   CREATE_ADD_HOST_CLUSTER_REQ=$(curl -s --fail \
@@ -69,8 +69,8 @@ if [ -z $NEW_CLUSTER_ID ]; then
   echo $NEW_CLUSTER_ID > ${CLUSTER_DIR}/.new-cluster-id-${HOSTS_MD5}.nfo
   
   #DELETE_ADD_HOST_CLUSTER_REQ=$(curl -s -o /dev/null -w "%{http_code}" \
- # --header "Authorization: Bearer $ACTIVE_TOKEN" \
- # --header "Content-Type: application/json" \
+  #--header "Authorization: Bearer $ACTIVE_TOKEN" \
+  #--header "Content-Type: application/json" \
   #--header "Accept: application/json" \
   #--request DELETE \
   #"${ASSISTED_SERVICE_V2_API}/clusters/${NEW_CLUSTER_ID}")
@@ -86,6 +86,8 @@ if [ -z $NEW_CLUSTER_ID ]; then
   echo $(generateAddHostPatchData) > ${CLUSTER_DIR}/.new-cluster-${HOSTS_MD5}-addHosts.json
 
 
+
+  echo "  Sending add cluster request..."
 
   ADD_HOST_CLUSTER_REQ=$(curl -s --fail \
     --header "Authorization: Bearer $ACTIVE_TOKEN" \

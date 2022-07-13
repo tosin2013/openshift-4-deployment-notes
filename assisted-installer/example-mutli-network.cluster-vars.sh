@@ -90,15 +90,15 @@ export ASSISTED_SERVICE_HOSTNAME="api.openshift.com"
 export ASSISTED_SERVICE_PORT="443" 
 export ASSISTED_SERVICE_PROTOCOL="https"
 export ASSISTED_SERVICE_ENDPOINT="${ASSISTED_SERVICE_PROTOCOL}://${ASSISTED_SERVICE_HOSTNAME}:${ASSISTED_SERVICE_PORT}"
-export ASSISTED_SERVICE_V1_API_PATH="/api/assisted-install/v1"
 export ASSISTED_SERVICE_V2_API_PATH="/api/assisted-install/v2"
-export ASSISTED_SERVICE_V1_API="${ASSISTED_SERVICE_ENDPOINT}${ASSISTED_SERVICE_V1_API_PATH}"
 export ASSISTED_SERVICE_V2_API="${ASSISTED_SERVICE_ENDPOINT}${ASSISTED_SERVICE_V2_API_PATH}"
 
 export CLUSTER_OVN="OVNKubernetes"
 
 GENERATED_ASSETS="${SCRIPT_DIR}/.generated"
 export CLUSTER_DIR="${GENERATED_ASSETS}/${CLUSTER_NAME}.${CLUSTER_BASE_DNS}"
+
+export HOSTS_MD5=$(echo -n "${NODE_CFGS}" | md5sum | awk '{print $1}')
 
 ## Set Cluster ID
 export CLUSTER_ID=""
@@ -110,6 +110,18 @@ fi
 export INFRAENV_ID=""
 if [ -f "${CLUSTER_DIR}/.infraenv-id.nfo" ]; then
   export INFRAENV_ID=$(cat ${CLUSTER_DIR}/.infraenv-id.nfo)
+fi
+
+## Set NEW_CLUSTER_ID
+export NEW_CLUSTER_ID=""
+if [ -f "${CLUSTER_DIR}/.new-cluster-id-${HOSTS_MD5}.nfo" ]; then
+  export NEW_CLUSTER_ID=$(cat ${CLUSTER_DIR}/.new-cluster-id-${HOSTS_MD5}.nfo)
+fi
+
+## Set NEW_INFRAENV_ID
+export NEW_INFRAENV_ID=""
+if [ -f "${CLUSTER_DIR}/.new-infraenv-id-${HOSTS_MD5}.nfo" ]; then
+  export NEW_INFRAENV_ID=$(cat ${CLUSTER_DIR}/.new-infraenv-id-${HOSTS_MD5}.nfo)
 fi
 
 ## Check/load SSH Public Key

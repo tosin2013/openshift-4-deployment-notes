@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#### TODO
+#### THIS SCRIPT NEEDS TO BE REWORKED TO THE INFRAENV ENDPOINTS
+#### https://github.com/kenmoini/ocp4-ai-svc-universal/blob/main/tasks/ai-svc/set_core_user_password.yaml
+
 set -e
 
 echo -e "\n===== Setting password authentication for core user..."

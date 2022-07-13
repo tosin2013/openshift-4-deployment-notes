@@ -22,7 +22,7 @@ DELETE_ADD_HOST_CLUSTER_REQ=$(curl -s -o /dev/null -w "%{http_code}" \
 --header "Content-Type: application/json" \
 --header "Accept: application/json" \
 --request DELETE \
-"${ASSISTED_SERVICE_V1_API}/clusters/${1}")
+"${ASSISTED_SERVICE_V2_API}/clusters/${1}")
 
 if [ "$DELETE_ADD_HOST_CLUSTER_REQ" -ne "204" ]; then
   echo "===== Failed to delete  cluster!"

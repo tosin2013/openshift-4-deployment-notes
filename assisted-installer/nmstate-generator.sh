@@ -30,28 +30,28 @@
         export auto_dns=${USE_AUTO_DNS}
         export parse_dns_vars=$( IFS=,; printf '%s' "${CLUSTER_NODE_NET_DNS_SERVERS[*]}" )
 
-        if [ $MULTI_NETWORK  == false ];
-        then 
+        if [ "$MULTI_NETWORK" == "false" ];
+        then
           export interface_name=$(_jq '.ipv4.iface')
           export static_ipv4_address=$(_jq '.ipv4.address')
           export static_ipv4_prefix=$(_jq '.ipv4.prefix')
           export static_ipv4_gateway=$(_jq '.ipv4.gateway')
           export vlan_id=${VLAN_ID}
 
-          if [ $USE_DHCP == false ] && [ $USE_VLAN == false ]; # Single Network static IPS
+          if [ "$USE_DHCP" == "false" ] && [ "$USE_VLAN" == false ]; # Single Network static IPS
           then 
             j2 network-templates/single-nic-static.j2 | sed '/^$/d' | tee ${CLUSTER_DIR}/$(_jq '.name').yaml
-          elif [ $USE_DHCP == true ] && [ $USE_VLAN == false ]; # Single Network VLAN NIC with Static IPS
+          elif [ "$USE_DHCP" == "true" ] && [ "$USE_VLAN" == false ]; # Single Network VLAN NIC with Static IPS
           then 
             j2 network-templates/single-nic-dhcp.j2 | sed '/^$/d' | tee ${CLUSTER_DIR}/$(_jq '.name').yaml
-          elif [ $USE_DHCP == false ] && [ $USE_VLAN == true ]; # Single Network VLAN NIC with Static IPS
+          elif [ "$USE_DHCP" == "false" ] && [ "$USE_VLAN" == true ]; # Single Network VLAN NIC with Static IPS
           then 
             j2 network-templates/single-nic-vlan-static.j2 | sed '/^$/d' | tee ${CLUSTER_DIR}/$(_jq '.name').yaml
-          elif [ $USE_DHCP == true ] && [ $USE_VLAN == true ]; # DHCP Network VLAN NIC with Static IPS
+          elif [ "$USE_DHCP" == "true" ] && [ "$USE_VLAN" == true ]; # DHCP Network VLAN NIC with Static IPS
           then 
             j2 network-templates/single-nic-vlan-dhcp.j2 | sed '/^$/d' | tee ${CLUSTER_DIR}/$(_jq '.name').yaml
           fi
-        elif [ $MULTI_NETWORK == true ];
+        elif [ "$MULTI_NETWORK" == "true" ];
         then 
           export interface_one_name=$(_jq '.ipv4_int1.iface')
           export interface_one_address=$(_jq '.ipv4_int1.address')
@@ -62,19 +62,19 @@
           export interface_two_prefix=$(_jq '.ipv4_int2.prefix')
           export vlan_id=${VLAN_ID}
           export vlan_id_two=${VLAN_ID_TWO}
-          if  [ $USE_DHCP == false ] && [ $USE_VLAN == true ] && [ $USE_BOND == true ];  # Bond Network Static
+          if  [ "$USE_DHCP" == "false" ] && [ "$USE_VLAN" == "true" ] && [ "$USE_BOND" == "true" ];  # Bond Network Static
           then 
             j2 network-templates/multi-nic-vlan-static-bond.j2 | sed '/^$/d' | tee ${CLUSTER_DIR}/$(_jq '.name').yaml 
-          elif [ $USE_DHCP == true ] && [ $USE_VLAN == false ];  # Multi Network DHCP
+          elif [ "$USE_DHCP" == "true" ] && [ "$USE_VLAN" == "false" ];  # Multi Network DHCP
           then 
             j2 network-templates/multi-nic-dhcp.j2 | sed '/^$/d' | tee ${CLUSTER_DIR}/$(_jq '.name').yaml 
-          elif [ $USE_DHCP == false ] && [ $USE_VLAN == false ]; # Multi Network Static IPs
+          elif [ "$USE_DHCP" == "false" ] && [ "$USE_VLAN" == "false" ]; # Multi Network Static IPs
           then 
             j2 network-templates/multi-nic-static.j2 | sed '/^$/d' | tee ${CLUSTER_DIR}/$(_jq '.name').yaml 
-          elif [ $USE_DHCP == false ] && [ $USE_VLAN == true ]; # Single Network VLAN NIC with Static IPS
+          elif [ "$USE_DHCP" == "false" ] && [ "$USE_VLAN" == "true" ]; # Single Network VLAN NIC with Static IPS
           then 
             j2 network-templates/multi-nic-vlan-static.j2 | sed '/^$/d' | tee ${CLUSTER_DIR}/$(_jq '.name').yaml
-          elif [ $USE_DHCP == true ] && [ $USE_VLAN == true ]; # DHCP Network VLAN NIC with Static IPS
+          elif [ "$USE_DHCP" == "true" ] && [ "$USE_VLAN" == "true" ]; # DHCP Network VLAN NIC with Static IPS
           then 
             j2 network-templates/single-nic-vlan-dhcp.j2 | sed '/^$/d' | tee ${CLUSTER_DIR}/$(_jq '.name').yaml
           fi

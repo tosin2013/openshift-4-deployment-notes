@@ -47,7 +47,7 @@ while [ $LOOP_ON = "true" ]; do
   ##     - TRUE: Cluster configuration and install complete, continue
 
   ## Check to see if the install has started
-  if [ $CLUSTER_INSTALL_STARTED == "2000-01-01T00:00:00.000Z" ]; then
+  if [ $CLUSTER_INSTALL_STARTED == "0001-01-01T00:00:00.000Z" ]; then
     ## Cluster has not been installed yet
     if [ "$NUMBER_OF_HOSTS" -eq "$NUMBER_OF_CFG_NODES" ]; then
       ## All nodes have reported in
