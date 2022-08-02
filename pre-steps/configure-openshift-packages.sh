@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+#set -e
 if [ -z $VERSION ];
 then
     export VERSION=latest
