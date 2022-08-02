@@ -53,13 +53,13 @@ function download_binaries(){
     $SUDO chmod +x /usr/bin/oc
     $SUDO oc version
 
-    if (( $EUID != 0 )); then
-      $SUDO oc completion bash |  $SUDO tee /etc/bash_completion.d/oc_completion
-      $SUDO openshift-install completion bash > openshift-install
-      $SUDO mv openshift-install /etc/bash_completion.d/
-    else
-       oc completion bash >>/etc/bash_completion.d/oc_completion
-    fi 
+    #if (( $EUID != 0 )); then
+    #  $SUDO oc completion bash |  $SUDO tee /etc/bash_completion.d/oc_completion
+    #  $SUDO openshift-install completion bash > openshift-install
+    #  $SUDO mv openshift-install /etc/bash_completion.d/
+    #else
+    #   oc completion bash >>/etc/bash_completion.d/oc_completion
+    #fi 
 
     echo "*******************************"
     echo "run the following to source the openshift auto complete"
