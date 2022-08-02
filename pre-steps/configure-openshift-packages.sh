@@ -157,6 +157,6 @@ args+=("$@")
 if [ -z $1 ];
 then
   usage
-  exit 1
+  exit
 fi
 
