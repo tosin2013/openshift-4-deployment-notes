@@ -51,15 +51,15 @@ function download_binaries(){
     $SUDO tar zxvf ${OC_CLI_CLIENT} -C /usr/bin
     rm -f ${OC_CLI_CLIENT}
     $SUDO chmod +x /usr/bin/oc
-    oc version
+    $SUDO oc version
 
     if (( $EUID != 0 )); then
       oc completion bash > openshift
       $SUDO mv openshift /etc/bash_completion.d/
-      openshift-install completion bash > openshift-install
+      $SUDO openshift-install completion bash > openshift-install
       $SUDO mv openshift-install /etc/bash_completion.d/
     else
-      oc completion bash | sudo tee /etc/bash_completion.d/openshift > /dev/null
+      $SUDO oc completion bash | sudo tee /etc/bash_completion.d/openshift > /dev/null
       . /usr/share/bash-completion/bash_completion
     fi 
 
