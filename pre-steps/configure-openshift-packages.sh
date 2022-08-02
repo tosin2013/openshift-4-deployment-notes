@@ -59,7 +59,7 @@ function download_binaries(){
       $SUDO openshift-install completion bash > openshift-install
       $SUDO mv openshift-install /etc/bash_completion.d/
     else
-      $SUDO oc completion bash | sudo tee /etc/bash_completion.d/openshift > /dev/null
+      $SUDO oc completion bash | $SUDO tee /etc/bash_completion.d/openshift > /dev/null
       . /usr/share/bash-completion/bash_completion
     fi 
 
