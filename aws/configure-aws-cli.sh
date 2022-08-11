@@ -51,7 +51,12 @@ EOF
 
   cat $HOME/.aws/credentials
 
-  aws sts get-caller-identity || exit $?
+  if [ ! -z SKIP_CHECK_CALLER_IDENTITY  ]
+  then
+     aws sts get-caller-identity || exit $?
+  fi
+
+
 
 }
 
