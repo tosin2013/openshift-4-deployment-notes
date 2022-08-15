@@ -33,7 +33,7 @@
 [Deploy Red Hat Quay 3 on OpenShift 4.2](post-steps/deploy-red-hat-quay-3-on-openshift-4.2.md)  
 [Configure Ansible tower on OpenShift (Legacy)](post-steps/configure-ansible-tower.md).   
 [Configure Cluster Resource Overrides](post-steps/cluster-resource-override.md)
-[Configure OpenShift Virtualization networking]((post-steps/configure-openshift-virtualization-networking.md)
+[Configure OpenShift Virtualization networking](post-steps/configure-openshift-virtualization-networking.md)
 
 ## Training links 
 [OCS Installation and Configuration](https://red-hat-storage.github.io/ocs-training/training/index.html)  
