@@ -1,13 +1,12 @@
 # Configure OpenShift Virtualization networking
 
-1. Install the Kubernetes NMState Operator
-------------------------------------------
+## 1. Install the Kubernetes NMState Operator
 * https://docs.openshift.com/container-platform/4.10/networking/k8s_nmstate/k8s-nmstate-about-the-k8s-nmstate-operator.html
 
 
 
-2. Confiure the node
---------------------
+## 2. Confiure the node
+
 **labels nodes for testing**
 ```
 oc label node ocp01 nodename=ocp01
@@ -15,7 +14,7 @@ oc label node ocp02 nodename=ocp02
 oc label node ocp03 nodename=ocp03
 ```
 
-Bridge notes 
+Bridge referance  
 -----------
 > definitions for network interfaces 
  -> https://nmstate.io/
