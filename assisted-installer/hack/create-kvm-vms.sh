@@ -43,7 +43,11 @@ for i in "${array[@]}"
 do
   echo "checking for $i"
   INTERFACE=$(ip addr | grep -oE $i | head -1)
-	if [[ ${INTERFACE} == 'containerLANbr0' ]];
+  if [ $DISCONNECTED_INSTALL == "true" ] || [ $SELF_HOSTED_INSTALLER == "true" ];
+  then
+    LIBVIRT_NETWORK="network=bare-net,model=virtio"
+    break
+  elif [[ ${INTERFACE} == 'containerLANbr0' ]];
   then 
     LIBVIRT_NETWORK="bridge=containerLANbr0,model=virtio"
     break
