@@ -3,6 +3,13 @@
 #set -e
 
 generatePatchData() {
+
+NODE_LENGTH=$(echo "${NODE_CFGS}" | jq -r '.nodes[].name' | wc -l)
+if [ ${NODE_LENGTH} -eq 1 ]; then
+  USER_MANAGED_NETWORKING=true
+else
+  USER_MANAGED_NETWORKING=false
+fi
 cat << EOF
 {
   "kind": "Cluster",
@@ -15,7 +22,7 @@ cat << EOF
   "api_vip": "${CLUSTER_API_VIP}",
   "schedulable_masters": ${SCHEDULABLE_MASTERS},
   "high_availability_mode": "${HA_MODE}",
-  "user_managed_networking": false,
+  "user_managed_networking": ${USER_MANAGED_NETWORKING},
   "platform": {
     "type": "baremetal"
   },
