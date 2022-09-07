@@ -64,9 +64,9 @@ function download_oc_client() {
         chmod +x configure-openshift-packages.sh
         ./configure-openshift-packages.sh -i
 		#https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/latest/release.txt
-		export OCP_RELEASE=$(oc version | awk '{print $3}')-x86_64
+		export OCP_RELEASE=$(oc version | awk '{print $3}' | head -1)-x86_64
 	else 
-		export OCP_RELEASE=$(oc version | awk '{print $3}')-x86_64
+		export OCP_RELEASE=$(oc version | awk '{print $3}' | head -1)-x86_64
 	fi
 }
 
