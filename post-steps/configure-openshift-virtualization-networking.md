@@ -5,7 +5,7 @@
 
 
 
-## 2. Confiure the node
+## 2. Configure the node
 
 **labels nodes for testing**
 ```

@@ -66,8 +66,14 @@ sudo ./mirror-registry uninstall -v
 ```
 
 ## TO-DO Generic Registry Creation Script
-> Ad steps to use generic registry
+> Add steps to use generic registry
 
+## Get OpenShift Pull Secret and save it to `~/pull_secret.json`
+> [Install OpenShift on Bare Metal](https://console.redhat.com/openshift/install/metal/installer-provisioned)
+
+```bash
+vim ~/pull_secret.json
+```
 
 # To mirror an OpenShift release to Quay
 * replace password with generated password for output
@@ -97,7 +103,7 @@ sed -i 's/PASSWORD="CHANGEME"/PASSWORD=PASSWORD_OUTPUT/g' mirror-ocp-full.sh
 sed -i 's/PASSWORD="CHANGEME"/PASSWORD=PASSWORD_OUTPUT/g' mirror-ocp-full.sh
 ```
 * run the get-ai-svc-version.sh
-> create `vim rh-api-offline-token` is the token generated from this page: https://access.redhat.com/management/api
+> create `vim $HOME/rh-api-offline-token` is the token generated from this page: https://access.redhat.com/management/api
 ```
 ./get-ai-svc-version.sh
 ```

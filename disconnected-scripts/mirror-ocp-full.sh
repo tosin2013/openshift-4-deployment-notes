@@ -66,22 +66,22 @@ function download_oc_latest_client() {
 
 		if [ -f ${HOME}/cluster-versions.json ];
 		then 
-			VARIABLE=$(oc version | awk '{print $3}')
+			VARIABLE=$(oc version | awk '{print $3}' | head -1)
 			echo ${VARIABLE::4}
 			AI_OC_RELEASE=$(cat cluster-versions.json | jq '.[]|.display_name'  | grep ${VARIABLE::4} | head -1 | tr -d '"')
 			export OCP_RELEASE=${AI_OC_RELEASE}-x86_64
 		else 
-			export OCP_RELEASE=$(oc version | awk '{print $3}')-x86_64
+			export OCP_RELEASE=$(oc version | awk '{print $3}' | head -1)-x86_64
 		fi 	
 	else 
 		if [ -f ${HOME}/cluster-versions.json ];
 		then 
-			VARIABLE=$(oc version | awk '{print $3}')
+			VARIABLE=$(oc version | awk '{print $3}' | head -1)
 			echo ${VARIABLE::3}
 			AI_OC_RELEASE=$(cat cluster-versions.json | jq '.[]|.display_name'  | grep ${VARIABLE::3} | head -1 | tr -d '"')
 			export OCP_RELEASE=${AI_OC_RELEASE}-x86_64
 		else 
-			export OCP_RELEASE=$(oc version | awk '{print $3}')-x86_64
+			export OCP_RELEASE=$(oc version | awk '{print $3}' | head -1)-x86_64
 		fi 
 	fi
 }
