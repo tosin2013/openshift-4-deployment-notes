@@ -33,40 +33,40 @@ sudo dnf install libvirt -y
 ## Quay Mirror Registry Script
 > https://github.com/quay/mirror-registry/releases
 
-### Download mirror registry
+**Download mirror registry**
 ```
 VERSION=1.1.0 # Testing
 VERSION=1.0.0  #Stable
 curl -OL https://github.com/quay/mirror-registry/releases/download/${VERSION}/mirror-registry-offline.tar.gz
 tar -zxvf mirror-registry-offline.tar.gz
 ```
-### install mirror registry
+**install mirror registry**
 ```
 mkdir -p /registry/
 sudo ./mirror-registry install \
   --quayHostname $(hostname) \
   --quayRoot /registry/
-```
-### Configure firewall
+
+**Configure firewall**
 ```
 sudo firewall-cmd --add-port=8443/tcp --permanent
 sudo firewall-cmd --reload
 ```
 
-### Set semanage ports for selinux
+**Set semanage ports for selinux**
 ```
 sudo semanage port  -a 8443 -t http_port_t -p tcp
 sudo semanage port  -l  | grep -w http_port_t
 ```
 
 
-### To uninstall mirror registry 
+**To uninstall mirror registry**
 ```
 sudo ./mirror-registry uninstall -v
 ```
 
-## TO-DO Generic Registry Creation Script
-> Add steps to use generic registry
+
+# On jumpbox or bastion host
 
 ## Get OpenShift Pull Secret and save it to `~/pull_secret.json`
 > [Install OpenShift on Bare Metal](https://console.redhat.com/openshift/install/metal/installer-provisioned)
@@ -75,7 +75,12 @@ sudo ./mirror-registry uninstall -v
 vim ~/pull_secret.json
 ```
 
-# To mirror an OpenShift release to Quay
+**To mirror an OpenShift release to Quay**
+* Change registry url to your registry url in `mirror-ocp-release.sh`
+```
+export REGISTRY_URL=$(hostname)
+```
+
 * replace password with generated password for output
 ```
 sed -i 's/PASSWORD="CHANGEME"/PASSWORD=PASSWORD_OUTPUT/g' mirror-ocp-release.sh
@@ -86,7 +91,11 @@ sed -i 's/PASSWORD="CHANGEME"/PASSWORD=PASSWORD_OUTPUT/g' mirror-ocp-release.sh
 ./mirror-ocp-release.sh
 ```
 
-# To mirror an OpenShift release and host OpenShift Binaries for UBI deployments
+**To mirror an OpenShift release and host OpenShift Binaries for UBI deployments**
+* Change registry url to your registry url in `mirror-ocp-full.sh`
+```
+export REGISTRY_URL=$(hostname)
+```
 * replace password with generated password for output
 ```
 sed -i 's/PASSWORD="CHANGEME"/PASSWORD=PASSWORD_OUTPUT/g' mirror-ocp-full.sh
@@ -97,7 +106,11 @@ sed -i 's/PASSWORD="CHANGEME"/PASSWORD=PASSWORD_OUTPUT/g' mirror-ocp-full.sh
 ./mirror-ocp-full.sh
 ```
 
-# To mirror an OpenShift release and host OpenShift Binaries for assisted installer deployments
+**To mirror an OpenShift release and host OpenShift Binaries for assisted installer deployments**
+* Change registry url to your registry url in `mirror-ocp-full.sh`
+```
+export REGISTRY_URL=$(hostname)
+```
 * replace password with generated password for output
 ```
 sed -i 's/PASSWORD="CHANGEME"/PASSWORD=PASSWORD_OUTPUT/g' mirror-ocp-full.sh
@@ -113,7 +126,7 @@ sed -i 's/PASSWORD="CHANGEME"/PASSWORD=PASSWORD_OUTPUT/g' mirror-ocp-full.sh
 ./mirror-ocp-full.sh
 ```
 
-# Location of Quay Certificate after deployment
+**Location of Quay Certificate after deployment**
 ```
 cat /registry/quay-rootCA/rootCA.pem
 ```

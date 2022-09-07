@@ -5,10 +5,11 @@ set -x
 export PULL_SECRET_JSON=~/pull_secret.json
 export LOCAL_SECRET_JSON=~/merged-pull-secret.json
 export PORT=8443 #5000
-export LOCAL_REGISTRY=$(hostname):${PORT}
+export REGISTRY_URL=$(hostname)
+export LOCAL_REGISTRY=${REGISTRY_URL}:${PORT}
 export LOCAL_REPOSITORY=ocp4
 #https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/latest/release.txt
-export OCP_RELEASE=latest # for 4.9 release use latest-4.9
+export OCP_RELEASE=latest # for 4.10 release use latest-4.10
 export OCP_REGISTRY=quay.io/openshift-release-dev/ocp-release
 export EMAIL="admin@changeme.com"
 export PASSWORD="CHANGEME"
