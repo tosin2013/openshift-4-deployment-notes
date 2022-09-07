@@ -97,7 +97,7 @@ sed -i 's/PASSWORD="CHANGEME"/PASSWORD=PASSWORD_OUTPUT/g' mirror-ocp-full.sh
 sed -i 's/PASSWORD="CHANGEME"/PASSWORD=PASSWORD_OUTPUT/g' mirror-ocp-full.sh
 ```
 * run the get-ai-svc-version.sh
-> create `vim rh-api-offline-token` is the token generated from this page: https://access.redhat.com/management/api
+> create `vim $HOME/rh-api-offline-token` is the token generated from this page: https://access.redhat.com/management/api
 ```
 ./get-ai-svc-version.sh
 ```
