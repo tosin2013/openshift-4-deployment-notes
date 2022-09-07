@@ -148,6 +148,8 @@ function format_images_config() {
 
 function configure_webserver(){
     sudo yum install -y  syslinux httpd wget
+	sudo systemctl enable firewalld
+	sudo systemctl start firewalld
     sudo firewall-cmd --add-service={http,https} --permanent
     sudo firewall-cmd --add-port=8080/tcp --permanent
     sudo firewall-cmd --reload
