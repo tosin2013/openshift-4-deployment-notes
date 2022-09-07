@@ -14,7 +14,7 @@ oc label node ocp02 nodename=ocp02
 oc label node ocp03 nodename=ocp03
 ```
 
-Bridge referance  
+Bridge Reference  
 -----------
 > definitions for network interfaces 
  -> https://nmstate.io/
@@ -127,5 +127,5 @@ Click on ![](https://i.imgur.com/FNdZfMD.png)
 ![](https://i.imgur.com/ZcKFbvb.png)
 
 
-Links:
+## Links:
 https://blog.cudanet.org/setting-up-kubevirt/

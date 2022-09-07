@@ -19,6 +19,7 @@ export CLUSTER_INGRESS_VIP="192.168.3.8"
 export CLUSTER_API_VIP="192.168.3.9"
 export CLUSTER_MACHINE_NETWORK="192.168.3.0/24"
 export NTP_SOURCE="0.rhel.pool.ntp.org"
+export SELF_HOSTED_INSTALLER="true"
 #########################################################
 ## if you enable or disable dhcp both interfaces will use the samae options
 ## edit nmstate-generator.sh if you want one interface to have static and the other dhcp
@@ -68,19 +69,27 @@ export NODE_CFGS='{ "nodes": [ '${NODE1_CFG}', '${NODE2_CFG}', '${NODE3_CFG}', '
 export ISO_TYPE="full-iso"
 
 ## CLUSTER_VERSION just needs to be MAJOR.MINOR - actual release is queried from the API
-export CLUSTER_VERSION="4.10"
+export CLUSTER_VERSION="4.11"
 ## CLUSTER_RELEASE has been moved to query-supported-versions.sh
 #export CLUSTER_RELEASE="4.9.6"
 
 # CORE_USER_PWD - Leave blank to not set a core user password
 export CORE_USER_PWD=""
 
+
+if [ $DISCONNECTED_INSTALL == "true" ] || [ $SELF_HOSTED_INSTALLER == "true" ]; then
+  export ASSISTED_SERVICE_HOSTNAME="192.168.1.10" # Change to your IP address
+  export ASSISTED_SERVICE_PORT="8090" 
+  export ASSISTED_SERVICE_PROTOCOL="http"
+else 
+  export ASSISTED_SERVICE_HOSTNAME="api.openshift.com"
+  export ASSISTED_SERVICE_PORT="443" 
+  export ASSISTED_SERVICE_PROTOCOL="https"
+fi
+
+
 #########################################################
 ## NOTHING TO SEE HERE - Don't edit past this point
-
-export ASSISTED_SERVICE_HOSTNAME="api.openshift.com"
-export ASSISTED_SERVICE_PORT="443" 
-export ASSISTED_SERVICE_PROTOCOL="https"
 export ASSISTED_SERVICE_ENDPOINT="${ASSISTED_SERVICE_PROTOCOL}://${ASSISTED_SERVICE_HOSTNAME}:${ASSISTED_SERVICE_PORT}"
 export ASSISTED_SERVICE_V2_API_PATH="/api/assisted-install/v2"
 export ASSISTED_SERVICE_V2_API="${ASSISTED_SERVICE_ENDPOINT}${ASSISTED_SERVICE_V2_API_PATH}"

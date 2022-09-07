@@ -31,7 +31,13 @@ checkForProgramAndExit j2
 
 set -e
 
-source $SCRIPT_DIR/authenticate-to-api.sh
+if [ ${SELF_HOSTED_INSTALLER} == "true" ]; then
+    echo -e "===== using ${ASSISTED_SERVICE_ENDPOINT}..."
+    export ACTIVE_TOKEN="dummy"
+else 
+    source $SCRIPT_DIR/authenticate-to-api.sh
+fi
+
 
 source $SCRIPT_DIR/query-openshift-versions.sh
 
