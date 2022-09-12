@@ -19,7 +19,6 @@ export CLUSTER_INGRESS_VIP="192.168.3.8"
 export CLUSTER_API_VIP="192.168.3.9"
 export CLUSTER_MACHINE_NETWORK="192.168.3.0/24"
 export NTP_SOURCE="0.rhel.pool.ntp.org"
-export SELF_HOSTED_INSTALLER="true"
 #export DISCONNECTED_INSTALL=""  # Work in progress
 #########################################################
 ## if you enable or disable dhcp both interfaces will use the samae options
@@ -78,7 +77,7 @@ export CLUSTER_VERSION="4.11"
 export CORE_USER_PWD=""
 
 
-if [ $DISCONNECTED_INSTALL == "true" ] || [ $SELF_HOSTED_INSTALLER == "true" ]; then
+if [ $DISCONNECTED_INSTALL == "true" ]; then
   export ASSISTED_SERVICE_HOSTNAME="192.168.1.10" # Change to your IP address
   export ASSISTED_SERVICE_PORT="8090" 
   export ASSISTED_SERVICE_PROTOCOL="http"
