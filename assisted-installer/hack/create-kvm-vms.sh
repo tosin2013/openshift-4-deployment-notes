@@ -18,11 +18,23 @@ if [ -z "$CLUSTER_ID" ]; then
   exit 1
 fi
 
-CP_CPU_CORES="4"
-CP_RAM_GB="16"
-CP_CPU_SOCKETS="1"
-DISK_SIZE="130"
-LIBVIRT_VM_PATH="/var/lib/libvirt/images"
+
+
+NODE_LENGTH=$(echo "${NODE_CFGS}" | jq -r '.nodes[].name' | wc -l)
+if [ ${NODE_LENGTH} -eq 1 ]; then
+  CP_CPU_CORES="8"
+  CP_RAM_GB="32"
+  CP_CPU_SOCKETS="1"
+  DISK_SIZE="130"
+  LIBVIRT_VM_PATH="/var/lib/libvirt/images"
+else
+  CP_CPU_CORES="4"
+  CP_RAM_GB="16"
+  CP_CPU_SOCKETS="1"
+  DISK_SIZE="130"
+  LIBVIRT_VM_PATH="/var/lib/libvirt/images"
+fi
+
 # uncomment POWEROFF if RHEL 8.5 or less
 # POWEROFF=",on_poweroff=preserve"
 if [ ! -f ${LIBVIRT_VM_PATH}/ai-liveiso-$CLUSTER_ID.iso ];
