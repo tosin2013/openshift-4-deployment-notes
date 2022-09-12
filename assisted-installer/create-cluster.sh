@@ -7,15 +7,19 @@ generatePatchData() {
 NODE_LENGTH=$(echo "${NODE_CFGS}" | jq -r '.nodes[].name' | wc -l)
 if [ ${NODE_LENGTH} -eq 1 ]; then
   USER_MANAGED_NETWORKING=true
+  PLATFORM_TYPE="none"
 else
   USER_MANAGED_NETWORKING=false
+  PLATFORM_TYPE="baremetal"
 fi
+
+
 cat << EOF
 {
   "kind": "Cluster",
   "name": "${CLUSTER_NAME}",
   "openshift_version": "${CLUSTER_VERSION}",
-  "ocp_release_image": "quay.io/openshift-release-dev/ocp-release:${CLUSTER_RELEASE}-x86_64",
+  "ocp_release_image": "${REPO_URL}",
   "base_dns_domain": "${CLUSTER_BASE_DNS}",
   "hyperthreading": "all",
   "ingress_vip": "${CLUSTER_INGRESS_VIP}",
@@ -24,7 +28,7 @@ cat << EOF
   "high_availability_mode": "${HA_MODE}",
   "user_managed_networking": ${USER_MANAGED_NETWORKING},
   "platform": {
-    "type": "baremetal"
+    "type": "${PLATFORM_TYPE}"
   },
   "cluster_networks": [
     {
@@ -66,6 +70,13 @@ CREATE_CLUSTER_REQUEST=$(curl -s --fail \
 
 if [ -z "$CREATE_CLUSTER_REQUEST" ]; then
   echo "===== Failed to create cluster!"
+  curl -s -v  \
+    --header "Authorization: Bearer $ACTIVE_TOKEN" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --request POST \
+    --data "$(generatePatchData)" \
+    "${ASSISTED_SERVICE_V2_API}/clusters"
   exit 1
 fi
 

@@ -20,6 +20,7 @@ export CLUSTER_API_VIP="192.168.3.9"
 export CLUSTER_MACHINE_NETWORK="192.168.3.0/24"
 export NTP_SOURCE="0.rhel.pool.ntp.org"
 export SELF_HOSTED_INSTALLER="true"
+#export DISCONNECTED_INSTALL=""  # Work in progress
 #########################################################
 ## if you enable or disable dhcp both interfaces will use the samae options
 ## edit nmstate-generator.sh if you want one interface to have static and the other dhcp
