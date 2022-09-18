@@ -48,6 +48,11 @@ vim cluster-vars.sh
 cp example-mutli-network.cluster-vars.sh cluster-vars.sh
 vim cluster-vars.sh
 ```
+> if using [openshift-virtualization-gitops](https://github.com/tosin2013/openshift-virtualization-gitops)
+```bash
+ln -s custom-cluster-var.sh cluster-vars.sh
+```
+edit the `custom-cluster-var.sh` directly from git.
 
 5. Run the bootstrap script to create the cluster, configure it, and download the ISO
 > the bootstrap-create.sh script may also be used. 
