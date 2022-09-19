@@ -23,9 +23,10 @@ extendedKeyUsage = serverAuth
 subjectAltName = @alt_names
 
 [alt_names]
-DNS.1=${DOMAIN}
+DNS.1=${REGISTRY_NAME}.${DOMAIN}
 DNS.2=${REGISTRY_NAME}
 DNS.3=${HOSTNAME}
+DNS.4=${DOMAIN}
 EOF
 openssl x509 -req -sha512 -days 3650 \
     -extfile v3.ext \

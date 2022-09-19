@@ -56,6 +56,9 @@ function ocp_mirror_release() {
 		--from=${OCP_REGISTRY}:${OCP_RELEASE} \
 		--to=${LOCAL_REGISTRY}/${LOCAL_REPOSITORY} \
 		--to-release-image=${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}:${OCP_RELEASE} --insecure=${USE_INSECURE}
+	podman pull quay.io/openshift-release-dev/ocp-release:${OCP_RELEASE} 
+	podman tag quay.io/openshift-release-dev/ocp-release:${OCP_RELEASE}  mirrorvm.lab.tosins-edgelab.io:8443/ocp4:${OCP_RELEASE} 
+	podman push mirrorvm.lab.tosins-edgelab.io:8443/ocp4:${OCP_RELEASE}  --authfile ~/merged-pull-secret.json --tls-verify=false
 }
 
 function download_oc_latest_client() {
