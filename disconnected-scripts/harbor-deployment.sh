@@ -43,5 +43,5 @@ cp ca.crt /etc/docker/certs.d/${DOMAIN}/
 systemctl restart docker
 
 
-cp harbor.yml.tmpl harbor.yml
-sed -i 's/reg.mydomain.com/'e'/g' harbor.yml
+#cp harbor.yml.tmpl harbor.yml
+#sed -i 's/reg.mydomain.com/'e'/g' harbor.yml
