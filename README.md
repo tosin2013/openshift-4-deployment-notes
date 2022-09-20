@@ -34,6 +34,7 @@
 [Configure Ansible tower on OpenShift (Legacy)](post-steps/configure-ansible-tower.md).    
 [Configure Cluster Resource Overrides](post-steps/cluster-resource-override.md).   
 [Configure OpenShift Virtualization networking](post-steps/configure-openshift-virtualization-networking.md)
+[Ansible Tower on ACM Deployment](post-steps/configure-tower-on-acm.md)
 
 ## Training links 
 [OCS Installation and Configuration](https://red-hat-storage.github.io/ocs-training/training/index.html)  
