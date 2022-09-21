@@ -66,7 +66,7 @@ $ export LOCAL_REPOSITORY=olm-mirror
 # For Artifactory Example: jfrog
 $ export LOCAL_REPOSITORY=olm-mirror/olm-mirror
 # For Harbor Example: harbor-registry.gp.ocpincubator.com
-$ export LOCAL_REPOSITORY=openshift4/olm-mirror
+$ export LOCAL_REPOSITORY=openshift/olm-mirror
 $ opm index prune \
     -f registry.redhat.io/redhat/redhat-operator-index:v${OPENSHIFT_VERSION} \
     -p $(cat saved-packages.log | paste -d ',' -s) \
@@ -88,8 +88,8 @@ oc adm catalog mirror  ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-ind
 ```
 # Generate imagecontent source policy and catalog source
 ```
-oc adm catalog mirror  ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-index:v4.10  ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY} --registry-config=${PULL_SECRET} --max-per-registry=100 --manifests-only  | tee -a mainfest.txt
-MANIFEST_DIRECTORY=$(cat mainfest.txt | grep -oE redhat-operator-index-[0-9]{10})
+oc adm catalog mirror  ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-index:v${OPENSHIFT_VERSION}  ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY} --registry-config=${PULL_SECRET} --max-per-registry=100 --manifests-only  | tee -a mainfest.txt
+MANIFEST_DIRECTORY=$(grep -P -i -o  'redhat-operator-index([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[eE]([+-]?\d+))?' mainfest.txt)
 ```
 ## add ImageContentSourcePolicy to cluster
 ```
