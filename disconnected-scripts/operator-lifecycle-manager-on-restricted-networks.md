@@ -23,11 +23,11 @@ oc patch OperatorHub cluster --type json \
     -p '[{"op": "add", "path": "/spec/disableAllDefaultSources", "value": true}]'
 ```
 
-***Authenticate with registry.redhat.io**
+**Authenticate with registry.redhat.io**
 ```
  podman login registry.redhat.io
 ```
-***Authenticate to your internal registry**
+**Authenticate to your internal registry**
 ```
 INTERNAL_REGISTRY=quay.example.com:8443
 podman  login ${INTERNAL_REGISTRY}  --tls-verify=false
@@ -75,7 +75,7 @@ $ podman push ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-index:v${OPE
 ```
 oc adm catalog mirror  ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-index:v${OPENSHIFT_VERSION}  ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY} -a ~/merged-pull-secret.json
 ```
-# Generate imagecontent source ploicy and catalog source
+# Generate imagecontent source policy and catalog source
 ```
 oc adm catalog mirror  ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-index:v4.10  ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY} --registry-config=${PULL_SECRET} --max-per-registry=100 --manifests-only  | tee -a mainfest.txt
 MANIFEST_DIRECTORY=$(cat mainfest.txt | grep -oE redhat-operator-index-[0-9]{10})
