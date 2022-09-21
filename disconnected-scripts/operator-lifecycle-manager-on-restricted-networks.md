@@ -36,7 +36,7 @@ oc patch OperatorHub cluster --type json \
 ```
 **Authenticate to your internal registry**
 ```
-INTERNAL_REGISTRY=quay.example.com:8443
+INTERNAL_REGISTRY=harbor-registry.gp.ocpincubator.com
 podman  login ${INTERNAL_REGISTRY}  --tls-verify=false
 ```
 **Run the source index image that you want to prune in a container.**
@@ -46,14 +46,16 @@ podman run -p50051:50051 -d -it registry.redhat.io/redhat/redhat-operator-index:
 ```
 
 **Use the grpcurl command to get a list of the packages provided by the index:**
+> example [packages.out](packages-4.10.x.out)
 ```
 grpcurl -plaintext localhost:50051 api.Registry/ListPackages > packages.out
 ```
 
 **Select packages from market place**
 ```
-cat packages.out | grep -E 'local-storage|odf|ocs'  | awk '{print $2}' | tr '"' ' '  | sed 's/ //g' | tee -a saved-packages.log
+cat packages.out | grep -E 'local-storage|odf-*|ocs|openshift-gitops-operator|advanced-cluster-management|ansible-automation-platform-operator|cincinnati-operator|klusterlet-product|mcg-operator|multicluster-engine|openshift-pipelines-operator-rh|quay-operator'  | awk '{print $2}' | tr '"' ' '  | sed 's/ //g' | tee -a saved-packages.log
 ```
+
 
 Run the following command to prune the source index of all but the specified packages:
 ```
@@ -63,6 +65,8 @@ $ export LOCAL_REGISTRY=${INTERNAL_REGISTRY}
 $ export LOCAL_REPOSITORY=olm-mirror
 # For Artifactory Example: jfrog
 $ export LOCAL_REPOSITORY=olm-mirror/olm-mirror
+# For Harbor Example: harbor-registry.gp.ocpincubator.com
+$ export LOCAL_REPOSITORY=openshift4/olm-mirror
 $ opm index prune \
     -f registry.redhat.io/redhat/redhat-operator-index:v${OPENSHIFT_VERSION} \
     -p $(cat saved-packages.log | paste -d ',' -s) \
