@@ -1,0 +1,282 @@
+{
+  "name": "3scale-operator"
+}
+{
+  "name": "advanced-cluster-management"
+}
+{
+  "name": "amq-broker-rhel8"
+}
+{
+  "name": "amq-online"
+}
+{
+  "name": "amq-streams"
+}
+{
+  "name": "amq7-interconnect-operator"
+}
+{
+  "name": "ansible-automation-platform-operator"
+}
+{
+  "name": "ansible-cloud-addons-operator"
+}
+{
+  "name": "apicast-operator"
+}
+{
+  "name": "aws-efs-csi-driver-operator"
+}
+{
+  "name": "aws-load-balancer-operator"
+}
+{
+  "name": "bamoe-businessautomation-operator"
+}
+{
+  "name": "bamoe-kogito-operator"
+}
+{
+  "name": "bare-metal-event-relay"
+}
+{
+  "name": "businessautomation-operator"
+}
+{
+  "name": "cincinnati-operator"
+}
+{
+  "name": "cluster-kube-descheduler-operator"
+}
+{
+  "name": "cluster-logging"
+}
+{
+  "name": "clusterresourceoverride"
+}
+{
+  "name": "codeready-workspaces"
+}
+{
+  "name": "codeready-workspaces2"
+}
+{
+  "name": "compliance-operator"
+}
+{
+  "name": "container-security-operator"
+}
+{
+  "name": "costmanagement-metrics-operator"
+}
+{
+  "name": "cryostat-operator"
+}
+{
+  "name": "datagrid"
+}
+{
+  "name": "devspaces"
+}
+{
+  "name": "devworkspace-operator"
+}
+{
+  "name": "dpu-network-operator"
+}
+{
+  "name": "eap"
+}
+{
+  "name": "elasticsearch-operator"
+}
+{
+  "name": "external-dns-operator"
+}
+{
+  "name": "file-integrity-operator"
+}
+{
+  "name": "fuse-apicurito"
+}
+{
+  "name": "fuse-console"
+}
+{
+  "name": "fuse-online"
+}
+{
+  "name": "gatekeeper-operator-product"
+}
+{
+  "name": "idp-mgmt-operator-product"
+}
+{
+  "name": "integration-operator"
+}
+{
+  "name": "jaeger-product"
+}
+{
+  "name": "jws-operator"
+}
+{
+  "name": "kiali-ossm"
+}
+{
+  "name": "klusterlet-product"
+}
+{
+  "name": "kubernetes-nmstate-operator"
+}
+{
+  "name": "kubevirt-hyperconverged"
+}
+{
+  "name": "local-storage-operator"
+}
+{
+  "name": "loki-operator"
+}
+{
+  "name": "mcg-operator"
+}
+{
+  "name": "metallb-operator"
+}
+{
+  "name": "mtc-operator"
+}
+{
+  "name": "mtv-operator"
+}
+{
+  "name": "multicluster-engine"
+}
+{
+  "name": "nfd"
+}
+{
+  "name": "node-healthcheck-operator"
+}
+{
+  "name": "node-maintenance-operator"
+}
+{
+  "name": "numaresources-operator"
+}
+{
+  "name": "ocs-operator"
+}
+{
+  "name": "odf-csi-addons-operator"
+}
+{
+  "name": "odf-lvm-operator"
+}
+{
+  "name": "odf-multicluster-orchestrator"
+}
+{
+  "name": "odf-operator"
+}
+{
+  "name": "odr-cluster-operator"
+}
+{
+  "name": "odr-hub-operator"
+}
+{
+  "name": "openshift-cert-manager-operator"
+}
+{
+  "name": "openshift-custom-metrics-autoscaler-operator"
+}
+{
+  "name": "openshift-gitops-operator"
+}
+{
+  "name": "openshift-pipelines-operator-rh"
+}
+{
+  "name": "openshift-secondary-scheduler-operator"
+}
+{
+  "name": "openshift-special-resource-operator"
+}
+{
+  "name": "opentelemetry-product"
+}
+{
+  "name": "performance-addon-operator"
+}
+{
+  "name": "poison-pill-manager"
+}
+{
+  "name": "ptp-operator"
+}
+{
+  "name": "quay-bridge-operator"
+}
+{
+  "name": "quay-operator"
+}
+{
+  "name": "red-hat-camel-k"
+}
+{
+  "name": "redhat-oadp-operator"
+}
+{
+  "name": "rh-service-binding-operator"
+}
+{
+  "name": "rhacs-operator"
+}
+{
+  "name": "rhpam-kogito-operator"
+}
+{
+  "name": "rhsso-operator"
+}
+{
+  "name": "sandboxed-containers-operator"
+}
+{
+  "name": "serverless-operator"
+}
+{
+  "name": "service-registry-operator"
+}
+{
+  "name": "servicemeshoperator"
+}
+{
+  "name": "skupper-operator"
+}
+{
+  "name": "sriov-network-operator"
+}
+{
+  "name": "submariner"
+}
+{
+  "name": "tang-operator"
+}
+{
+  "name": "topology-aware-lifecycle-manager"
+}
+{
+  "name": "vertical-pod-autoscaler"
+}
+{
+  "name": "volsync-product"
+}
+{
+  "name": "web-terminal"
+}
+{
+  "name": "windows-machine-config-operator"
+}
