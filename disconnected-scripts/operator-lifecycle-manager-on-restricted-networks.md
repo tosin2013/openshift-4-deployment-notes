@@ -15,8 +15,15 @@ sudo mv grpcurl /usr/local/bin/
 **opm**
 * https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/
 
+OCP 4.10 - https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable-4.10/
+OCP 4.11 - https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable-4.11/
+```
+curl -OL https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable-4.10/opm-linux.tar.gz
+tar -zxvf opm-linux.tar.gz
+sudo mv opm /usr/local/bin 
+```
 
-Disable the sources for the default catalogs by adding disableAllDefaultSources: true to the OperatorHub object:
+**Disable the sources for the default catalogs by adding disableAllDefaultSources: true to the OperatorHub object:**
 
 ```
 oc patch OperatorHub cluster --type json \
