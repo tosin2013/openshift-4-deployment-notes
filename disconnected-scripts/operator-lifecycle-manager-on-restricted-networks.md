@@ -35,7 +35,7 @@ oc patch OperatorHub cluster --type json \
 ```
 **Authenticate to your internal registry**
 ```
-INTERNAL_REGISTRY=harbor-registry.gp.ocpincubator.com
+INTERNAL_REGISTRY=registry.example.com
 podman  login ${INTERNAL_REGISTRY}  --tls-verify=false
 ```
 **Run the source index image that you want to prune in a container.**
