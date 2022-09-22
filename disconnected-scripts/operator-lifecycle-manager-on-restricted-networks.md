@@ -65,7 +65,7 @@ $ export LOCAL_REPOSITORY=olm-mirror
 # For Artifactory Example: jfrog
 $ export LOCAL_REPOSITORY=olm-mirror/olm-mirror
 # For Harbor Example: harbor-registry.gp.ocpincubator.com
-$ export LOCAL_REPOSITORY=openshift/olm-mirror
+$ export LOCAL_REPOSITORY=openshift
 $ opm index prune \
     -f registry.redhat.io/redhat/redhat-operator-index:v${OPENSHIFT_VERSION} \
     -p $(cat saved-packages.log | paste -d ',' -s) \
