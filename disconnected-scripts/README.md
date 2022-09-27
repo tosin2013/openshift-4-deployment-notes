@@ -46,8 +46,10 @@ mkdir -p /registry/
 sudo ./mirror-registry install \
   --quayHostname $(hostname) \
   --quayRoot /registry/
+```
 
 **Configure firewall**
+
 ```
 sudo firewall-cmd --add-port=8443/tcp --permanent
 sudo firewall-cmd --reload
