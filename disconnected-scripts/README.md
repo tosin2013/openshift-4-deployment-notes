@@ -132,3 +132,16 @@ sed -i 's/PASSWORD="CHANGEME"/PASSWORD=PASSWORD_OUTPUT/g' mirror-ocp-full.sh
 ```
 cat /registry/quay-rootCA/rootCA.pem
 ```
+
+## add pull secert to install-config.yaml
+```
+$ echo "pullSecret: '$(jq -c . merged-pull-secret.json)'" >> install-config.yaml 
+```
+
+## Add certificate to our trust bundles in our install-config.yaml 
+```
+# vim ~/domain.crt
+# sed -i -e 's/^/  /' ~/domain.crt
+# echo "additionalTrustBundle: |" >> ~/lab/install-config.yaml
+# cat ~/domain.crt >> ~/lab//install-config.yaml
+```
