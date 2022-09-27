@@ -140,8 +140,9 @@ $ echo "pullSecret: '$(jq -c . merged-pull-secret.json)'" >> install-config.yaml
 
 ## Add certificate to our trust bundles in our install-config.yaml 
 ```
-# vim ~/domain.crt
-# sed -i -e 's/^/  /' ~/domain.crt
-# echo "additionalTrustBundle: |" >> ~/lab/install-config.yaml
-# cat ~/domain.crt >> ~/lab//install-config.yaml
+$ vim ~/domain.crt
+$ sed -i -e 's/^/  /' ~/domain.crt
+$ echo "additionalTrustBundle: |" >> install-config.yaml
+$ cat ~/domain.crt >> install-config.yaml
+$ vim install-config.yaml
 ```
