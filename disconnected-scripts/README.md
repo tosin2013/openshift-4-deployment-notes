@@ -46,8 +46,10 @@ mkdir -p /registry/
 sudo ./mirror-registry install \
   --quayHostname $(hostname) \
   --quayRoot /registry/
+```
 
 **Configure firewall**
+
 ```
 sudo firewall-cmd --add-port=8443/tcp --permanent
 sudo firewall-cmd --reload
@@ -129,4 +131,18 @@ sed -i 's/PASSWORD="CHANGEME"/PASSWORD=PASSWORD_OUTPUT/g' mirror-ocp-full.sh
 **Location of Quay Certificate after deployment**
 ```
 cat /registry/quay-rootCA/rootCA.pem
+```
+
+## add pull secert to install-config.yaml
+```
+$ echo "pullSecret: '$(jq -c . merged-pull-secret.json)'" >> install-config.yaml 
+```
+
+## Add certificate to our trust bundles in our install-config.yaml 
+```
+$ vim ~/domain.crt
+$ sed -i -e 's/^/  /' ~/domain.crt
+$ echo "additionalTrustBundle: |" >> install-config.yaml
+$ cat ~/domain.crt >> install-config.yaml
+$ vim install-config.yaml
 ```
