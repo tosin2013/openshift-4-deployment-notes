@@ -21,7 +21,10 @@ curl -OL https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable
 tar -zxvf opm-linux.tar.gz
 sudo mv opm /usr/local/bin 
 ```
+## Automated script
+* [disconnected-olm.sh](disconnected-scripts/disconnected-olm.sh)
 
+## Manual Steps 
 **Disable the sources for the default catalogs by adding disableAllDefaultSources: true to the OperatorHub object:**
 
 ```
@@ -35,7 +38,7 @@ oc patch OperatorHub cluster --type json \
 ```
 **Authenticate to your internal registry**
 ```
-INTERNAL_REGISTRY=harbor-registry.gp.ocpincubator.com
+INTERNAL_REGISTRY=registry.example.com
 podman  login ${INTERNAL_REGISTRY}  --tls-verify=false
 ```
 **Run the source index image that you want to prune in a container.**
@@ -64,7 +67,7 @@ $ export LOCAL_REGISTRY=${INTERNAL_REGISTRY}
 $ export LOCAL_REPOSITORY=olm-mirror
 # For Artifactory Example: jfrog
 $ export LOCAL_REPOSITORY=olm-mirror/olm-mirror
-# For Harbor Example: harbor-registry.gp.ocpincubator.com
+# For Harbor Example: registry.example.com
 $ export LOCAL_REPOSITORY=openshift/olm-mirror
 $ opm index prune \
     -f registry.redhat.io/redhat/redhat-operator-index:v${OPENSHIFT_VERSION} \
@@ -83,7 +86,9 @@ $ podman push ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-index:v${OPE
 ## Run the following command to mirror the content
 >  If your mirror registry is on the same network as your workstation with unrestricted network access 
 ```
-oc adm catalog mirror  ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-index:v${OPENSHIFT_VERSION}  ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY} -a ~/merged-pull-secret.json
+$ tmux new -s mirror_images
+$ oc adm catalog mirror  ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-index:v${OPENSHIFT_VERSION}  ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY} -a ~/merged-pull-secret.json
+$ tmux a -t mirror_images
 ```
 # Generate imagecontent source policy and catalog source
 ```
