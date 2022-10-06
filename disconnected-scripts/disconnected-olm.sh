@@ -4,6 +4,7 @@ export INTERNAL_REGISTRY=registry.example.com
 export PULL_SECRET_JSON=~/pull-secret.json
 export LOCAL_SECRET_JSON=~/merged-pull-secret.json
 export OPENSHIFT_VERSION="4.10"
+export CURRENT_OPENSHIFT_VERSION="4.10.36"
 export PORT=8443
 export LOCAL_REGISTRY=${INTERNAL_REGISTRY}:${PORT}
 export LOCAL_REPOSITORY=olm-mirror
@@ -67,15 +68,15 @@ cat packages.out | grep -E 'local-storage|odf-*|ocs|openshift-gitops-operator|ad
 opm index prune \
     -f registry.redhat.io/redhat/redhat-operator-index:v${OPENSHIFT_VERSION} \
     -p $(cat saved-packages.log | paste -d ',' -s) \
-    -t ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-index:v${OPENSHIFT_VERSION}
+    -t ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-index:v${CURRENT_OPENSHIFT_VERSION}
 
 podman login --authfile ${LOCAL_SECRET_JSON} \
   ${LOCAL_REGISTRY} \
   --tls-verify=${TLS_VERIFY} 
-podman push ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-index:v${OPENSHIFT_VERSION}
+podman push ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-index:v${CURRENT_OPENSHIFT_VERSION}
 
 
-oc adm catalog mirror  ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-index:v${OPENSHIFT_VERSION}  ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY} -a ${LOCAL_SECRET_JSON}
+oc adm catalog mirror  ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}/redhat-operator-index:v${CURRENT_OPENSHIFT_VERSION}  ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY} -a ${LOCAL_SECRET_JSON}
 
 cd manifests-redhat-operator-index-*   
 oc create -f imageContentSourcePolicy.yaml
