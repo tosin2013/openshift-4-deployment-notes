@@ -68,5 +68,5 @@ butane 99-worker-chrony.bu -o 99-worker-chrony.yaml
 
 oc apply -f ./99-worker-chrony.yaml
 
-watch oc get nodes watch oc get nodes 
+watch oc get nodes 
 ```
