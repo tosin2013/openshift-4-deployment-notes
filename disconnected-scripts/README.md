@@ -146,3 +146,6 @@ $ echo "additionalTrustBundle: |" >> install-config.yaml
 $ cat ~/domain.crt >> install-config.yaml
 $ vim install-config.yaml
 ```
+
+Links:
+* [Mirroring OpenShift Registries: The Easy Way](https://cloud.redhat.com/blog/mirroring-openshift-registries-the-easy-way)
