@@ -26,20 +26,20 @@
 [Red Hat Advanced Cluster Management for Kubernetes](acm/)  
 
 ## Day Two Operations  
-[Configure a HTPasswd identity provider](post-steps/configure-htpasswd-identity-provider.md)  
-[Configure with Internal Image Registry to Use Red Hat OpenShift Data Foundation](post-steps/configure-registry-odf.md)  
-[Configure Red Hat Single Sign-On 7.3 identity provider](post-steps/red-hat-sso-templates.md)  
-[Configure NFS Provisioner as Alternative Storage Class](https://github.com/tosin2013/nfs-provisioner-role)  
-[Deploy Red Hat Quay 3 on OpenShift 4.2](post-steps/deploy-red-hat-quay-3-on-openshift-4.2.md)  
-[Configure Ansible tower on OpenShift (Legacy)](post-steps/configure-ansible-tower.md).    
-[Configure Cluster Resource Overrides](post-steps/cluster-resource-override.md).   
-[Configure OpenShift Virtualization networking](post-steps/configure-openshift-virtualization-networking.md). 
-[Ansible Tower on ACM Deployment](acm/configure-tower-on-acm.md). 
-[Configure Chrony](post-steps/configure-chrony.md). 
+* [Configure a HTPasswd identity provider](post-steps/configure-htpasswd-identity-provider.md)  
+* [Configure with Internal Image Registry to Use Red Hat OpenShift Data Foundation](post-steps/configure-registry-odf.md)  
+* [Configure Red Hat Single Sign-On 7.3 identity provider](post-steps/red-hat-sso-templates.md)  
+* [Configure NFS Provisioner as Alternative Storage Class](https://github.com/tosin2013/nfs-provisioner-role)  
+* [Deploy Red Hat Quay 3 on OpenShift 4.2](post-steps/deploy-red-hat-quay-3-on-openshift-4.2.md)  
+* [Configure Ansible tower on OpenShift (Legacy)](post-steps/configure-ansible-tower.md).    
+* [Configure Cluster Resource Overrides](post-steps/cluster-resource-override.md).   
+* [Configure OpenShift Virtualization networking](post-steps/configure-openshift-virtualization-networking.md). 
+* [Ansible Tower on ACM Deployment](acm/configure-tower-on-acm.md). 
+* [Configure Chrony](post-steps/configure-chrony.md). 
 
 ## Training links 
-[OCS Installation and Configuration](https://red-hat-storage.github.io/ocs-training/training/index.html)  
-[examples.openshift.pub](examples.openshift.pub)  
+* [OCS Installation and Configuration](https://red-hat-storage.github.io/ocs-training/training/index.html)  
+* [examples.openshift.pub](examples.openshift.pub)  
 
 ## TO-DO 
 > Add the following notes
