@@ -116,8 +116,8 @@ $TTL 900
 root IN A 192.168.1.211
 dns  IN A 192.168.1.211
 api              IN  A   192.168.1.211
-api-int          IN  A   192.168.1.211
-*.apps           IN  A   192.168.1.211
+api-int          IN  A   192.168.1.212
+*.apps           IN  A   192.168.1.213
 ```
 
 **Create reverse zone file for OpenShift 4.6 and up**
@@ -148,8 +148,8 @@ $TTL 900
 root IN A 192.168.1.211
 dns  IN A 192.168.1.211
 api              IN  A   192.168.1.211
-api-int          IN  A   192.168.1.211
-*.apps           IN  A   192.168.1.211
+api-int          IN  A   192.168.1.212
+*.apps           IN  A   192.168.1.213
 bootstrap-0        IN  A   192.168.1.76
 master-01           IN  A   192.168.1.77
 master-02           IN  A   192.168.1.78
