@@ -103,7 +103,7 @@ zone "1.168.192.in-addr.arpa" {
 
 ```
 
-**Create zone file for OpenShift 4.6**
+**Create zone file for OpenShift 4.6 and up**
 ```
 $ cat /var/named/ocp4.example.com.zone
 $ORIGIN ocp4.example.com.
@@ -120,7 +120,7 @@ api-int          IN  A   192.168.1.211
 *.apps           IN  A   192.168.1.211
 ```
 
-**Create reverse zone file for OpenShift 4.6**
+**Create reverse zone file for OpenShift 4.6 and up**
 ```
 $ cat /var/named/1.168.192.in-addr.arpa.zone
 $TTL 900
