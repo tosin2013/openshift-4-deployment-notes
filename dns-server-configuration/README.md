@@ -115,7 +115,7 @@ $TTL 900
 
 root IN A 192.168.1.211
 dns  IN A 192.168.1.211
-api              IN  A   192.168.1.211
+api              IN  A   192.168.1.212
 api-int          IN  A   192.168.1.212
 *.apps           IN  A   192.168.1.213
 ```
@@ -147,7 +147,7 @@ $TTL 900
 
 root IN A 192.168.1.211
 dns  IN A 192.168.1.211
-api              IN  A   192.168.1.211
+api              IN  A   192.168.1.212
 api-int          IN  A   192.168.1.212
 *.apps           IN  A   192.168.1.213
 bootstrap-0        IN  A   192.168.1.76
