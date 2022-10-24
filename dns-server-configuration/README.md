@@ -224,7 +224,7 @@ systemctl start named
 systemctl enable named
 ```
 
-**Test dns resolution for OpenShift 4.6**
+**Test dns resolution for OpenShift 4.6 and up**
 ```
 dig @localhost  api-int.ocp4.example.com
 ```
