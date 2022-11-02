@@ -245,7 +245,6 @@ $ govc datastore.upload -ds Datastore1 ./.generated/ocp4.example.com/ai-liveiso-
 git clone https://github.com/tosin2013/openshift-4-deployment-notes.git
 cd openshift-4-deployment-notes
 
-git checkout kemo-patch-2
 cd assisted-installer/
 
 ## Copy/edit vars
