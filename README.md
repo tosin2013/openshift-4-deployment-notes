@@ -39,8 +39,8 @@
 [Managing applications and users via a Gitops Control Plane](https://cloud.redhat.com/blog/managing-applications-via-a-gitops-control-plane)
 
 ## Training links 
-[OCS Installation and Configuration](https://red-hat-storage.github.io/ocs-training/training/index.html)  
-[examples.openshift.pub](examples.openshift.pub)  
+* [OCS Installation and Configuration](https://red-hat-storage.github.io/ocs-training/training/index.html)  
+* [examples.openshift.pub](examples.openshift.pub)  
 
 ## TO-DO 
 > Add the following notes

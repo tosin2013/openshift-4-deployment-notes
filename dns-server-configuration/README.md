@@ -103,7 +103,7 @@ zone "1.168.192.in-addr.arpa" {
 
 ```
 
-**Create zone file for OpenShift 4.6**
+**Create zone file for OpenShift 4.6 and up**
 ```
 $ cat /var/named/ocp4.example.com.zone
 $ORIGIN ocp4.example.com.
@@ -115,12 +115,12 @@ $TTL 900
 
 root IN A 192.168.1.211
 dns  IN A 192.168.1.211
-api              IN  A   192.168.1.211
-api-int          IN  A   192.168.1.211
-*.apps           IN  A   192.168.1.211
+api              IN  A   192.168.1.212
+api-int          IN  A   192.168.1.212
+*.apps           IN  A   192.168.1.213
 ```
 
-**Create reverse zone file for OpenShift 4.6**
+**Create reverse zone file for OpenShift 4.6 and up**
 ```
 $ cat /var/named/1.168.192.in-addr.arpa.zone
 $TTL 900
@@ -147,9 +147,9 @@ $TTL 900
 
 root IN A 192.168.1.211
 dns  IN A 192.168.1.211
-api              IN  A   192.168.1.211
-api-int          IN  A   192.168.1.211
-*.apps           IN  A   192.168.1.211
+api              IN  A   192.168.1.212
+api-int          IN  A   192.168.1.212
+*.apps           IN  A   192.168.1.213
 bootstrap-0        IN  A   192.168.1.76
 master-01           IN  A   192.168.1.77
 master-02           IN  A   192.168.1.78
@@ -224,7 +224,7 @@ systemctl start named
 systemctl enable named
 ```
 
-**Test dns resolution for OpenShift 4.6**
+**Test dns resolution for OpenShift 4.6 and up**
 ```
 dig @localhost  api-int.ocp4.example.com
 ```
