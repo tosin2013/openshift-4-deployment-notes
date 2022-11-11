@@ -41,6 +41,11 @@
 ## Training links 
 * [OCS Installation and Configuration](https://red-hat-storage.github.io/ocs-training/training/index.html)  
 * [examples.openshift.pub](examples.openshift.pub)  
+* [DevSecOps Pipeline Demo](https://github.com/rcarrata/devsecops-demo)
+
+## GitOPs Links
+* [ArgoCD and Team Topologies](https://github.com/redhat-cop/helm-charts/blob/master/charts/gitops-operator/TEAM_DOCS.md#platform-argocd-namespaced-argocd-per-team)
+
 
 ## TO-DO 
 > Add the following notes
