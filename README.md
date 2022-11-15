@@ -1,5 +1,4 @@
 # OpenShift Container Platform [4] Installation
-https://devconnected.com/how-to-search-ldap-using-ldapsearch-examples/
 * [OpenShift 4 on AWS](aws/)  
 * [OpenShift 4 on Bare Metal](bare-metal/)  
 * [OpenShift 4 on KVM/libvirt](kvm-scripts/)  
