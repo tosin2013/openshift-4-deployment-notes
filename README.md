@@ -40,7 +40,7 @@
 
 ## Training links 
 * [OCS Installation and Configuration](https://red-hat-storage.github.io/ocs-training/training/index.html)  
-* [examples.openshift.pub](examples.openshift.pub)  
+* [OpenShift Examples](https://examples.openshift.pub/)  
 * [DevSecOps Pipeline Demo](https://github.com/rcarrata/devsecops-demo)
 
 ## GitOPs Links
