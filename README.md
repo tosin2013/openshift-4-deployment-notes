@@ -1,5 +1,4 @@
 # OpenShift Container Platform [4] Installation
-
 * [OpenShift 4 on AWS](aws/)  
 * [OpenShift 4 on Bare Metal](bare-metal/)  
 * [OpenShift 4 on KVM/libvirt](kvm-scripts/)  
@@ -40,7 +39,7 @@
 
 ## Training links 
 * [OCS Installation and Configuration](https://red-hat-storage.github.io/ocs-training/training/index.html)  
-* [examples.openshift.pub](examples.openshift.pub)  
+* [OpenShift Examples](https://examples.openshift.pub/)  
 * [DevSecOps Pipeline Demo](https://github.com/rcarrata/devsecops-demo)
 * [Red Hat Advanced Cluster Security](https://redhat-scholars.github.io/acs-workshop/acs-workshop/index.html)
 
