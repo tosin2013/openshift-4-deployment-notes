@@ -37,7 +37,7 @@ Now we patch the registry config so that only one replica is running. This is im
  $ oc patch config.imageregistry.operator.openshift.io/cluster --type=merge -p '{"spec":{"rolloutStrategy":"Recreate","replicas":1}}'
 ```
 
-** Create a Persistent Volume Claim **
+**Create a Persistent Volume Claim**
 
 The name (image-registry-storage) and size (100Gi) are important to have exactly correct.
 

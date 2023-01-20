@@ -2,4 +2,4 @@ export SERVER="vsphere.bk.virtualization.ocpincubator.com"
 export DATACENTER="Datacenter"
 export DEFAULT_DATASTORE="Datastore2"
 export OCP_CLUSTER="bk"
-export FOLDER_NAME=''${DATACENTER}'/vm/'${OCP_CLUSTER}''
+export FOLDER_NAME=''$(echo ${DATACENTER} | sed -e 's/\(.*\)/\L\1/')'/vm/'${OCP_CLUSTER}''
