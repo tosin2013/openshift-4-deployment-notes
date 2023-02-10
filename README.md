@@ -36,6 +36,7 @@
 * [Ansible Tower on ACM Deployment](acm/configure-tower-on-acm.md)
 * [Configure Chrony](post-steps/configure-chrony.md)
 * [Managing applications and users via a Gitops Control Plane](https://cloud.redhat.com/blog/managing-applications-via-a-gitops-control-plane)
+* [Create Custom Certs Example Script](post-steps/create_custom_cert.sh)
 
 ## Training links 
 * [OCS Installation and Configuration](https://red-hat-storage.github.io/ocs-training/training/index.html)  
