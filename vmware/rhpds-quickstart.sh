@@ -107,9 +107,6 @@ yq eval '.platform.vsphere.folder = "/SDDC-Datacenter/vm/Workloads/sandbox-'$GUI
 
 cat cluster_$GUID/install-config.yaml
 
-
-
-
 openshift-install create cluster --dir=cluster_$GUID --log-level debug
 
 
