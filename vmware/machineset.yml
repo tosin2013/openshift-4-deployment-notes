@@ -1,0 +1,51 @@
+apiVersion: machine.openshift.io/v1beta1
+kind: MachineSet
+metadata:
+  annotations:
+    machine.openshift.io/memoryMb: '32768'
+    machine.openshift.io/vCPU: '8'
+  name: ds8m4-zqd8z-infra
+  namespace: openshift-machine-api
+  labels:
+    machine.openshift.io/cluster-api-cluster: ds8m4-zqd8z
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      machine.openshift.io/cluster-api-cluster: ds8m4-zqd8z
+      machine.openshift.io/cluster-api-machineset: ds8m4-zqd8z-infra
+  template:
+    metadata:
+      labels:
+        machine.openshift.io/cluster-api-cluster: ds8m4-zqd8z
+        machine.openshift.io/cluster-api-machine-role: infra
+        machine.openshift.io/cluster-api-machine-type: worker
+        machine.openshift.io/cluster-api-machineset: ds8m4-zqd8z-infra
+    spec:
+      lifecycleHooks: {}
+      metadata: {}
+      providerSpec:
+        value:
+          numCoresPerSocket: 1
+          diskGiB: 120
+          snapshot: ''
+          userDataSecret:
+            name: worker-user-data
+          memoryMiB: 32768
+          credentialsSecret:
+            name: vsphere-cloud-credentials
+          network:
+            devices:
+              - networkName: segment-sandbox-ds8m4
+          metadata:
+            creationTimestamp: null
+          numCPUs: 8
+          kind: VSphereMachineProviderSpec
+          workspace:
+            datacenter: SDDC-Datacenter
+            datastore: WorkloadDatastore
+            folder: /SDDC-Datacenter/vm/Workloads/sandbox-ds8m4
+            resourcePool: /SDDC-Datacenter/host/Cluster-1/Resources
+            server: portal.example.com
+          template: ds8m4-zqd8z-rhcos
+          apiVersion: machine.openshift.io/v1beta1
