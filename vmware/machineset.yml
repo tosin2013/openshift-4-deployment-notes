@@ -26,7 +26,7 @@ spec:
       metadata: {}
       providerSpec:
         value:
-          numCoresPerSocket: 1
+          numCoresPerSocket: 2
           diskGiB: 120
           snapshot: ''
           userDataSecret:
@@ -39,7 +39,7 @@ spec:
               - networkName: segment-sandbox-ds8m4
           metadata:
             creationTimestamp: null
-          numCPUs: 8
+          numCPUs: 12
           kind: VSphereMachineProviderSpec
           workspace:
             datacenter: SDDC-Datacenter

@@ -45,9 +45,8 @@ echo "API VIP: $API_VIP"
 echo "Ingress VIP: $INGRESS_VIP"
 echo "Subnet CIDR: $SUBNET_CIDR"
 
-if [ -f /usr/local/bin/oc ]; then
+if [ -f /usr/local/bin/oc ] || [ -f /usr/bin/oc ]; then
     echo "OpenShift binaries already installed"
-    exit 0
 else 
     echo "Installing OpenShift binaries"
     curl -OL https://raw.githubusercontent.com/tosin2013/openshift-4-deployment-notes/master/pre-steps/configure-openshift-packages.sh
@@ -106,9 +105,9 @@ yq eval '.networking.machineNetwork[0].cidr = "'${SUBNET_CIDR}'"' cluster_$GUID/
 yq eval '.platform.vsphere.folder = "/SDDC-Datacenter/vm/Workloads/sandbox-'$GUID'"' cluster_$GUID/install-config.yaml -i
 
 cat cluster_$GUID/install-config.yaml
-
+read -t 360 -p "Press Enter to continue, or wait 5 minutes for the script to continue automatically" || true
 openshift-install create cluster --dir=cluster_$GUID --log-level debug
 
 
 #openshift-install destroy cluster --dir=cluster_$GUID --log-level debug
-# rm -rf cluster_$GUID
+#rm -rf cluster_$GUID
