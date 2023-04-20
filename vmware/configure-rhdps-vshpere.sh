@@ -36,8 +36,9 @@ oc apply -f machineset-useme.yml
 rm  machineset-useme.yml
 
 # Wait until the READY count of the MachineSet is equal to 3
+USE_NAME=$(oc get nodes | grep  master-0 | awk '{print $1}' | sed 's/-master-0//g')
 while true; do
-  ready_count=$(oc get machineset f698j-pjds4-infra -n openshift-machine-api -o=jsonpath='{.status.readyReplicas}')
+  ready_count=$(oc get machineset ${USE_NAME}-infra -n openshift-machine-api -o=jsonpath='{.status.readyReplicas}')
   if [[ $ready_count -eq 3 ]]; then
     echo "All machines are ready"
     break
@@ -86,6 +87,6 @@ oc patch storageclass thin -p '{"metadata": {"annotations":{"storageclass.kubern
 oc patch storageclass ocs-storagecluster-cephfs -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 
 
-curl -OL https://raw.githubusercontent.com/tosin2013/openshift-demos/master/quick-scripts/deploy-gitea.sh
-chmod +x deploy-gitea.sh
-./deploy-gitea.sh
+#curl -OL https://raw.githubusercontent.com/tosin2013/openshift-demos/master/quick-scripts/deploy-gitea.sh
+#chmod +x deploy-gitea.sh
+#./deploy-gitea.sh
