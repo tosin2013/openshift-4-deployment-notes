@@ -48,8 +48,6 @@ while true; do
   fi
 done
 
-oc patch -n openshift-ingress-operator ingresscontroller/default --patch '{"spec":{"replicas": 3}}' --type=merge
-
 git clone https://github.com/tosin2013/sno-quickstarts.git
 cd sno-quickstarts/gitops/cluster-config
 oc create -k openshift-local-storage/operator/overlays/stable-4.11/
@@ -62,9 +60,37 @@ echo "New values: ${new_values[@]}"
 for i in {0..2}; do
   if [[ $i -lt ${#new_values[@]} ]]; then
     value=${new_values[i]}
+    oc label node $value node-role.kubernetes.io/infra=""
     sed "s/worker-$i.example.com/${value}/g" openshift-local-storage/instance/overlays/bare-metal/kustomization.yaml -i 
   fi
 done
+
+oc patch -n openshift-ingress-operator ingresscontroller/default --patch '{"spec":{"replicas": 3}}' --type=merge
+oc patch ingresscontroller default -n openshift-ingress-operator --type='json' -p='[
+  {
+    "op": "add",
+    "path": "/spec/nodePlacement",
+    "value": {
+      "nodeSelector": {
+        "matchLabels": {
+          "node-role.kubernetes.io/infra": ""
+        }
+      },
+      "tolerations": [
+        {
+          "effect": "NoSchedule",
+          "key": "node-role.kubernetes.io/infra",
+          "value": "reserved"
+        },
+        {
+          "effect": "NoExecute",
+          "key": "node-role.kubernetes.io/infra",
+          "value": "reserved"
+        }
+      ]
+    }
+  }
+]'
 
 cat openshift-local-storage/instance/overlays/bare-metal/kustomization.yaml
 
