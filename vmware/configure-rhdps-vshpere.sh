@@ -51,7 +51,7 @@ done
 git clone https://github.com/tosin2013/sno-quickstarts.git
 cd sno-quickstarts/gitops/cluster-config
 oc create -k openshift-local-storage/operator/overlays/stable-4.11/
-
+sleep 120s
 # Define the new values
 new_values=($(oc get nodes --no-headers -o custom-columns='NAME:.metadata.name' | grep infra))
 echo "New values: ${new_values[@]}"
@@ -101,9 +101,11 @@ do
 done
 oc create -k openshift-local-storage/instance/overlays/bare-metal --dry-run=client -o yaml 
 oc create -k openshift-local-storage/instance/overlays/bare-metal
+sleep 120s
 
 oc create -k openshift-data-foundation-operator/operator/overlays/stable-4.11  --dry-run=client -o yaml 
 oc create -k openshift-data-foundation-operator/operator/overlays/stable-4.11
+sleep 120s
 
 
 oc create -k openshift-data-foundation-operator/instance/overlays/bare-metal --dry-run=client -o yaml 
