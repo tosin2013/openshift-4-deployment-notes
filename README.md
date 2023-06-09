@@ -43,12 +43,14 @@
 * [OpenShift Examples](https://examples.openshift.pub/)  
 * [DevSecOps Pipeline Demo](https://github.com/rcarrata/devsecops-demo)
 * [Red Hat Advanced Cluster Security](https://redhat-scholars.github.io/acs-workshop/acs-workshop/index.html)
-* [ton of openshift-demos](https://github.com/rhthsa/openshift-demo/tree/main)
+* [Ton of openshift-demos](https://github.com/rhthsa/openshift-demo/tree/main)
 
 ## GitOPs Links
 * [ArgoCD and Team Topologies](https://github.com/redhat-cop/helm-charts/blob/master/charts/gitops-operator/TEAM_DOCS.md#platform-argocd-namespaced-argocd-per-team)
 
-
+- op: replace
+  path: /spec/channel
+  value: 'stable'
 ## TO-DO 
 > Add the following notes
 * https://github.com/openshift/oc-mirror/
