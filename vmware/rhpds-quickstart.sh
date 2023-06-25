@@ -95,15 +95,27 @@ INGRESS_VIP: ${INGRESS_VIP}
 SUBNET_CIDR: ${SUBNET_CIDR}"
 openshift-install create install-config --dir=cluster_$GUID
 
-# 4.12 Edits
-#yq eval '.platform.vsphere.ingressVIPs[0] = "'${INGRESS_VIP}'"'  cluster_$GUID/install-config.yaml -i
-#yq eval '.platform.vsphere.apiVIPs[0] = "'${API_VIP}'"'  cluster_$GUID/install-config.yaml -i
-#yq eval '.networking.machineNetwork[0].cidr = "'${SUBNET_CIDR}'"' cluster_$GUID/install-config.yaml -i
-#yq eval '.platform.vsphere.folder = "/SDDC-Datacenter/vm/Workloads/sandbox-'$GUID'"' cluster_$GUID/install-config.yaml -i
+# 4.13 edits
+if [ $OPENSHIFT_VERSION == "4.13" ];
+then 
+    curl -OL https://raw.githubusercontent.com/tosin2013/openshift-4-deployment-notes/master/pre-steps/4.13-install-config.yaml
+    chmod +x 4.13-install-config.yaml
+    ./4.13-install-config.yaml 
+elif [ $OPENSHIFT_VERSION == "4.12" ];
+then
+    yq eval '.platform.vsphere.ingressVIPs[0] = "'${INGRESS_VIP}'"'  cluster_$GUID/install-config.yaml -i
+    yq eval '.platform.vsphere.apiVIPs[0] = "'${API_VIP}'"'  cluster_$GUID/install-config.yaml -i
+    yq eval '.networking.machineNetwork[0].cidr = "'${SUBNET_CIDR}'"' cluster_$GUID/install-config.yaml -i
+    yq eval '.platform.vsphere.folder = "/SDDC-Datacenter/vm/Workloads/sandbox-'$GUID'"' cluster_$GUID/install-config.yaml -i
+elif [ $OPENSHIFT_VERSION == "4.11" ];
+then
+    yq eval '.networking.machineNetwork[0].cidr = "'${SUBNET_CIDR}'"' cluster_$GUID/install-config.yaml -i
+    yq eval '.platform.vsphere.folder = "/SDDC-Datacenter/vm/Workloads/sandbox-'$GUID'"' cluster_$GUID/install-config.yaml -i
+else
+    echo "Unsupported OpenShift version"
+    exit 1
+fi 
 
-# 4.11 edits 
-yq eval '.networking.machineNetwork[0].cidr = "'${SUBNET_CIDR}'"' cluster_$GUID/install-config.yaml -i
-yq eval '.platform.vsphere.folder = "/SDDC-Datacenter/vm/Workloads/sandbox-'$GUID'"' cluster_$GUID/install-config.yaml -i
 
 cat cluster_$GUID/install-config.yaml
 read -t 360 -p "Press Enter to continue, or wait 5 minutes for the script to continue automatically" || true

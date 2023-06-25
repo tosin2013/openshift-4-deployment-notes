@@ -5,7 +5,7 @@ if [ $# -ne 1 ]; then
     exit 1
 fi
 
-OPENSHIFT_VERSION="4.11"
+OPENSHIFT_VERSION="4.13" # Versions 4.11, 4.12, and 4.13 are supported
 VCENTER_URL=$1
 # Check that all arguments were provided
 if [ ! -f /home/$USER/cluster_${GUID}/auth/kubeconfig ];
@@ -30,6 +30,10 @@ MACHINE_CONFIG=$(echo "${COMPUTER_NAME}" | sed -E 's/-master-0$//')
 sed -i "s/ds8m4-zqd8z/$MACHINE_CONFIG/g" machineset-useme.yml
 sed -i "s/ds8m4/$GUID/g" machineset-useme.yml
 sed -i "s/portal.example.com/${VCENTER_URL}/g" machineset-useme.yml
+if [ $OPENSHIFT_VERSION == "4.13" ];
+then
+    sed -i "s|ds8m4-zqd8z-rhcos|${MACHINE_CONFIG}-rhcos-region1-zone1|g" machineset-useme.yml
+fi
 cat machineset-useme.yml
 echo "Press Enter to continue, or wait 15 seconds for the script to continue automatically"
 read -t 15 -p "Press Enter to continue, or wait 15 seconds for the script to continue automatically"
