@@ -5,6 +5,24 @@ if [ $# -ne 1 ]; then
     exit 1
 fi
 
+wait_for_condition_message() {
+  local desired_message="$1"
+
+  while true; do
+    local condition_message=$(oc get serviceexport zookeeper-east-0-internal -o jsonpath='{.status}' -n east | jq -r '.conditions[].message')
+
+    if [[ $condition_message == "$desired_message" ]]; then
+      echo "Condition message found: $condition_message"
+      break
+    else
+      echo "Condition message is not yet '$desired_message'. Retrying in 5 seconds..."
+      delete_matching_pod "submariner-operator"
+      sleep 5
+      local desired_message=$(oc get serviceexport zookeeper-east-0-internal -o jsonpath='{.status}' -n east | jq -r '.conditions[].message')
+    fi
+  done
+}
+
 OPENSHIFT_VERSION="4.13" # Versions 4.11, 4.12, and 4.13 are supported
 VCENTER_URL=$1
 # Check that all arguments were provided
