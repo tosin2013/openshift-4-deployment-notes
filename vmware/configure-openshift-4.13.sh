@@ -1,4 +1,3 @@
-
 #!/bin/bash
 if [ -z "$GUID" ]; then
   echo "GUID is not set"
