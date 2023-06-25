@@ -6,6 +6,7 @@ if [ $# -ne 5 ]; then
     exit 1
 fi
 
+OPENSHIFT_VERSION="4.11"
 VCENTER_URL=$1
 BASE_DOMAIN=$2
 API_VIP=$3
@@ -51,7 +52,7 @@ else
     echo "Installing OpenShift binaries"
     curl -OL https://raw.githubusercontent.com/tosin2013/openshift-4-deployment-notes/master/pre-steps/configure-openshift-packages.sh
     chmod +x configure-openshift-packages.sh
-    export VERSION=latest-4.11
+    export VERSION=latest-${OPENSHIFT_VERSION}
     ./configure-openshift-packages.sh -i
 fi
 

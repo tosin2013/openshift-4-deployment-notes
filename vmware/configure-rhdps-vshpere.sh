@@ -5,6 +5,7 @@ if [ $# -ne 1 ]; then
     exit 1
 fi
 
+OPENSHIFT_VERSION="4.11"
 VCENTER_URL=$1
 # Check that all arguments were provided
 if [ ! -f /home/$USER/cluster_${GUID}/auth/kubeconfig ];
@@ -50,7 +51,7 @@ done
 
 git clone https://github.com/tosin2013/sno-quickstarts.git
 cd sno-quickstarts/gitops/cluster-config
-oc create -k openshift-local-storage/operator/overlays/stable-4.11/
+oc create -k openshift-local-storage/operator/overlays/stable-${OPENSHIFT_VERSION}/
 sleep 120s
 # Define the new values
 new_values=($(oc get nodes --no-headers -o custom-columns='NAME:.metadata.name' | grep infra))
@@ -103,8 +104,8 @@ oc create -k openshift-local-storage/instance/overlays/bare-metal --dry-run=clie
 oc create -k openshift-local-storage/instance/overlays/bare-metal
 sleep 120s
 
-oc create -k openshift-data-foundation-operator/operator/overlays/stable-4.11  --dry-run=client -o yaml 
-oc create -k openshift-data-foundation-operator/operator/overlays/stable-4.11
+oc create -k openshift-data-foundation-operator/operator/overlays/stable-${OPENSHIFT_VERSION}  --dry-run=client -o yaml 
+oc create -k openshift-data-foundation-operator/operator/overlays/stable-${OPENSHIFT_VERSION}
 sleep 120s
 
 
