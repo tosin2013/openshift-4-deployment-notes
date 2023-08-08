@@ -93,6 +93,42 @@ EOF
 oc create -f ${NODENAME}-nncp.yaml
 ```
 
+## Advanced Example using bond and vlan
+```
+apiVersion: nmstate.io/v1alpha1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: my-bridge
+spec:
+  nodeSelector: 
+    nodename: "${NODENAME}"
+  desiredState:
+    interfaces:
+    - name: bond0
+      type: bond
+      state: up
+      bond:
+        mode: active-backup
+        interfaces:
+        - name: eth0
+        - name: eth1
+    - name: my-bridge
+      type: linux-bridge
+      state: up
+      bridge:
+        options:
+          stp: enabled: false
+        ports:
+        - name: bond0.100
+          type: vlan
+          vlan:
+            base-iface: bond0
+            id: 100
+    ipv4:
+      dhcp: true
+      enabled: true
+```
+
 ## Check bridge status of each worker
 ```
 $ oc get nncp
