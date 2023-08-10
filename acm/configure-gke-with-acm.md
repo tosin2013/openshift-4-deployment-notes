@@ -7,8 +7,8 @@ https://cloud.redhat.com/openshift/install/pull-secret
 ### You can also get your pull secret from your cluster using the command below
 ```
 DOCKER_CONFIG_JSON=`oc extract secret/pull-secret -n openshift-config --to=-`
-oc create secret generic open-cluster-management \
-    -n open-cluster-management-observability \
+oc create secret generic open-cluster-management-image-pull-credentials \
+    -n open-cluster-management \
     --from-literal=.dockerconfigjson="$DOCKER_CONFIG_JSON" \
     --type=kubernetes.io/dockerconfigjson
 
