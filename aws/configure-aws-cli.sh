@@ -2,6 +2,15 @@
 #set -xe 
 
 
+function checkForProgramAndInstall() {
+    command -v $1 > /dev/null 2>&1
+    if [[ $? -eq 0 ]]; then
+        printf '%-72s %-7s\n' $1 "PASSED!";
+    else
+      sudo yum install -y  $1
+    fi
+}
+
 # Print usage
 usage() {
   echo -n "${0} [OPTION]
@@ -23,6 +32,8 @@ if [ "$EUID" -ne 0 ]
 fi
 
 function install_aws_cli(){
+  checkForProgramAndInstall curl 
+  checkForProgramAndInstall unzip 
   curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
   unzip awscliv2.zip
 
