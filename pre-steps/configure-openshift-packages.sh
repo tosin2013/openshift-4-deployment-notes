@@ -10,7 +10,7 @@ function checkForProgramAndInstall() {
     if [[ $? -eq 0 ]]; then
         printf '%-72s %-7s\n' $1 "PASSED!";
     else
-      sudo yum install $1
+      sudo yum install -y  $1
     fi
 }
 
