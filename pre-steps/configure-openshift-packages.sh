@@ -5,7 +5,18 @@ then
     export VERSION=latest
 fi 
 
+function checkForProgramAndInstall() {
+    command -v $1 > /dev/null 2>&1
+    if [[ $? -eq 0 ]]; then
+        printf '%-72s %-7s\n' $1 "PASSED!";
+    else
+      sudo yum install -y  $1
+    fi
+}
+
+
 function download_binaries(){
+    checkForProgramAndInstall wget 
 
     if [ "pre-release" == ${1} ];
     then 
