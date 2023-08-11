@@ -5,19 +5,18 @@ then
     export VERSION=latest
 fi 
 
-function checkForProgramAndExit() {
+function checkForProgramAndInstall() {
     command -v $1 > /dev/null 2>&1
     if [[ $? -eq 0 ]]; then
         printf '%-72s %-7s\n' $1 "PASSED!";
     else
-        printf '%-72s %-7s\n' $1 "FAILED!";
-        exit 1
+      sudo yum install $1
     fi
 }
 
 
 function download_binaries(){
-    checkForProgramAndExit wget 
+    checkForProgramAndInstall wget 
 
     if [ "pre-release" == ${1} ];
     then 
