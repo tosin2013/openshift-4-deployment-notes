@@ -4,7 +4,9 @@ Latest documentation: https://access.redhat.com/documentation/en-us/red_hat_adva
 
 Configure Infra nodes  
 ```
-$ 
+$ curl -OL https://raw.githubusercontent.com/tosin2013/openshift-4-deployment-notes/master/acm/label-nodes.sh
+$ chmod +x label-nodes.sh
+$ ./label-nodes.sh infra
 $ oc patch ingresscontroller default -n openshift-ingress-operator --type merge -p '
 {
   "spec": {
