@@ -47,10 +47,8 @@
 
 ## GitOPs Links
 * [ArgoCD and Team Topologies](https://github.com/redhat-cop/helm-charts/blob/master/charts/gitops-operator/TEAM_DOCS.md#platform-argocd-namespaced-argocd-per-team)
-
-- op: replace
-  path: /spec/channel
-  value: 'stable'
+* [OpenShift GitOps Workshop](https://openshiftdemos.github.io/openshift-gitops-workshop/openshift-gitops-workshop/index.html)
+  
 ## TO-DO 
 > Add the following notes
 * https://github.com/openshift/oc-mirror/
