@@ -43,7 +43,7 @@ podman login --authfile ~/merged-pull-secret.json \
   -u ${USERNAME} \
   -p ${PASSWORD} \
   ${LOCAL_REGISTRY} \
-  --tls-verify=${TLS_VERIFY} 
+  --tls-verify=${TLS_VERIFY} || exit $?
 }
 
 function ocp_mirror_release() {

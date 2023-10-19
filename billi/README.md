@@ -3,7 +3,7 @@
 ## Required Files
 ```
 export SSH_PUB_KEY_PATH="$HOME/.ssh/id_rsa.pub"
-export PULL_SECRET_PATH="$HOME/ocp-pull-secret"
+export PULL_SECRET_PATH="$HOME/pull_secret.json"
 ```
 
 ## Configure Rhel 8.5 system 
@@ -41,26 +41,10 @@ cd ~/qubinode-installer
 curl -OL https://raw.githubusercontent.com/tosin2013/openshift-4-deployment-notes/master/pre-steps/configure-openshift-packages.sh
 chmod +x configure-openshift-packages.sh
 ./configure-openshift-packages.sh -i
-sudo rm -rf /usr/bin/openshift-install
 ```
 
 [Centos Jumpbox Deployment](https://github.com/tosin2013/qubinode-installer/blob/cleanup/docs/qubinode/rdpjumpbox.md)
 
-**install golang**
-```
-wget https://storage.googleapis.com/golang/getgo/installer_linux
-chmod +x ./installer_linux
-./installer_linux
-source ~/.bash_profile 
-```
-
-**Build openshift-installer**
-```
-$ git clone https://github.com/openshift/installer
-$ cd installer/
-$ git checkout agent-installer
-$ hack/build.sh
-```
 
 **install nmstatgectl**
 ```
@@ -85,7 +69,7 @@ spec:
   clusterDeploymentRef:
     name: ocp4
   imageSetRef:
-    name: openshift-v4.10.0
+    name: openshift-v4.13.0
   networking:
     clusterNetwork:
     - cidr: 10.128.0.0/14
