@@ -1,8 +1,21 @@
 #!/bin/bash
-# https://cloud.redhat.com/blog/meet-the-new-agent-based-openshift-installer-1
+# https://cloud.redhat.com/blog/meet-the-new-agent-based-openshift-installer-1git a
 export SSH_PUB_KEY_PATH="$HOME/.ssh/id_rsa.pub"
 export PULL_SECRET_PATH="$HOME/pull_secret.json"
 export KVM_DEPLOY="TRUE"
+
+if [ ! -f $PULL_SECRET_PATH ];
+then 
+    echo "Please download the pull secret from https://cloud.redhat.com/openshift/install/pull-secret"
+    echo "and save it to $PULL_SECRET_PATH"
+    exit 1
+fi
+
+if [ ! -f $SSH_PUB_KEY_PATH ];
+then 
+    echo "Please generate a ssh key and save it to $SSH_PUB_KEY_PATH"
+    exit 1
+fi
 
 # Define target directory for readline
 read -p "Enter the target directory: " TARGET_DIR
