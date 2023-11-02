@@ -1,23 +1,24 @@
 #!/bin/bash 
+#export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 set -xe 
-export INTERNAL_REGISTRY=registry.example.com
-export PULL_SECRET_JSON=~/pull-secret.json
+export INTERNAL_REGISTRY=mirror-registry.example.com # registry.example.com
+export PULL_SECRET_JSON=~/pull_secret.json
 export LOCAL_SECRET_JSON=~/merged-pull-secret.json
-export OPENSHIFT_VERSION="4.10"
-export CURRENT_OPENSHIFT_VERSION="4.10.36"
+export OPENSHIFT_VERSION="4.13"
+export CURRENT_OPENSHIFT_VERSION="4.13.17"
 export PORT=8443
 export LOCAL_REGISTRY=${INTERNAL_REGISTRY}:${PORT}
 export LOCAL_REPOSITORY=olm-mirror
 export TLS_VERIFY=false
 export EMAIL="admin@changeme.com"
-export PASSWORD="CHANGEME"
+export PASSWORD="idlV8sL3ARuZ0DTtc2N4M56jF9kJw71I" # "CHANGEME"
 export USERNAME="init"
 export AUTH="$(echo -n 'init:${PASSWORD}' | base64 -w0)" # in base 64
 
 if [ ! -f /usr/local/bin/grpcurl ];
 then 
-    curl -OL https://github.com/fullstorydev/grpcurl/releases/download/v1.8.6/grpcurl_1.8.6_linux_x86_64.tar.gz
-    tar -zxvf grpcurl_1.8.6_linux_x86_64.tar.gz
+    curl -OL https://github.com/fullstorydev/grpcurl/releases/download/v1.8.8/grpcurl_1.8.8_linux_x86_64.tar.gz
+    tar -zxvf grpcurl_1.8.8_linux_x86_64.tar.gz
     sudo mv grpcurl /usr/local/bin/
 fi
 
@@ -58,12 +59,20 @@ podman login -u "$RHN_USER" -p "$RHN_PASSWORD" registry.redhat.io
 
 podman  login ${LOCAL_REGISTRY}  -u ${USERNAME} -p ${PASSWORD}  --tls-verify=${TLS_VERIFY}
 
+CONTAINER_ID=$(podman ps | grep 50051 | awk '{print $1}')
+
+if [ ! -z "$CONTAINER_ID" ]; then
+  echo "Container $CONTAINER_ID is using port 50051, stopping it..."
+  podman kill $CONTAINER_ID
+fi
+
 podman run -p50051:50051 -d -it registry.redhat.io/redhat/redhat-operator-index:v${OPENSHIFT_VERSION}
 sleep 15s
 rm -rf packages.out saved-packages.log
 grpcurl -plaintext localhost:50051 api.Registry/ListPackages > packages.out
 
-cat packages.out | grep -E 'local-storage|odf-*|ocs|openshift-gitops-operator|advanced-cluster-management|ansible-automation-platform-operator|cincinnati-operator|klusterlet-product|mcg-operator|multicluster-engine|openshift-pipelines-operator-rh|quay-operator'  | awk '{print $2}' | tr '"' ' '  | sed 's/ //g' | tee -a saved-packages.log
+
+cat packages.out | grep -E 'local-storage|odf-*|ocs|openshift-gitops-operator|advanced-cluster-management|ansible-automation-platform-operator|cincinnati-operator|klusterlet-product|mcg-operator|multicluster-engine|openshift-pipelines-operator-rh|quay-operator|mtv-operator|kubevirt-hyperconverged'  | awk '{print $2}' | tr '"' ' '  | sed 's/ //g' | tee -a saved-packages.log
 
 opm index prune \
     -f registry.redhat.io/redhat/redhat-operator-index:v${OPENSHIFT_VERSION} \

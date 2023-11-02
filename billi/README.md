@@ -55,6 +55,38 @@ sudo dnf install /usr/bin/nmstatectl -y
 mkdir cluster-manifests
 ```
 
+```
+$ cat << EOF > my-cluster/install-config.yaml
+apiVersion: v1
+baseDomain: test.example.com
+compute:
+  architecture: amd64 
+  hyperthreading: Enabled
+  name: worker
+  replicas: 0
+controlPlane:
+  architecture: amd64
+  hyperthreading: Enabled
+  name: master
+  replicas: 1
+metadata:
+  name: sno-cluster 
+networking:
+  clusterNetwork:
+  - cidr: 10.128.0.0/14
+    hostPrefix: 23
+  machineNetwork:
+  - cidr: 192.168.111.0/16
+  networkType: OVNKubernetes 
+  serviceNetwork:
+  - 172.30.0.0/16
+platform:
+  none: {}
+pullSecret: '$(cat ${PULL_SECRET_PATH})' 
+sshKey: '$(cat ${SSH_PUB_KEY_PATH})' 
+EOF
+```
+
 **1. Create agent-cluster-install.yaml**
 ```
 cat << EOF > ./cluster-manifests/agent-cluster-install.yaml
@@ -64,8 +96,8 @@ metadata:
   name: ocp4
   namespace: ocp4-cluster
 spec:
-  apiVIP: 192.168.150.253
-  ingressVIP: 192.168.150.252
+  apiVIP: 192.168.122.253
+  ingressVIP: 192.168.122.252
   clusterDeploymentRef:
     name: ocp4
   imageSetRef:
@@ -117,9 +149,9 @@ cat << EOF > ./cluster-manifests/cluster-image-set.yaml
 apiVersion: hive.openshift.io/v1
 kind: ClusterImageSet
 metadata:
-  name: ocp-release-4.11
+  name: "4.13"
 spec:
-  releaseImage: registry.ci.openshift.org/ocp/release:4.11.0-0.nightly-2022-06-06-025509
+  releaseImage: quay.io/openshift-release-dev/ocp-release:4.13.0-x86_64
 EOF
 ```
 
@@ -165,17 +197,17 @@ spec:
         ipv4:
           enabled: true
           address:
-            - ip: 192.168.150.116
+            - ip: 192.168.122.116
               prefix-length: 24
           dhcp: false
     dns-resolver:
       config:
         server:
-          - 192.168.150.1
+          - 192.168.122.1
     routes:
       config:
         - destination: 0.0.0.0/0
-          next-hop-address: 192.168.150.1
+          next-hop-address: 192.168.122.1
           next-hop-interface: enp2s0
           table-id: 254
   interfaces:
@@ -199,17 +231,17 @@ spec:
         ipv4:
           enabled: true
           address:
-            - ip: 192.168.150.117
+            - ip: 192.168.122.117
               prefix-length: 24
           dhcp: false
     dns-resolver:
       config:
         server:
-          - 192.168.150.1
+          - 192.168.122.1
     routes:
       config:
         - destination: 0.0.0.0/0
-          next-hop-address: 192.168.150.1
+          next-hop-address: 192.168.122.1
           next-hop-interface: enp2s0
           table-id: 254
   interfaces:
@@ -233,17 +265,17 @@ spec:
         ipv4:
           enabled: true
           address:
-            - ip: 192.168.150.118
+            - ip: 192.168.122.118
               prefix-length: 24
           dhcp: false
     dns-resolver:
       config:
         server:
-          - 192.168.150.1
+          - 192.168.122.1
     routes:
       config:
         - destination: 0.0.0.0/0
-          next-hop-address: 192.168.150.1
+          next-hop-address: 192.168.122.1
           next-hop-interface: enp2s0
           table-id: 254
   interfaces:
@@ -270,7 +302,7 @@ EOF
 ```
 cp -avi cluster-manifests/ ~/cluster-mainfests
 ls -l ./cluster-manifests/
-bin/openshift-install agent create image 
+openshift-install agent create image 
 ```
 
 ### Optional steps
@@ -302,7 +334,7 @@ bash -x baremetal-test-script.sh
 **Get deployment status using curl**
 > we are using the ip for the ocp4-master1 in script
 ```
-curl --silent http://192.168.150.116:8090//api/assisted-install/v2/clusters | jq .
+curl --silent http://192.168.122.116:8090//api/assisted-install/v2/clusters | jq .
 ```
 
 **login to openshift cluster**

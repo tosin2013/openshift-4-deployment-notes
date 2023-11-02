@@ -1,7 +1,7 @@
  #!/usr/bin/env bash
 # WIP 
 
-export OCP_RELEASE="4.11"
+export OCP_RELEASE="4.13"
 export MERGED_PULLSECRET="merged-pull-secret.json"
 export OCP_PULLSECRET_AUTHFILE="~/${MERGED_PULLSECRET}"
 export REGISTRY_NAME=quay.ztp-pipelines.ocpincubator.com

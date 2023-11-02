@@ -1,8 +1,10 @@
 #!/bin/bash
-# https://cloud.redhat.com/blog/meet-the-new-agent-based-openshift-installer-1git a
+# https://cloud.redhat.com/blog/meet-the-new-agent-based-openshift-installer-1
 export SSH_PUB_KEY_PATH="$HOME/.ssh/id_rsa.pub"
 export PULL_SECRET_PATH="$HOME/pull_secret.json"
 export KVM_DEPLOY="TRUE"
+export INSTALL_FILE="install-config.yaml"
+export EXTRA_FILE="extra-config.yaml"
 
 if [ ! -f $PULL_SECRET_PATH ];
 then 
@@ -35,7 +37,7 @@ apiVersion: v1alpha1
 kind: AgentConfig
 metadata:
   name: sno-cluster
-rendezvousIP: 192.168.122.80
+rendezvousIP: 192.168.100.80
 hosts:
   - hostname: master-0
     interfaces:
@@ -52,7 +54,7 @@ hosts:
           ipv4:
             enabled: true
             address:
-              - ip: 192.168.122.80
+              - ip: 192.168.100.80
                 prefix-length: 23
             dhcp: false
       dns-resolver:
@@ -62,10 +64,11 @@ hosts:
       routes:
         config:
           - destination: 0.0.0.0/0
-            next-hop-address: 192.168.122.1
+            next-hop-address: 192.168.100.1
             next-hop-interface: enp2s0
             table-id: 254
 EOF
+
 
 # Save the updated agent configuration template
 cat agent-config.yaml
@@ -94,7 +97,7 @@ networking:
   - cidr: 10.128.0.0/14
     hostPrefix: 23
   machineNetwork:
-  - cidr: 192.168.122.0/24
+  - cidr: 192.168.100.0/24
   networkType: OVNKubernetes 
   serviceNetwork:
   - 172.30.0.0/16
@@ -103,6 +106,17 @@ platform:
 pullSecret: '$(cat ${PULL_SECRET_PATH})' 
 sshKey: '$(cat ${SSH_PUB_KEY_PATH})' 
 EOF
+
+if [[ -f $HOME/$EXTRA_FILE ]]; then
+    if [[ -f $INSTALL_FILE ]]; then
+        cat $HOME/$EXTRA_FILE >> $INSTALL_FILE
+        echo "Content from $HOME/$EXTRA_FILE appended to $INSTALL_FILE."
+    else
+        echo "File $INSTALL_FILE does not exist. Content not appended."
+    fi
+else
+    echo "File $HOME/$EXTRA_FILE does not exist. Content not appended."
+fi
 
 cat install-config.yaml
 sleep 5s
