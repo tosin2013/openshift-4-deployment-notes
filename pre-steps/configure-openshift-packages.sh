@@ -33,8 +33,8 @@ function download_binaries(){
        echo "Installing ${VERSION} binaries" 
        echo "*******************************"
        URL="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${VERSION}/"
-       LATEST_CLI=$(curl -sL https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${VERSION}/  | grep -o openshift-client-linux-4.[0-9].[0-9].tar.gz | head -1)
-       LATEST_INSTALLER=$(curl -sL https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${VERSION}/  | grep -o openshift-install-linux-4.[0-9].[0-9].tar.gz | head -1)
+       LATEST_CLI=$(curl -sL https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${VERSION}/  | grep -o openshift-client-linux-4.[[:digit:]]\+.[[:digit:]]\+.tar.gz | head -1)
+       LATEST_INSTALLER=$(curl -sL https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${VERSION}/  | grep -o openshift-install-linux-4.[[:digit:]]\+.[[:digit:]]\+.tar.gz | head -1)
     fi
 
     SUDO=''
