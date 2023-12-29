@@ -6,7 +6,7 @@ if [ $# -ne 5 ]; then
     exit 1
 fi
 
-OPENSHIFT_VERSION="4.11"
+OPENSHIFT_VERSION="4.13"
 VCENTER_URL=$1
 BASE_DOMAIN=$2
 API_VIP=$3
