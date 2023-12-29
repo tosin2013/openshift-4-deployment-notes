@@ -6,6 +6,8 @@ export KVM_DEPLOY="TRUE"
 export INSTALL_FILE="install-config.yaml"
 export EXTRA_FILE="extra-config.yaml"
 
+# install nmstate cli 
+# yum install nmstate -y 
 if [ ! -f $PULL_SECRET_PATH ];
 then 
     echo "Please download the pull secret from https://cloud.redhat.com/openshift/install/pull-secret"
