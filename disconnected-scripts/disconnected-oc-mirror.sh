@@ -16,7 +16,7 @@ sudo mv /etc/containers/policy.json.new /etc/containers/policy.json
 
 # Login registries
 REGISTRY_USER=init
-REGISTRY_PASSWORD=1C7cA65JEt2kilFyYgm9sI0G4Kjd3BQ8
+REGISTRY_PASSWORD=CHANGEME
 podman login -u $REGISTRY_USER -p $REGISTRY_PASSWORD $LOCAL_REGISTRY
 #podman login registry.redhat.io --authfile ${HOME}/openshift_pull.json
 REDHAT_CREDS=$(cat ~/${MERGED_PULLSECRET} | jq .auths.\"registry.redhat.io\".auth -r | base64 -d)
