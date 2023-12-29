@@ -107,8 +107,6 @@ then
     curl -OL https://raw.githubusercontent.com/tosin2013/openshift-4-deployment-notes/master/vmware/configure-openshift-4.13.sh
     chmod +x configure-openshift-4.13.sh 
     ./configure-openshift-4.13.sh $VCENTER_PASSWORD $API_VIP $INGRESS_VIP || exit $?
-    cat cluster_$GUID/install-config.yaml
-    exit 0
 elif [ $OPENSHIFT_VERSION == "4.12" ];
 then
     openshift-install create install-config --dir=cluster_$GUID
@@ -127,7 +125,7 @@ else
 fi 
 
 
-cat cluster_$GUID/install-config.yaml
+cat cluster_$GUID/install-config.yaml || exit $?
 read -t 360 -p "Press Enter to continue, or wait 5 minutes for the script to continue automatically" || true
 openshift-install create cluster --dir=cluster_$GUID --log-level debug
 
