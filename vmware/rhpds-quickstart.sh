@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -x 
 # Check that all arguments were provided
 if [ $# -ne 5 ]; then
     echo "Usage: $0 <vCenter URL> <Base Domain> <API VIP> <Ingress VIP> <Subnet CIDR>"
@@ -92,24 +92,33 @@ BASE_DOMAIN: ${BASE_DOMAIN}
 CLUSTER_NAME: $GUID
 API_VIP: ${API_VIP}
 INGRESS_VIP: ${INGRESS_VIP}
-SUBNET_CIDR: ${SUBNET_CIDR}"
-openshift-install create install-config --dir=cluster_$GUID
+SUBNET_CIDR: ${SUBNET_CIDR}" > $HOME/.env
+
 
 # 4.13 edits
 if [ $OPENSHIFT_VERSION == "4.13" ];
 then 
+    read -s -p "Enter vCenter password: " VCENTER_PASSWORD
+    export VCENTER_PASSWORD
+    read -s -p "Enter OpenShift pull secret: " PULL_SECRET
+    echo $PULL_SECRET > pull-secret.txt
+    export PULL_SECRET_PATH=$HOME/pull-secret.txt
+    export SSH_PUB_KEY_PATH=$HOME/.ssh/cluster-key.pub
     curl -OL https://raw.githubusercontent.com/tosin2013/openshift-4-deployment-notes/master/vmware/configure-openshift-4.13.sh
-    chmod +x configure-openshift-4.13.sh
-    ./configure-openshift-4.13.sh
+    chmod +x configure-openshift-4.13.sh 
+    ./configure-openshift-4.13.sh $VCENTER_PASSWORD $API_VIP $INGRESS_VIP || exit $?
+    cat cluster_$GUID/install-config.yaml
     exit 0
 elif [ $OPENSHIFT_VERSION == "4.12" ];
 then
+    openshift-install create install-config --dir=cluster_$GUID
     yq eval '.platform.vsphere.ingressVIPs[0] = "'${INGRESS_VIP}'"'  cluster_$GUID/install-config.yaml -i
     yq eval '.platform.vsphere.apiVIPs[0] = "'${API_VIP}'"'  cluster_$GUID/install-config.yaml -i
     yq eval '.networking.machineNetwork[0].cidr = "'${SUBNET_CIDR}'"' cluster_$GUID/install-config.yaml -i
     yq eval '.platform.vsphere.folder = "/SDDC-Datacenter/vm/Workloads/sandbox-'$GUID'"' cluster_$GUID/install-config.yaml -i
 elif [ $OPENSHIFT_VERSION == "4.11" ];
 then
+    openshift-install create install-config --dir=cluster_$GUID
     yq eval '.networking.machineNetwork[0].cidr = "'${SUBNET_CIDR}'"' cluster_$GUID/install-config.yaml -i
     yq eval '.platform.vsphere.folder = "/SDDC-Datacenter/vm/Workloads/sandbox-'$GUID'"' cluster_$GUID/install-config.yaml -i
 else

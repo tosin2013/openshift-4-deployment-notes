@@ -19,6 +19,16 @@ if [ -z "$3" ]; then
   exit 1
 fi
 
+if [ -z "$PULL_SECRET_PATH" ]; then
+  echo "PULL_SECRET_PATH is not set"
+  exit 1
+fi
+
+if [ -z "$SSH_PUB_KEY_PATH" ]; then
+  echo "SSH_PUB_KEY_PATH is not set"
+  exit 1
+fi
+
 export VCENTER_PASSWORD=$1
 export API_VIP=$2
 export APPS_VIP=$3
@@ -89,6 +99,6 @@ platform:
       user: ${VCENTER_USER}
     diskType: thin 
 fips: false
-pullSecret: ''
-sshKey: 'ssh-rsa '
+pullSecret: '$(cat ${PULL_SECRET_PATH})' 
+sshKey: '$(cat ${SSH_PUB_KEY_PATH})' 
 EOF
