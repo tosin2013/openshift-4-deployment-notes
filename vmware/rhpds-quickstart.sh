@@ -101,6 +101,7 @@ then
     curl -OL https://raw.githubusercontent.com/tosin2013/openshift-4-deployment-notes/master/vmware/configure-openshift-4.13.sh
     chmod +x configure-openshift-4.13.sh
     ./configure-openshift-4.13.sh
+    exit 0
 elif [ $OPENSHIFT_VERSION == "4.12" ];
 then
     yq eval '.platform.vsphere.ingressVIPs[0] = "'${INGRESS_VIP}'"'  cluster_$GUID/install-config.yaml -i
