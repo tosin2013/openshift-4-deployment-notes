@@ -7,8 +7,7 @@ sudo hostnamectl set-hostname registry.example.com
 ```
 * Ansible 
 ```
-sudo subscription-manager repos --enable ansible-2.9-for-rhel-8-x86_64-rpms
-sudo dnf install ansible
+sudo dnf install ansible-core
 ```
 * Podman
 ```
