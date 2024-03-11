@@ -54,7 +54,7 @@ oc get po -n openshift-ingress
 
 oc create secret tls api-cert \
     --cert=${CERTDIR}/fullchain.pem \
-    --key=${CERTDIR}/key.pem \
+    --key=${CERTDIR}/privkey.pem \
     -n openshift-config
 
 oc patch apiserver cluster \
