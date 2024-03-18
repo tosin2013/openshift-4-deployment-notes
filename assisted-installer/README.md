@@ -12,8 +12,8 @@ The following binaries need to be included in the system $PATH:
 pip3 install j2cli
 ```
 
-## Swagger API
-> https://app.swaggerhub.com/apis/TOSINAKINOSHO/assisted-install/1.0.0
+## Chapter 4. Installing with the Assisted Installer API
+> https://access.redhat.com/documentation/en-us/assisted_installer_for_openshift_container_platform/2024/html/installing_openshift_container_platform_with_the_assisted_installer/installing-with-api#doc-wrapper
 
 ## Assisted Installer Steps for Bare Metal machines with Static IPs
 
