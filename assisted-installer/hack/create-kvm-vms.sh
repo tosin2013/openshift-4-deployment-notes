@@ -56,6 +56,7 @@ do
   echo "checking for $i"
   INTERFACE=$(ip addr | grep -oE $i | head -1)
   BOND_INTERFACE=$(ip addr | grep -oE bond0 | head -1)
+  INTERNAL_INTERFACE=$(ip addr | grep -oE internal-net | head -1)
   if [ $DISCONNECTED_INSTALL == "true" ] || [ $SELF_HOSTED_INSTALLER == "true" ];
   then
     LIBVIRT_NETWORK="network=bare-net,model=virtio"
@@ -67,6 +68,11 @@ do
   elif  [[ ${INTERFACE} == 'qubibr0' ]];
   then
     LIBVIRT_NETWORK="bridge=qubibr0,model=virtio"
+    break
+  elif [[ ${INTERNAL_INTERFACE} == 'internal-net' ]];
+  then
+    LIBVIRT_NETWORK_TWO="network=internal-net,model=virtio"
+    LIBVIRT_NETWORK="network=default,model=virtio"
     break
   elif [[ ! -z $BOND_INTERFACE ]]
   then
@@ -126,8 +132,8 @@ for node in $(echo "${NODE_CFGS}" | jq -r '.nodes[] | @base64'); do
       sudo virt-install -n ${CLUSTER_NAME}-$(_jq '.name')  --memory="$(expr ${CP_RAM_GB} \* 1024)" \
         --disk "size=${DISK_SIZE},path=${LIBVIRT_VM_PATH}/${CLUSTER_NAME}-$(_jq '.name').qcow2,cache=none,format=qcow2" \
         --cdrom=${LIBVIRT_VM_PATH}/ai-liveiso-$CLUSTER_ID.iso \
-        --network bridge=qubibr0,model=virtio,mac=$(_jq '.mac_address_int1') \
-        --network bridge=qubibr0,model=virtio,mac=$(_jq '.mac_address_int2') \
+        --network ${LIBVIRT_NETWORK},mac=$(_jq '.mac_address_int1') \
+        --network ${LIBVIRT_NETWORK_TWO},mac=$(_jq '.mac_address_int2') \
         --connect=qemu:///system -v --memballoon none --cpu host-passthrough --autostart --noautoconsole --virt-type kvm --features kvm_hidden=on --controller type=scsi,model=virtio-scsi \
         --graphics vnc,listen=0.0.0.0 --noautoconsole -v --vcpus "sockets=${CP_CPU_SOCKETS},cores=${CP_CPU_CORES},threads=1"
       #echo sudo virt-install ${LIBVIRT_LIKE_OPTIONS} --mac="$(_jq '.mac_address_int1')" --network ${LIBVIRT_NETWORK} --mac="$(_jq '.mac_address_int2')" --name=${CLUSTER_NAME}-$(_jq '.name') --vcpus "sockets=${CP_CPU_SOCKETS},cores=${CP_CPU_CORES},threads=1" --memory="$(expr ${CP_RAM_GB} \* 1024)" --disk "size=${DISK_SIZE},path=${LIBVIRT_VM_PATH}/${CLUSTER_NAME}-$(_jq '.name').qcow2,cache=none,format=qcow2"
