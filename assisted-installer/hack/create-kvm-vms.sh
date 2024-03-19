@@ -55,6 +55,7 @@ for i in "${array[@]}"
 do
   echo "checking for $i"
   INTERFACE=$(ip addr | grep -oE $i | head -1)
+  BOND_INTERFACE=$(ip addr | grep -oE bond0 | head -1)
   if [ $DISCONNECTED_INSTALL == "true" ] || [ $SELF_HOSTED_INSTALLER == "true" ];
   then
     LIBVIRT_NETWORK="network=bare-net,model=virtio"
@@ -66,6 +67,10 @@ do
   elif  [[ ${INTERFACE} == 'qubibr0' ]];
   then
     LIBVIRT_NETWORK="bridge=qubibr0,model=virtio"
+    break
+  elif [[ ! -z $BOND_INTERFACE ]]
+  then
+    LIBVIRT_NETWORK="network=default,model=virtio"
     break
   else
     echo "${array[@]}  not found please machine with one of the interfaces"

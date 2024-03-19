@@ -16,36 +16,22 @@ fi
 
 cat << EOF
 {
-  "kind": "Cluster",
   "name": "${CLUSTER_NAME}",
   "openshift_version": "${CLUSTER_VERSION}",
-  "ocp_release_image": "${REPO_URL}",
+  "cpu_architecture": "${CLUSTER_ARCH}",
   "base_dns_domain": "${CLUSTER_BASE_DNS}",
   "hyperthreading": "all",
-  "ingress_vip": "${CLUSTER_INGRESS_VIP}",
-  "api_vip": "${CLUSTER_API_VIP}",
+  "ingress_vips": [{"ip": "${CLUSTER_INGRESS_VIP}"}],
+  "api_vips":  [{"ip": "${CLUSTER_API_VIP}"}],
   "schedulable_masters": ${SCHEDULABLE_MASTERS},
   "high_availability_mode": "${HA_MODE}",
   "user_managed_networking": ${USER_MANAGED_NETWORKING},
   "platform": {
     "type": "${PLATFORM_TYPE}"
   },
-  "cluster_networks": [
-    {
-      "cidr": "10.128.0.0/14",
-      "host_prefix": 23
-    }
-  ],
-  "service_networks": [
-    {
-      "cidr": "172.31.0.0/16"
-    }
-  ],
-  "machine_networks": [
-    {
-      "cidr": "${CLUSTER_MACHINE_NETWORK}"
-    }
-  ],
+  "cluster_network_cidr": "10.128.0.0/14",
+  "cluster_network_host_prefix": 23,
+  "service_network_cidr": "172.31.0.0/16",
   "network_type": "${CLUSTER_OVN}",
   "additional_ntp_source": "${NTP_SOURCE}",
   "vip_dhcp_allocation": false,

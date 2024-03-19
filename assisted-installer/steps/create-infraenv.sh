@@ -6,8 +6,9 @@ generateInfraenvPatchData() {
 cat << EOF
 {
   "name": "${CLUSTER_NAME}",
+  "image_type": "full-iso",
   "cluster_id": "${CLUSTER_ID}",
-  "openshift_version": "${CLUSTER_VERSION}",
+  "cpu_architecture": "${CLUSTER_ARCH}",
   "pull_secret": $PULL_SECRET
 }
 EOF
