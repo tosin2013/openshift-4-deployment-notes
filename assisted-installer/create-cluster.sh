@@ -41,6 +41,18 @@ cat << EOF
 EOF
 }
 
+## Test DNS before creating the cluster
+echo -e "\n===== Testing DNS for ${CLUSTER_NAME}.${CLUSTER_BASE_DNS}..."
+if [ -z "$(dig +short api.${CLUSTER_NAME}.${CLUSTER_BASE_DNS})" ]; then
+  echo -e "  DNS for api.${CLUSTER_NAME}.${CLUSTER_BASE_DNS} is not resolvable!\n"
+  exit 1
+fi
+
+if [ -z "$(dig +short test.apps.${CLUSTER_NAME}.${CLUSTER_BASE_DNS})" ]; then
+  echo -e "  DNS for test.apps.${CLUSTER_NAME}.${CLUSTER_BASE_DNS} is not resolvable!\n"
+  exit 1
+fi
+
 ## Save to file anyway for debugging purposes
 echo "$(generatePatchData)" > ${CLUSTER_DIR}/cluster-config.json
 
