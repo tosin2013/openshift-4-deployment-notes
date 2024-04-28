@@ -1,5 +1,6 @@
 #!/bin/bash
-
+export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+set -xe
 #########################################################
 ## Check for required cluster-vars.sh file
 if [ ! -f "./cluster-vars.sh" ]; then
@@ -50,13 +51,13 @@ then
   fi 
 fi 
 
-array=(  containerLANbr0 qubibr0 )
+array=(  containerLANbr0 qubibr0 "1924" "bond0")
 for i in "${array[@]}"
 do
   echo "checking for $i"
   INTERFACE=$(ip addr | grep -oE $i | head -1)
   BOND_INTERFACE=$(ip addr | grep -oE bond0 | head -1)
-  INTERNAL_INTERFACE=$(ip addr | grep -oE internal-net | head -1)
+  INTERNAL_INTERFACE=$(sudo virsh net-list | grep 1924 | awk '{print $1}')
   if [ $DISCONNECTED_INSTALL == "true" ] || [ $SELF_HOSTED_INSTALLER == "true" ];
   then
     LIBVIRT_NETWORK="network=bare-net,model=virtio"
@@ -69,10 +70,10 @@ do
   then
     LIBVIRT_NETWORK="bridge=qubibr0,model=virtio"
     break
-  elif [[ ${INTERNAL_INTERFACE} == 'internal-net' ]];
+  elif [[ ${INTERNAL_INTERFACE} == '1924' ]];
   then
-    LIBVIRT_NETWORK_TWO="network=internal-net,model=virtio"
-    LIBVIRT_NETWORK="network=default,model=virtio"
+    LIBVIRT_NETWORK_TWO="network=1925,model=virtio"
+    LIBVIRT_NETWORK="network=1924,model=virtio"
     break
   elif [[ ! -z $BOND_INTERFACE ]]
   then
@@ -82,6 +83,10 @@ do
     echo "${array[@]}  not found please machine with one of the interfaces"
   fi
 done
+
+echo "LIBVIRT_NETWORK: $LIBVIRT_NETWORK"
+echo "LIBVIRT_NETWORK_TWO: $LIBVIRT_NETWORK_TWO"
+
 
 if [ ! -z ${NEW_CLUSTER_ID} ];
 then 
@@ -126,7 +131,7 @@ for node in $(echo "${NODE_CFGS}" | jq -r '.nodes[] | @base64'); do
   if [[ -z "${VIRSH_VM}" ]]; then
     echo "  Creating VM $(_jq '.name') ..."
     if [ $MULTI_NETWORK  == false ]; then 
-      nohup sudo virt-install ${LIBVIRT_LIKE_OPTIONS} --mac="$(_jq '.mac_address')" --name=${CLUSTER_NAME}-$(_jq '.name') --vcpus "sockets=${CP_CPU_SOCKETS},cores=${CP_CPU_CORES},threads=1" --memory="$(expr ${CP_RAM_GB} \* 1024)" --disk "size=${DISK_SIZE},path=${LIBVIRT_VM_PATH}/${CLUSTER_NAME}-$(_jq '.name').qcow2,cache=none,format=qcow2" &
+      nohup sudo virt-install ${LIBVIRT_LIKE_OPTIONS} --mac="$(_jq '.mac_address')" --name=${CLUSTER_NAME}-$(_jq '.name') --vcpus "sockets=${CP_CPU_SOCKETS},cores=${CP_CPU_CORES},threads=1" --memory="$(expr ${CP_RAM_GB} \* 1024)" --disk "size=${DISK_SIZE},path=${LIBVIRT_VM_PATH}/${CLUSTER_NAME}-$(_jq '.name').qcow2,cache=none,format=qcow2" --os-variant=rhel8.6 &
     elif [ $MULTI_NETWORK  == true ]; then 
       #nohup sudo virt-install ${LIBVIRT_LIKE_OPTIONS} --mac="$(_jq '.mac_address_int1')" --mac="$(_jq '.mac_address_int2')" --name=${CLUSTER_NAME}-$(_jq '.name') --vcpus "sockets=${CP_CPU_SOCKETS},cores=${CP_CPU_CORES},threads=1" --memory="$(expr ${CP_RAM_GB} \* 1024)" --disk "size=${DISK_SIZE},path=${LIBVIRT_VM_PATH}/${CLUSTER_NAME}-$(_jq '.name').qcow2,cache=none,format=qcow2" &
       sudo virt-install -n ${CLUSTER_NAME}-$(_jq '.name')  --memory="$(expr ${CP_RAM_GB} \* 1024)" \
@@ -135,7 +140,7 @@ for node in $(echo "${NODE_CFGS}" | jq -r '.nodes[] | @base64'); do
         --network ${LIBVIRT_NETWORK},mac=$(_jq '.mac_address_int1') \
         --network ${LIBVIRT_NETWORK_TWO},mac=$(_jq '.mac_address_int2') \
         --connect=qemu:///system -v --memballoon none --cpu host-passthrough --autostart --noautoconsole --virt-type kvm --features kvm_hidden=on --controller type=scsi,model=virtio-scsi \
-        --graphics vnc,listen=0.0.0.0 --noautoconsole -v --vcpus "sockets=${CP_CPU_SOCKETS},cores=${CP_CPU_CORES},threads=1"
+        --graphics vnc,listen=0.0.0.0 --noautoconsole -v --vcpus "sockets=${CP_CPU_SOCKETS},cores=${CP_CPU_CORES},threads=1" --os-variant=rhel8.6
       #echo sudo virt-install ${LIBVIRT_LIKE_OPTIONS} --mac="$(_jq '.mac_address_int1')" --network ${LIBVIRT_NETWORK} --mac="$(_jq '.mac_address_int2')" --name=${CLUSTER_NAME}-$(_jq '.name') --vcpus "sockets=${CP_CPU_SOCKETS},cores=${CP_CPU_CORES},threads=1" --memory="$(expr ${CP_RAM_GB} \* 1024)" --disk "size=${DISK_SIZE},path=${LIBVIRT_VM_PATH}/${CLUSTER_NAME}-$(_jq '.name').qcow2,cache=none,format=qcow2"
     fi 
     sleep 3

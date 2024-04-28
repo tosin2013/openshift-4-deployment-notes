@@ -16,7 +16,7 @@ interfaces:
   state: up
   type: vlan
   vlan:
-    base-iface: {{ interface_one_address }}
+    base-iface: {{ interface_one_name }}
     id: {{ vlan_id }}
 - name: {{ interface_two_name }}.{{ vlan_id_two }}
   ipv4:
