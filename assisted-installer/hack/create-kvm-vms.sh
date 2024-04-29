@@ -29,7 +29,7 @@ if [ ${NODE_LENGTH} -eq 1 ]; then
   DISK_SIZE="130"
   LIBVIRT_VM_PATH="/var/lib/libvirt/images"
 else
-  CP_CPU_CORES="4"
+  CP_CPU_CORES="8"
   CP_RAM_GB="16"
   CP_CPU_SOCKETS="1"
   DISK_SIZE="130"
