@@ -1,5 +1,4 @@
 #!/bin/bash
-
 set -e
 source cluster-vars.sh
 source authenticate-to-api.sh

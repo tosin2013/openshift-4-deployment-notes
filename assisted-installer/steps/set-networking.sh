@@ -1,5 +1,4 @@
 #!/bin/bash
-
 set -e
 
 source cluster-vars.sh
@@ -19,8 +18,18 @@ generatePatchData() {
 cat <<EOF
 {
   "vip_dhcp_allocation": false,
-  "api_vip": "${CLUSTER_API_VIP}",
-  "ingress_vip": "${CLUSTER_INGRESS_VIP}",
+  "api_vips": [
+    {
+      "cluster_id": "${TARGET_CLUSTER_ID}",
+      "ip": "${CLUSTER_API_VIP}"
+    }
+  ],
+  "ingress_vips": [
+    {
+      "cluster_id": "${TARGET_CLUSTER_ID}",
+      "ip": "${CLUSTER_INGRESS_VIP}"
+    }
+  ],
   "user_managed_networking": false
 }
 EOF
