@@ -15,9 +15,9 @@ export RH_OFFLINE_TOKEN_PATH="$HOME/rh-api-offline-token"
 ## Required Configuration
 export CLUSTER_NAME="ocp4"
 export CLUSTER_BASE_DNS="example.com"
-export CLUSTER_INGRESS_VIP="192.168.49.252"
-export CLUSTER_API_VIP="192.168.49.253"
-export CLUSTER_MACHINE_NETWORK="192.168.49.0/24"
+export CLUSTER_INGRESS_VIP="192.168.50.252"
+export CLUSTER_API_VIP="192.168.50.253"
+export CLUSTER_MACHINE_NETWORK="192.168.50.0/24"
 export NTP_SOURCE="0.rhel.pool.ntp.org"
 #########################################################
 ## if you enable or disable dhcp both interfaces will use the samae options
@@ -36,7 +36,7 @@ export USE_AUTO_DNS=false
 export USE_BOND=true
 #########################################################
 ## Enable or disable VLAN
-export USE_VLAN=false
+export USE_VLAN=true
 export VLAN_ID="1924"
 export VLAN_ID_TWO="1925"
 
@@ -45,17 +45,17 @@ export VLAN_ID_TWO="1925"
 export CLUSTER_NODE_NET_DNS_SERVERS=("8.8.8.8" "1.1.1.1")
 
 ## Set Node Network Configuration
-NODE1_CFG='{"name": "ocp01", "role": "control-plane", "mac_address_int1": "52:54:00:00:00:01",  "ipv4_int1": {"address": "192.168.49.21", "gateway": "192.168.49.1", "prefix": "24", "iface": "enp1s0"}, "mac_address_int2": "52:54:00:00:00:11", "ipv4_int2": {"address": "192.168.52.21", "gateway": "192.168.52.1", "prefix": "24", "iface": "enp7s0"}}'
-NODE2_CFG='{"name": "ocp02", "role": "control-plane", "mac_address_int1": "52:54:00:00:00:02",  "ipv4_int1": {"address": "192.168.49.22", "gateway": "192.168.49.1", "prefix": "24", "iface": "enp1s0"}, "mac_address_int2": "52:54:00:00:00:22", "ipv4_int2": {"address": "192.168.52.22", "gateway": "192.168.52.1", "prefix": "24", "iface": "enp7s0"}}'
-NODE3_CFG='{"name": "ocp03", "role": "control-plane", "mac_address_int1": "52:54:00:00:00:03",  "ipv4_int1": {"address": "192.168.49.23", "gateway": "192.168.49.1", "prefix": "24", "iface": "enp1s0"}, "mac_address_int2": "52:54:00:00:00:33", "ipv4_int2": {"address": "192.168.52.23", "gateway": "192.168.52.1", "prefix": "24", "iface": "enp7s0"}}'
+NODE1_CFG='{"name": "ocp01", "role": "control-plane", "mac_address_int1": "52:54:00:00:00:01",  "ipv4_int1": {"address": "192.168.50.21", "gateway": "192.168.50.1", "prefix": "24", "iface": "enp1s0"}, "mac_address_int2": "52:54:00:00:00:11", "ipv4_int2": {"address": "192.168.52.21", "gateway": "192.168.52.1", "prefix": "24", "iface": "enp7s0"}}'
+NODE2_CFG='{"name": "ocp02", "role": "control-plane", "mac_address_int1": "52:54:00:00:00:02",  "ipv4_int1": {"address": "192.168.50.22", "gateway": "192.168.50.1", "prefix": "24", "iface": "enp1s0"}, "mac_address_int2": "52:54:00:00:00:22", "ipv4_int2": {"address": "192.168.52.22", "gateway": "192.168.52.1", "prefix": "24", "iface": "enp7s0"}}'
+NODE3_CFG='{"name": "ocp03", "role": "control-plane", "mac_address_int1": "52:54:00:00:00:03",  "ipv4_int1": {"address": "192.168.50.23", "gateway": "192.168.50.1", "prefix": "24", "iface": "enp1s0"}, "mac_address_int2": "52:54:00:00:00:33", "ipv4_int2": {"address": "192.168.52.23", "gateway": "192.168.52.1", "prefix": "24", "iface": "enp7s0"}}'
 ## INFRA NODES
-NODE4_CFG='{"name": "ocp04", "role": "application-node", "mac_address_int1": "52:54:00:00:00:04",  "ipv4_int1": {"address": "192.168.49.24", "gateway": "192.168.49.1", "prefix": "24", "iface": "enp1s0"}, "mac_address_int2": "52:54:00:00:00:44", "ipv4_int2": {"address": "192.168.52.24", "gateway": "192.168.52.1", "prefix": "24", "iface": "enp7s0"}}'
-NODE5_CFG='{"name": "ocp05", "role": "application-node", "mac_address_int1": "52:54:00:00:00:05",  "ipv4_int1": {"address": "192.168.49.25", "gateway": "192.168.49.1", "prefix": "24", "iface": "enp1s0"}, "mac_address_int2": "52:54:00:00:00:55", "ipv4_int2": {"address": "192.168.52.25", "gateway": "192.168.52.1", "prefix": "24", "iface": "enp7s0"}}'
-NODE6_CFG='{"name": "ocp06", "role": "application-node", "mac_address_int1": "52:54:00:00:00:06",  "ipv4_int1": {"address": "192.168.49.26", "gateway": "192.168.49.1", "prefix": "24", "iface": "enp1s0"}, "mac_address_int2": "52:54:00:00:00:66", "ipv4_int2": {"address": "192.168.52.26", "gateway": "192.168.52.1", "prefix": "24", "iface": "enp7s0"}}'
+NODE4_CFG='{"name": "ocp04", "role": "application-node", "mac_address_int1": "52:54:00:00:00:04",  "ipv4_int1": {"address": "192.168.50.24", "gateway": "192.168.50.1", "prefix": "24", "iface": "enp1s0"}, "mac_address_int2": "52:54:00:00:00:44", "ipv4_int2": {"address": "192.168.52.24", "gateway": "192.168.52.1", "prefix": "24", "iface": "enp7s0"}}'
+NODE5_CFG='{"name": "ocp05", "role": "application-node", "mac_address_int1": "52:54:00:00:00:05",  "ipv4_int1": {"address": "192.168.50.25", "gateway": "192.168.50.1", "prefix": "24", "iface": "enp1s0"}, "mac_address_int2": "52:54:00:00:00:55", "ipv4_int2": {"address": "192.168.52.25", "gateway": "192.168.52.1", "prefix": "24", "iface": "enp7s0"}}'
+NODE6_CFG='{"name": "ocp06", "role": "application-node", "mac_address_int1": "52:54:00:00:00:06",  "ipv4_int1": {"address": "192.168.50.26", "gateway": "192.168.50.1", "prefix": "24", "iface": "enp1s0"}, "mac_address_int2": "52:54:00:00:00:66", "ipv4_int2": {"address": "192.168.52.26", "gateway": "192.168.52.1", "prefix": "24", "iface": "enp7s0"}}'
 ## Worker Nodes
-NODE7_CFG='{"name": "ocp07", "role": "application-node", "mac_address_int1": "52:54:00:00:00:07",  "ipv4_int1": {"address": "192.168.49.27", "gateway": "192.168.49.1", "prefix": "24", "iface": "enp1s0"}, "mac_address_int2": "52:54:00:00:00:77", "ipv4_int2": {"address": "192.168.52.27", "gateway": "192.168.52.1", "prefix": "24", "iface": "enp7s0"}}'
-NODE8_CFG='{"name": "ocp08", "role": "application-node", "mac_address_int1": "52:54:00:00:00:08",  "ipv4_int1": {"address": "192.168.49.28", "gateway": "192.168.49.1", "prefix": "24", "iface": "enp1s0"}, "mac_address_int2": "52:54:00:00:00:88", "ipv4_int2": {"address": "192.168.52.28", "gateway": "192.168.52.1", "prefix": "24", "iface": "enp7s0"}}'
-NODE9_CFG='{"name": "ocp09", "role": "application-node", "mac_address_int1": "52:54:00:00:00:09",  "ipv4_int1": {"address": "192.168.49.29", "gateway": "192.168.49.1", "prefix": "24", "iface": "enp1s0"}, "mac_address_int2": "52:54:00:00:00:99", "ipv4_int2": {"address": "192.168.52.29", "gateway": "192.168.52.1", "prefix": "24", "iface": "enp7s0"}}'
+NODE7_CFG='{"name": "ocp07", "role": "application-node", "mac_address_int1": "52:54:00:00:00:07",  "ipv4_int1": {"address": "192.168.50.27", "gateway": "192.168.50.1", "prefix": "24", "iface": "enp1s0"}, "mac_address_int2": "52:54:00:00:00:77", "ipv4_int2": {"address": "192.168.52.27", "gateway": "192.168.52.1", "prefix": "24", "iface": "enp7s0"}}'
+NODE8_CFG='{"name": "ocp08", "role": "application-node", "mac_address_int1": "52:54:00:00:00:08",  "ipv4_int1": {"address": "192.168.50.28", "gateway": "192.168.50.1", "prefix": "24", "iface": "enp1s0"}, "mac_address_int2": "52:54:00:00:00:88", "ipv4_int2": {"address": "192.168.52.28", "gateway": "192.168.52.1", "prefix": "24", "iface": "enp7s0"}}'
+NODE9_CFG='{"name": "ocp09", "role": "application-node", "mac_address_int1": "52:54:00:00:00:09",  "ipv4_int1": {"address": "192.168.50.29", "gateway": "192.168.50.1", "prefix": "24", "iface": "enp1s0"}, "mac_address_int2": "52:54:00:00:00:99", "ipv4_int2": {"address": "192.168.52.29", "gateway": "192.168.52.1", "prefix": "24", "iface": "enp7s0"}}'
 
 #########################################################
 ####INSERT NEW NODES UNDER HERE
