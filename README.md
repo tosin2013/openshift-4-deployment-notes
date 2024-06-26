@@ -40,6 +40,7 @@
 
 ## Training links 
 * [OCS Installation and Configuration](https://red-hat-storage.github.io/ocs-training/training/index.html)  
+* [Architect the OpenShift Virtualization](https://redhatquickcourses.github.io/architect-the-ocpvirt/Red%20Hat%20OpenShift%20Virtualization%20-%20Architect%20the%20OpenShift%20Virtualization/1/index.html)
 * [OpenShift Examples](https://examples.openshift.pub/)  
 * [DevSecOps Pipeline Demo](https://github.com/rcarrata/devsecops-demo)
 * [Red Hat Advanced Cluster Security](https://redhat-scholars.github.io/acs-workshop/acs-workshop/index.html)
