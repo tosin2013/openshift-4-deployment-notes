@@ -1,4 +1,6 @@
 #!/bin/bash
+export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+set -x 
 set -e
 source cluster-vars.sh
 source authenticate-to-api.sh
@@ -42,7 +44,6 @@ while [ -z "$CHECK_HOST" ] || [ "$CHECK_HOST" == "null" ]; do
     --header "Authorization: Bearer $ACTIVE_TOKEN" \
     "${ASSISTED_SERVICE_V2_API}/infra-envs/${INFRAENV_ID}/hosts"  | jq -r .[].requested_hostname)
 done
-
 
 HOSTS=$(curl -s \
     --header "Authorization: Bearer $ACTIVE_TOKEN" \
@@ -147,14 +148,23 @@ for item in "${hostname_array[@]}"; do
   --header "Content-Type: application/json" \
   --header "Accept: application/json" \
   --request PATCH \
-  --data-raw '{ "host_name": "'${OCP_HOST_NAME}'"}' \
+  --data-raw '{ "hostname": "'${OCP_HOST_NAME}'"}' \
   "${ASSISTED_SERVICE_V2_API}/infra-envs/${INFRAENV_ID}/hosts/${HOST_ID}")
+  curl -v \
+  --header "Authorization: Bearer $ACTIVE_TOKEN" \
+  --header "Content-Type: application/json" \
+  --header "Accept: application/json" \
+  --request PATCH \
+  --data-raw '{ "hostname": "'${OCP_HOST_NAME}'"}' \
+  "${ASSISTED_SERVICE_V2_API}/infra-envs/${INFRAENV_ID}/hosts/${HOST_ID}"
   if [ "$SET_HOST_INFO_REQ" -ne "201" ]; then
     echo "===== Failed to configure host names and roles! ERROR CODE: $SET_HOST_INFO_REQ"
     exit 1
   fi
   export CLUSER_ROLE_TAGGED="true"
 done
+
+exit 0 
 
 # Label nodes roles 
 readarray -t roles_array < <(jq -c '.hosts_roles[]' /tmp/results.json)
