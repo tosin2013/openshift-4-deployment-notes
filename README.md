@@ -18,6 +18,10 @@
 * [Configure OpenShift ignition Configs](configure-ignitionfiles/)   
 * [Disconnected Scripts to be used for disconnected clusters](disconnected-scripts/)
 
+## Education 
+* [OpenShift Networking](https://network-insight.net/2022/06/09/openshift-networking/)
+* [Kubevirt Network Deep Dive](https://kubevirt.io/2018/KubeVirt-Network-Deep-Dive.html)
+
 ## Notes
 * [Performing OpenShift 4 installation](run-ocp-installer/)  
 
