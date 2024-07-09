@@ -5,8 +5,9 @@
 * [OpenShift 4 on VMWARE](vmware/)  
 * [OpenShift 4 Assisted Installer Steps on bare metal](assisted-installer/)
 
-## Useful tool
-* [Helper node](helper-node/)
+## Helpful Guides
+* [OpenShift Examples](https://examples.openshift.pub/)  
+* [OpenShift Quickstarts](https://github.com/kenmoini/openshift-quickstarts/tree/main)
 
 ## Useful scripts
 * [DHCP Server Configuration](dhcp-configuration/)  
@@ -46,7 +47,7 @@
 * [OCS Installation and Configuration](https://red-hat-storage.github.io/ocs-training/training/index.html)  
 * [Architect the OpenShift Virtualization](https://redhatquickcourses.github.io/architect-the-ocpvirt/Red%20Hat%20OpenShift%20Virtualization%20-%20Architect%20the%20OpenShift%20Virtualization/1/index.html)
 * [RHODS Quick Courses](https://github.com/RedHatQuickCourses/rhods-qc-apps/tree/main)
-* [OpenShift Examples](https://examples.openshift.pub/)  
+
 * [DevSecOps Pipeline Demo](https://github.com/rcarrata/devsecops-demo)
 * [Red Hat Advanced Cluster Security](https://redhat-scholars.github.io/acs-workshop/acs-workshop/index.html)
 * [Ton of openshift-demos](https://github.com/rhthsa/openshift-demo/tree/main)
