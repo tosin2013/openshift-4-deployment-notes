@@ -1,13 +1,5 @@
 #!/bin/bash 
 
-# Set firwall rules for cockpit access 
-# sudo iptables -I INPUT 9 -p tcp --dport 9090 -j ACCEPT
-
-# Install cockpit if not install on rhel 8
-# sudo yum install cockpit cockpit-machines -y
-# sudo systemctl enable --now cockpit.socket
-`
-
 # create a arguement for ACTION
 if [ "$#" -ne 1 ]; then
     echo "Illegal number of parameters"
@@ -52,7 +44,7 @@ EOF
 
 function create(){
     create_livirt_networks
-    IPADDR=$(sudo virsh net-dhcp-leases default | grep vyos-builder  | sort -k1 -k2 | tail -1 | awk '{print $5}' | sed 's/\/24//g')
+    IPADDR=$(sudo virsh net-dhcp-leases ocp4-provisioning | grep vyos-builder  | sort -k1 -k2 | tail -1 | awk '{print $5}' | sed 's/\/24//g')
     # Vyos nightly builds 
     # https://github.com/vyos/vyos-rolling-nightly-builds/releases
     VYOS_VERSION=1.5-rolling-202407100021
@@ -77,7 +69,7 @@ sudo virt-install -n ${VM_NAME} \
    --vcpus 2 \
    --cdrom /var/lib/libvirt/images/seed.iso \
    --os-variant debian10 \
-   --network network=default,model=e1000e,mac=$(date +%s | md5sum | head -c 6 | sed -e 's/\([0-9A-Fa-f]\{2\}\)/\1:/g' -e 's/\(.*\):$/\1/' | sed -e 's/^/52:54:00:/') \
+   --network network=ocp4-net,model=e1000e,mac=$(date +%s | md5sum | head -c 6 | sed -e 's/\([0-9A-Fa-f]\{2\}\)/\1:/g' -e 's/\(.*\):$/\1/' | sed -e 's/^/52:54:00:/') \
    --network network=1924,model=e1000e \
    --network network=1925,model=e1000e \
    --network network=1926,model=e1000e \
@@ -95,8 +87,9 @@ sudo virt-install -n ${VM_NAME} \
     curl -OL https://raw.githubusercontent.com/tosin2013/demo-virt/rhpds/demo.redhat.com/vyos-config-1.5.sh
     mv vyos-config-1.5.sh vyos-config.sh
     chmod +x vyos-config.sh
-    ip_address=$(grep -m 1 'nameserver' /etc/resolv.conf | awk '{print $2}')
-    sed -i "s/1.1.1.1/${ip_address}/g" vyos-config.sh
+    #ip_address=$(grep -m 1 'nameserver' /etc/resolv.conf | awk '{print $2}')
+    sed -i "s/192.168.122.2/192.168.123.2/g" vyos-config.sh
+    sed -i "s/1.1.1.1/192.168.123.1/g" vyos-config.sh
   fi 
 }
 
@@ -107,6 +100,21 @@ function destroy(){
     sudo rm -rf /var/lib/libvirt/images/$VM_NAME.qcow2
     sudo rm -rf /var/lib/libvirt/images/seed.iso
 }
+
+# Set firwall rules for cockpit access 
+sudo iptables -I INPUT 9 -p tcp --dport 9090 -j ACCEPT
+
+# Install cockpit if not install on rhel 8
+# Check if Cockpit is installed
+if ! rpm -qa | grep cockpit; then
+	# Install Cockpit
+	sudo yum install cockpit-system cockpit cockpit-machines -y
+
+	# Enable Cockpit service
+	sudo systemctl enable --now cockpit.socket
+  sudo systemctl status cockpit
+fi
+
 
 if [ "$ACTION" == "create" ];
 then 
