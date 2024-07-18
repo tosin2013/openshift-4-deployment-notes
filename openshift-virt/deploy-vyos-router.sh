@@ -107,12 +107,13 @@ sudo iptables -I INPUT 9 -p tcp --dport 9090 -j ACCEPT
 
 # Install cockpit if not install on rhel 8
 # Check if Cockpit is installed
-if ! rpm -qa | grep cockpit; then
+if ! rpm -qa | grep cockpit-machines; then
 	# Install Cockpit
 	sudo yum install cockpit-system cockpit cockpit-machines -y
 
 	# Enable Cockpit service
 	sudo systemctl enable --now cockpit.socket
+  sudo systemctl start cockpit
   sudo systemctl status cockpit
 fi
 
