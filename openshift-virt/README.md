@@ -137,7 +137,23 @@ spec:
       "bridge": "br-1",
       "isGateway": true,
       "vlan": 1925,
-      "ipam": {}
+      "ipam": {
+        "type": "static",
+        "addresses": [
+          {
+            "address": "192.168.52.3/24",
+            "gateway": "192.168.52.1"
+          }
+        ],
+        "routes": [
+          { "dst": "0.0.0.0/0" }
+        ],
+        "dns": {
+          "nameservers": ["8.8.8.8"],
+          "domain": "example.com",
+          "search": ["example.com"]
+        }
+      }
     }
 ```
 ![20240717145329](https://i.imgur.com/NpLI6Gy.png)
