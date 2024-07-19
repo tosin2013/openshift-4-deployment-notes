@@ -15,6 +15,8 @@ chmod +x deploy-vyos-router.sh
 ./deploy-vyos-router.sh create
 ```
 
+### Login to the hypervisor via cockpit
+* https://hypervisor.98352.dynamic.example.com:9090
 
 ### Validate the vyos
 **Default username and password**
@@ -141,7 +143,7 @@ spec:
 ![20240717145329](https://i.imgur.com/NpLI6Gy.png)
 
 ## Test Static IP migration on a Windows VM
-**Login To Vshpere and clone VM**
+**Login To vSshpere and clone VM**
 Clone winweb01 as a backup
 ![20240717145837](https://i.imgur.com/ohDBCtw.png)
 
@@ -150,13 +152,17 @@ Start winweb01 and login
 * enter option 1 and option 1 then option (S) to change the ip address
 * 
   ![20240717150316](https://i.imgur.com/fje2iUv.png)
-  ![20240717151046](https://i.imgur.com/i6c0VxC.png)
+  ![20240718185656](https://i.imgur.com/OoMA35H.png)
 
 ## Start VM Migration plan
 **Shutdown and remove winweb01 in the vmimported project**
 ![20240717152950](https://i.imgur.com/ev9wobR.png)
 ![20240717153211](https://i.imgur.com/PNyUJ2M.png)
 ![20240717153229](https://i.imgur.com/ouRo6wW.png)
+
+**Select openshift-mtv project**
+![20240718190605](https://i.imgur.com/6cCSBZp.png)
+**Create Plan**
 **Select Vmware**
 ![20240717151555](https://i.imgur.com/BcRtUMd.png)
 **Select virtual machine - winweb01**

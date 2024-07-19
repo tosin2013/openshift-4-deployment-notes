@@ -88,9 +88,9 @@ sudo virt-install -n ${VM_NAME} \
     mv vyos-config-1.5.sh vyos-config.sh
     chmod +x vyos-config.sh
     #ip_address=$(grep -m 1 'nameserver' /etc/resolv.conf | awk '{print $2}')
+    sed -i '73,80d' vyos-config.sh
     sed -i "s/192.168.122.2/192.168.123.2/g" vyos-config.sh
     sed -i "s/1.1.1.1/192.168.123.1/g" vyos-config.sh
-    sed -i '98,106d' vyos-config.sh
   fi 
 }
 
