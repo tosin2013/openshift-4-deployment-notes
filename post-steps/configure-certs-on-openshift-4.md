@@ -102,3 +102,4 @@ For more information, refer to the following OpenShift 4.16 documentation:
 
 - [Configuring the API Server Certificates](https://docs.openshift.com/container-platform/4.16/security/certificates/api-server.html)
 - [Ingress Controller Configuration](https://docs.openshift.com/container-platform/4.16/networking/ingress-operator.html)
+- [Let’s Automate :: Let’s Encrypt TLS Certs for OpenShift 4](https://ksingh7.medium.com/lets-automate-let-s-encrypt-tls-certs-for-openshift-4-211d6c081875)
