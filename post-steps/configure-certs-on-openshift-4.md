@@ -2,6 +2,8 @@
 
 In this detailed how-to guide, we'll walk through a script designed to automate the generation and installation of Let's Encrypt TLS certificates for OpenShift 4.16. This guide assumes you are familiar with basic OpenShift operations and have access to a running OpenShift cluster.
 
+[Full Script](https://github.com/tosin2013/openshift-4-deployment-notes/blob/master/post-steps/create_custom_cert.sh)
+
 ### Prerequisites
 
 - An OpenShift 4.16 cluster.
@@ -100,5 +102,3 @@ For more information, refer to the following OpenShift 4.16 documentation:
 
 - [Configuring the API Server Certificates](https://docs.openshift.com/container-platform/4.16/security/certificates/api-server.html)
 - [Ingress Controller Configuration](https://docs.openshift.com/container-platform/4.16/networking/ingress-operator.html)
-
-This detailed guide should help you set up automated TLS certificates in your OpenShift environment. If you have any questions or need further assistance, the OpenShift documentation and community forums are excellent resources.
