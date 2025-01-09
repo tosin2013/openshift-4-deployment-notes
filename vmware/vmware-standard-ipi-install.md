@@ -108,6 +108,12 @@ cp certs/lin/* /etc/pki/ca-trust/source/anchors
 update-ca-trust extract
 ```
 
+**To add to ACM or MTV**
+Best practice: Link together multiple certificates with a .0 extension by running 
+```
+cat certs/lin/*.0 > ca.crt
+```
+
 **make cluster installation directory**
 ```
 mkdir my_ocp4_cluster
