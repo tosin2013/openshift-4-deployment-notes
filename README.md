@@ -44,7 +44,8 @@
 * [Create Custom Certs Example Script](post-steps/create_custom_cert.sh)
 
 ## Training links 
-* [OCS Installation and Configuration](https://red-hat-storage.github.io/ocs-training/training/index.html)  
+* [OCS Installation and Configuration](https://red-hat-storage.github.io/ocs-training/training/index.html)
+* [ODF Sizer](https://access.redhat.com/labs/ocsst/#/workloads)
 * [Architect the OpenShift Virtualization](https://redhatquickcourses.github.io/architect-the-ocpvirt/Red%20Hat%20OpenShift%20Virtualization%20-%20Architect%20the%20OpenShift%20Virtualization/1/index.html)
 * [How to create and scale 6,000 virtual machines in 7 hours with Red Hat OpenShift Virtualization](https://cloud.redhat.com/learn/how-create-and-scale-6000-virtual-machines-7-hours-red-hat-openshift-virtualization#page-title)
 * [RHODS Quick Courses](https://github.com/RedHatQuickCourses/rhods-qc-apps/tree/main)
@@ -52,6 +53,7 @@
 * [DevSecOps Pipeline Demo](https://github.com/rcarrata/devsecops-demo)
 * [Red Hat Advanced Cluster Security](https://redhat-scholars.github.io/acs-workshop/acs-workshop/index.html)
 * [Ton of openshift-demos](https://github.com/rhthsa/openshift-demo/tree/main)
+* [Developer Hub Documentation](https://maarten-vandeperre.github.io/developer-hub-documentation/index.html)
 
 ## GitOPs Links
 * [ArgoCD and Team Topologies](https://github.com/redhat-cop/helm-charts/blob/master/charts/gitops-operator/TEAM_DOCS.md#platform-argocd-namespaced-argocd-per-team)
