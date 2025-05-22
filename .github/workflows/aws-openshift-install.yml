@@ -105,6 +105,7 @@ jobs:
 
       - name: Set up environment
         run: |
+          set -eo pipefail
           echo "Setting up environment for OpenShift ${{ env.OPENSHIFT_VERSION }} installation on AWS"
           echo "Cluster name: ${{ env.CLUSTER_NAME }}"
           echo "Base domain: ${{ env.BASE_DOMAIN }}"
@@ -120,6 +121,7 @@ jobs:
 
       - name: Validate input parameters
         run: |
+          set -eo pipefail
           # Validate cluster name
           if [[ ! ${{ env.CLUSTER_NAME }} =~ ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$ ]]; then
             echo "Error: Cluster name must consist of lower case alphanumeric characters or '-', and must start and end with an alphanumeric character."
@@ -142,6 +144,7 @@ jobs:
 
       - name: Install required packages
         run: |
+          set -eo pipefail
           echo "Installing required packages..."
           sudo apt-get update
           sudo apt-get install -y jq unzip curl
@@ -157,6 +160,7 @@ jobs:
       # Error handling wrapper
       - name: Set up error handling
         run: |
+          set -eo pipefail
           # Create error handling function
           cat > ${{ env.ARTIFACTS_DIR }}/error_handler.sh << 'EOF'
           #!/bin/bash
@@ -193,6 +197,7 @@ jobs:
       # Vault integration for secret retrieval
       - name: Configure Vault connection
         run: |
+          set -eo pipefail
           # Check if using HCP Vault Secrets (cloud-hosted)
           if [ ! -z "${{ secrets.HCP_CLIENT_ID }}" ] && [ ! -z "${{ secrets.HCP_CLIENT_SECRET }}" ] && [ ! -z "${{ secrets.HCP_VAULT_SECRETS_APP }}" ]; then
             echo "Using HCP Vault Secrets (cloud-hosted)"
@@ -255,6 +260,7 @@ jobs:
       - name: Retrieve secrets from HashiCorp Vault
         id: vault-secrets
         run: |
+          set -eo pipefail
           # Ensure shell variables set by the 'Configure Vault connection' step are available
           # These are VAULT_SERVICE, HCP_CLIENT_ID, HCP_CLIENT_SECRET, HCP_VAULT_SECRETS_APP, VAULT_URL, VAULT_TOKEN, VAULT_NAMESPACE
 
@@ -318,6 +324,7 @@ jobs:
 
       - name: Check Vault connection
         run: |
+          set -eo pipefail
           if [ "${{ steps.vault-secrets.outcome }}" != "success" ]; then
             echo "Failed to connect to Vault server or retrieve secrets."
             echo "Please check the following based on your VAULT_SERVICE configuration ('${VAULT_SERVICE}'):"
@@ -349,6 +356,7 @@ jobs:
 
       - name: Validate Vault secrets
         run: |
+          set -eo pipefail
           echo "Validating secrets retrieved from Vault..."
 
           # Check if pull secret was retrieved
@@ -370,6 +378,7 @@ jobs:
 
       - name: Mask sensitive values
         run: |
+          set -eo pipefail
           # Mask sensitive values in logs
           echo "::add-mask::${{ steps.vault-secrets.outputs.pull_secret }}"
           echo "::add-mask::${{ steps.vault-secrets.outputs.private_key }}"
@@ -380,6 +389,7 @@ jobs:
 
       - name: Store secrets securely
         run: |
+          set -eo pipefail
           echo "Storing secrets securely by calling external script ./aws/store-secrets.sh..."
           chmod +x ./aws/store-secrets.sh
 
@@ -410,6 +420,7 @@ jobs:
       # AWS CLI configuration
       - name: Configure AWS CLI
         run: |
+          set -eo pipefail
           echo "Configuring AWS CLI..."
 
           # Make the script executable
@@ -428,6 +439,7 @@ jobs:
       # OpenShift packages installation
       - name: Install OpenShift packages
         run: |
+          set -eo pipefail
           echo "Installing OpenShift packages..."
 
           # Make the script executable
@@ -456,6 +468,7 @@ jobs:
       # OpenShift installer execution
       - name: Prepare OpenShift installer
         run: |
+          set -eo pipefail
           echo "Preparing OpenShift installer..."
 
           # Make the script executable
@@ -481,6 +494,7 @@ jobs:
 
       - name: Run OpenShift installer
         run: |
+          set -eo pipefail
           echo "Running OpenShift installer step..."
           chmod +x ./aws/run-openshift-installer.sh
 
@@ -497,6 +511,7 @@ jobs:
       # Verification and kubeconfig storage
       - name: Verify cluster and store kubeconfig
         run: |
+          set -eo pipefail
           echo "Verifying cluster and storing kubeconfig by calling external script..."
           chmod +x ./aws/verify-cluster-and-store-kubeconfig.sh
 
@@ -526,6 +541,7 @@ jobs:
       - name: Summary
         if: always()
         run: |
+          set -eo pipefail
           echo "Installation Summary"
           echo "===================="
 
