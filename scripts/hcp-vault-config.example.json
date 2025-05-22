@@ -1,0 +1,25 @@
+{
+  "_comment": "HCP Vault Configuration Example - Copy to hcp-vault-config.json and fill in your values",
+  
+  "organization": "your-organization-name",
+  "project": "your-project-name",
+  "cluster": "your-vault-cluster-name",
+  "region": "us-west-2",
+  
+  "_auth_comment": "Use either Service Principal (recommended) or direct token",
+  "client_id": "your-service-principal-client-id",
+  "client_secret": "your-service-principal-client-secret",
+  
+  "_token_comment": "Alternative to Service Principal - use admin token directly",
+  "token": "",
+  
+  "_options_comment": "Optional configuration",
+  "secrets_path_prefix": "",
+  "example_secrets": false,
+  
+  "_usage_examples": [
+    "python3 scripts/setup-hcp-vault-cli.py --config hcp-vault-config.json",
+    "python3 scripts/setup-hcp-vault-cli.py --config hcp-vault-config.json --example-secrets",
+    "python3 scripts/setup-hcp-vault-cli.py --config hcp-vault-config.json --dry-run"
+  ]
+}

@@ -1,0 +1,90 @@
+# HCP Vault Configuration Files (contain sensitive credentials)
+scripts/hcp-vault-config.env
+scripts/hcp-vault-config.json
+scripts/hcp-vault-secrets-config.env
+
+# Other sensitive configuration files (but allow .example.* files)
+*.env
+!*.example.env
+*.secret
+*-config.env
+!*-config.example.env
+*-secrets.env
+!*-secrets.example.env
+
+# Temporary files
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+.env/
+
+# Logs
+*.log
+logs/
+
+# Backup files
+*.bak
+*.backup
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Ansible
+*.retry
+
+# OpenShift/Kubernetes
+kubeconfig*
+*.kubeconfig
+
+# Vault
+.vault-token
+vault-token*
