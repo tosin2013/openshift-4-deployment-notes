@@ -68,16 +68,6 @@ on:
         description: 'Existing subnet IDs (if using existing VPC, comma-separated)'
         required: false
         type: string
-      openshift_version:
-        description: 'OpenShift version to install'
-        required: true
-        type: string
-        default: '4.18'
-      single_az_deployment:
-        description: 'Deploy all nodes in a single availability zone'
-        required: false
-        type: boolean
-        default: false
 
 env:
   CLUSTER_NAME: ${{ github.event.inputs.cluster_name }}
@@ -89,8 +79,7 @@ env:
   NETWORK_TYPE: ${{ github.event.inputs.network_type }}
   EXISTING_VPC_ID: ${{ github.event.inputs.existing_vpc_id }}
   EXISTING_SUBNET_IDS: ${{ github.event.inputs.existing_subnet_ids }}
-  OPENSHIFT_VERSION: ${{ github.event.inputs.openshift_version }}
-  SINGLE_AZ_DEPLOYMENT: ${{ github.event.inputs.single_az_deployment }}
+  OPENSHIFT_VERSION: "4.18"
   INSTALL_DIR: "/tmp/cluster"
   ARTIFACTS_DIR: "/tmp/artifacts"
 
@@ -484,7 +473,6 @@ jobs:
           export COMPUTE_INSTANCE_TYPE="${{ env.COMPUTE_INSTANCE_TYPE }}"
           export COMPUTE_NODES="${{ env.COMPUTE_NODES }}"
           export CONTROL_PLANE_INSTANCE_TYPE="${{ env.CONTROL_PLANE_INSTANCE_TYPE }}"
-          export SINGLE_AZ_DEPLOYMENT="${{ env.SINGLE_AZ_DEPLOYMENT }}"
           export PULL_SECRET_CONTENT_RAW='${{ steps.vault-secrets.outputs.pull_secret }}'
           export SSH_KEY_CONTENT_RAW='${{ steps.vault-secrets.outputs.public_key }}'
           export ARTIFACTS_DIR="${{ env.ARTIFACTS_DIR }}"
