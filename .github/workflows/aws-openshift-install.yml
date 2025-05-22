@@ -380,37 +380,32 @@ jobs:
 
       - name: Store secrets securely
         run: |
-          # Store pull secret
-          echo '${{ steps.vault-secrets.outputs.pull_secret }}' > ${{ env.INSTALL_DIR }}/pull-secret.json
-          chmod 600 ${{ env.INSTALL_DIR }}/pull-secret.json
+          echo "Storing secrets securely by calling external script ./aws/store-secrets.sh..."
+          chmod +x ./aws/store-secrets.sh
 
-          # Store SSH keys
-          mkdir -p $HOME/.ssh
-          echo '${{ steps.vault-secrets.outputs.private_key }}' > $HOME/.ssh/cluster-key
-          echo '${{ steps.vault-secrets.outputs.public_key }}' > $HOME/.ssh/cluster-key.pub
-          chmod 600 $HOME/.ssh/cluster-key
-          chmod 644 $HOME/.ssh/cluster-key.pub
+          # Set environment variables for the script aws/store-secrets.sh
+          export PULL_SECRET_CONTENT='${{ steps.vault-secrets.outputs.pull_secret }}'
+          export SSH_PRIVATE_KEY_CONTENT='${{ steps.vault-secrets.outputs.private_key }}'
+          export SSH_PUBLIC_KEY_CONTENT='${{ steps.vault-secrets.outputs.public_key }}'
+          export AWS_ACCESS_KEY_ID_CONTENT='${{ steps.vault-secrets.outputs.aws_access_key_id }}'
+          export AWS_SECRET_ACCESS_KEY_CONTENT='${{ steps.vault-secrets.outputs.aws_secret_access_key }}'
+          export AWS_REGION_FOR_CRED_FILE='${{ env.AWS_REGION }}'
+          export INSTALL_DIR_PATH='${{ env.INSTALL_DIR }}'
+          export ARTIFACTS_DIR_PATH='${{ env.ARTIFACTS_DIR }}' # For handle_error sourcing by the script
+          # CLUSTER_NAME is available from the global workflow env (env.CLUSTER_NAME) for handle_error context
 
-          # Set up SSH agent
-          eval "$(ssh-agent -s)"
-          ssh-add $HOME/.ssh/cluster-key
-
-          # Store AWS credentials
-          mkdir -p $HOME/.aws
-          cat > $HOME/.aws/credentials << EOF
-          [default]
-          aws_access_key_id = ${{ steps.vault-secrets.outputs.aws_access_key_id }}
-          aws_secret_access_key = ${{ steps.vault-secrets.outputs.aws_secret_access_key }}
-          region = ${{ env.AWS_REGION }}
-          EOF
-          chmod 600 $HOME/.aws/credentials
-
-          # Verify files were created successfully
-          if [ ! -f "${{ env.INSTALL_DIR }}/pull-secret.json" ] || [ ! -f "$HOME/.ssh/cluster-key" ] || [ ! -f "$HOME/.aws/credentials" ]; then
-            handle_error 1 "Failed to store secrets in files" "Store secrets securely"
+          # Ensure the error_handler.sh script is sourced for the current step's execution context
+          # if it's called by the external script. The external script also tries to source it.
+          if [ -f "${{ env.ARTIFACTS_DIR }}/error_handler.sh" ]; then
+            source "${{ env.ARTIFACTS_DIR }}/error_handler.sh"
+          else
+            echo "Error (Workflow): error_handler.sh not found at ${{ env.ARTIFACTS_DIR }}/error_handler.sh. Critical for script error handling."
+            exit 1
           fi
 
-          echo "Secrets stored securely in the environment."
+          ./aws/store-secrets.sh || { exit_code=$?; echo "aws/store-secrets.sh failed with exit code ${exit_code}."; handle_error ${exit_code} "Execution of aws/store-secrets.sh failed" "Store secrets securely"; }
+
+          echo "Secrets storage step completed."
 
       # AWS CLI configuration
       - name: Configure AWS CLI
@@ -464,205 +459,69 @@ jobs:
           echo "Preparing OpenShift installer..."
 
           # Make the script executable
-          chmod +x ./aws/configure-openshift-installer.sh
+          chmod +x ./aws/generate-install-config.sh
 
-          # Create install-config.yaml
-          mkdir -p "${{ env.INSTALL_DIR }}"
+          # Set environment variables for the script
+          export INSTALL_DIR="${{ env.INSTALL_DIR }}"
+          export BASE_DOMAIN="${{ env.BASE_DOMAIN }}"
+          export CLUSTER_NAME="${{ env.CLUSTER_NAME }}"
+          export AWS_REGION="${{ env.AWS_REGION }}"
+          export EXISTING_VPC_ID="${{ env.EXISTING_VPC_ID }}"
+          export EXISTING_SUBNET_IDS="${{ env.EXISTING_SUBNET_IDS }}"
+          export COMPUTE_INSTANCE_TYPE="${{ env.COMPUTE_INSTANCE_TYPE }}"
+          export COMPUTE_NODES="${{ env.COMPUTE_NODES }}"
+          export CONTROL_PLANE_INSTANCE_TYPE="${{ env.CONTROL_PLANE_INSTANCE_TYPE }}"
+          export SINGLE_AZ_DEPLOYMENT="${{ env.SINGLE_AZ_DEPLOYMENT }}"
+          export PULL_SECRET_CONTENT_RAW='${{ steps.vault-secrets.outputs.pull_secret }}'
+          export SSH_KEY_CONTENT_RAW='${{ steps.vault-secrets.outputs.public_key }}'
+          export ARTIFACTS_DIR="${{ env.ARTIFACTS_DIR }}"
 
-          # Prepare pull secret and ssh key for embedding
-          PULL_SECRET_CONTENT_RAW='${{ steps.vault-secrets.outputs.pull_secret }}'
-          PULL_SECRET_CONTENT_COMPACT=$(echo "${PULL_SECRET_CONTENT_RAW}" | jq -c .)
-          INDENTED_PULL_SECRET=$(echo "${PULL_SECRET_CONTENT_COMPACT}" | sed 's/^/    /') # 4 spaces for YAML block scalar
-
-          SSH_KEY_CONTENT_RAW='${{ steps.vault-secrets.outputs.public_key }}'
-          INDENTED_SSH_KEY=$(echo "${SSH_KEY_CONTENT_RAW}" | sed 's/^/    /') # 4 spaces for YAML block scalar
-
-          # Start install-config.yaml
-          cat > "${{ env.INSTALL_DIR }}/install-config.yaml" <<EOF
-apiVersion: v1
-baseDomain: ${{ env.BASE_DOMAIN }}
-metadata:
-  name: ${{ env.CLUSTER_NAME }}
-platform:
-  aws:
-    region: ${{ env.AWS_REGION }}
-EOF
-
-          # Conditionally add userTags and vpcID if EXISTING_VPC_ID is set
-          if [ -n "${{ env.EXISTING_VPC_ID }}" ]; then
-            cat >> "${{ env.INSTALL_DIR }}/install-config.yaml" <<EOF_VPC
-    userTags:
-      Name: ${{ env.CLUSTER_NAME }}
-    vpcID: ${{ env.EXISTING_VPC_ID }}
-EOF_VPC
-          fi
-
-          # Conditionally add subnets if EXISTING_SUBNET_IDS is set
-          if [ -n "${{ env.EXISTING_SUBNET_IDS }}" ]; then
-            echo "    subnets:" >> "${{ env.INSTALL_DIR }}/install-config.yaml"
-            IFS=',' read -ra SUBNET_ARRAY <<< "${{ env.EXISTING_SUBNET_IDS }}"
-            for subnet_id in "${SUBNET_ARRAY[@]}"; do
-              trimmed_subnet_id=$(echo "$subnet_id" | xargs) # Trim whitespace
-              echo "      - \\"${trimmed_subnet_id}\\"" >> "${{ env.INSTALL_DIR }}/install-config.yaml"
-            done
-          fi
-
-          # Add compute, controlPlane, networking, pullSecret, sshKey, fips, publish
-          cat >> "${{ env.INSTALL_DIR }}/install-config.yaml" <<EOF_MAIN
-compute:
-- architecture: amd64
-  hyperthreading: Enabled
-  name: worker
-  platform:
-    aws:
-      type: ${{ env.COMPUTE_INSTANCE_TYPE }}
-  replicas: ${{ env.COMPUTE_NODES }}
-controlPlane:
-  architecture: amd64
-  hyperthreading: Enabled
-  name: master
-  platform:
-    aws:
-      type: ${{ env.CONTROL_PLANE_INSTANCE_TYPE }}
-  replicas: 3 # Note: Consider SINGLE_AZ_DEPLOYMENT here if implemented
-networking:
-  networkType: OVNKubernetes
-  clusterNetwork:
-  - cidr: 10.128.0.0/14
-    hostPrefix: 23
-  machineNetwork:
-  - cidr: 10.0.0.0/16
-  serviceNetwork:
-  - 172.30.0.0/16
-pullSecret: |
-${INDENTED_PULL_SECRET}
-sshKey: |
-${INDENTED_SSH_KEY}
-fips: false
-publish: External
-EOF_MAIN
-
-          # Add a comment about single_az_deployment if it's set
-          if [ "${{ env.SINGLE_AZ_DEPLOYMENT }}" = "true" ]; then
-            cat >> "${{ env.INSTALL_DIR }}/install-config.yaml" <<EOF_AZ_COMMENT
-
-# Warning: input single_az_deployment=true but this install-config.yaml may not fully
-# reflect a single-AZ deployment (e.g. controlPlane replicas are still 3).
-# Further customization might be needed for a true single-AZ setup.
-EOF_AZ_COMMENT
-          fi
-
-          # Backup the install config
-          cp "${{ env.INSTALL_DIR }}/install-config.yaml" "${{ env.ARTIFACTS_DIR }}/install-config.yaml"
-          echo "DEBUG: install-config.yaml content:"
-          cat "${{ env.INSTALL_DIR }}/install-config.yaml"
+          # Run the script to generate install-config.yaml
+          ./aws/generate-install-config.sh || { handle_error $? "Failed to generate install-config.yaml" "Prepare OpenShift installer"; }
 
       - name: Run OpenShift installer
         run: |
-          echo "Running OpenShift installer..."
+          echo "Running OpenShift installer step..."
+          chmod +x ./aws/run-openshift-installer.sh
 
-          # Run the installer
-          cd ${{ env.INSTALL_DIR }}
-          openshift-install create cluster --dir=. --log-level=debug &> ${{ env.ARTIFACTS_DIR }}/install.log || { handle_error $? "OpenShift installation failed during 'create cluster'" "Run OpenShift installer"; }
+          # Required by the script and handle_error if it's sourced within the script
+          # However, handle_error is sourced in a previous step and should be available.
+          export INSTALL_DIR="${{ env.INSTALL_DIR }}"
+          export ARTIFACTS_DIR="${{ env.ARTIFACTS_DIR }}"
+          # CLUSTER_NAME is already in the global env, so accessible by handle_error
 
-          # Check if kubeconfig exists
-          if [ ! -f "${{ env.INSTALL_DIR }}/auth/kubeconfig" ]; then
-            handle_error 1 "Kubeconfig not found after installation" "Run OpenShift installer"
-          fi
+          ./aws/run-openshift-installer.sh || { exit_code=$?; echo "aws/run-openshift-installer.sh failed with exit code ${exit_code}."; handle_error ${exit_code} "Execution of aws/run-openshift-installer.sh failed" "Run OpenShift installer"; }
 
-          echo "OpenShift cluster installed successfully."
+          echo "OpenShift cluster installation step completed."
 
       # Verification and kubeconfig storage
       - name: Verify cluster and store kubeconfig
         run: |
-          echo "Verifying cluster and storing kubeconfig..."
+          echo "Verifying cluster and storing kubeconfig by calling external script..."
+          chmod +x ./aws/verify-cluster-and-store-kubeconfig.sh
 
-          # Set KUBECONFIG
-          export KUBECONFIG="${{ env.INSTALL_DIR }}/auth/kubeconfig"
-          export KUBECONFIG_FILEPATH="${{ env.INSTALL_DIR }}/auth/kubeconfig" # For the script below
+          # Set environment variables for the script
+          # These are read by aws/verify-cluster-and-store-kubeconfig.sh
+          export INSTALL_DIR="${{ env.INSTALL_DIR }}"
+          export ARTIFACTS_DIR="${{ env.ARTIFACTS_DIR }}"
+          export KUBECONFIG_FILEPATH="${{ env.INSTALL_DIR }}/auth/kubeconfig" # Used by the script
 
-          # Verify cluster API accessibility (with retries)
-          for i in {1..5}; do
-            if oc cluster-info &>/dev/null; then
-              echo "Cluster API is accessible."
-              break
-            fi
-            echo "Waiting for cluster API to be accessible..."
-            sleep 10
-          done
+          # Vault related variables are expected to be in the environment from 'Configure Vault connection' step
+          # or set to GITHUB_ENV. The script will directly use VAULT_SERVICE, VAULT_ADDR, VAULT_TOKEN, VAULT_NAMESPACE.
+          # CLUSTER_NAME is available from the global workflow env.
 
-          # Check node status (with retries)
-          for i in {1..5}; do
-            if oc get nodes &>/dev/null; then
-              echo "Node status is accessible."
-              break
-            fi
-            echo "Waiting for node status to be accessible..."
-            sleep 10
-          done
-
-          # Store kubeconfig in Vault (conditionally)
-          if [ "${{ env.VAULT_SERVICE }}" != "hcp-vault-secrets" ]; then
-            echo "Attempting to store kubeconfig in Vault (${{ env.VAULT_SERVICE }})..."
-
-            cat > "${{ env.ARTIFACTS_DIR }}/store-kubeconfig.sh" <<EOF_STORE_KUBECONFIG
-#!/bin/bash
-set -eo pipefail
-
-# This script expects the following environment variables to be set:
-# VAULT_ADDR
-# VAULT_TOKEN
-# VAULT_NAMESPACE (optional, defaults to Vault's behavior if not set)
-# CLUSTER_NAME
-# KUBECONFIG_FILEPATH
-
-echo "--- store-kubeconfig.sh execution environment (some values may be masked) ---"
-echo "VAULT_ADDR: '\${VAULT_ADDR}'"
-echo "VAULT_TOKEN: Present (masked for security)" # Mask actual token value
-echo "VAULT_NAMESPACE: '\${VAULT_NAMESPACE:-not set, using Vault default}'"
-echo "CLUSTER_NAME: '\${CLUSTER_NAME}'"
-echo "KUBECONFIG_FILEPATH: '\${KUBECONFIG_FILEPATH}'"
-echo "--------------------------------------------------------------------------"
-
-if [ -z "\${VAULT_ADDR}" ]; then echo "Error (store-kubeconfig.sh): VAULT_ADDR is not set."; exit 1; fi
-if [ -z "\${VAULT_TOKEN}" ]; then echo "Error (store-kubeconfig.sh): VAULT_TOKEN is not set."; exit 1; fi
-if [ -z "\${CLUSTER_NAME}" ]; then echo "Error (store-kubeconfig.sh): CLUSTER_NAME is not set."; exit 1; fi
-if [ -z "\${KUBECONFIG_FILEPATH}" ] || [ ! -f "\${KUBECONFIG_FILEPATH}" ]; then
-  echo "Error (store-kubeconfig.sh): KUBECONFIG_FILEPATH ('\${KUBECONFIG_FILEPATH}') is not set or kubeconfig file does not exist."
-  exit 1
-fi
-
-echo "Storing kubeconfig from '\${KUBECONFIG_FILEPATH}' for cluster '\${CLUSTER_NAME}' in Vault."
-echo "Target Vault Details - Addr: '\${VAULT_ADDR}', Namespace: '\${VAULT_NAMESPACE:-not set, using Vault default}'"
-
-# The vault CLI will pick up VAULT_ADDR, VAULT_TOKEN, and VAULT_NAMESPACE from the environment.
-vault kv put "openshift/aws/\${CLUSTER_NAME}/kubeconfig" value=@"\${KUBECONFIG_FILEPATH}"
-echo "Kubeconfig stored successfully in Vault."
-EOF_STORE_KUBECONFIG
-            chmod +x "${{ env.ARTIFACTS_DIR }}/store-kubeconfig.sh"
-
-            echo "Executing store-kubeconfig.sh..."
-            # Essential variables (VAULT_ADDR, VAULT_TOKEN, VAULT_NAMESPACE, CLUSTER_NAME)
-            # are expected to be in the environment of this 'run' step,
-            # typically set via 'env:' context or 'GITHUB_ENV' from previous steps.
-            # KUBECONFIG_FILEPATH is exported locally within this 'run' step.
-            
-            # Pre-execution check for critical env vars in the main workflow step
-            if [ -z "${{ env.VAULT_ADDR }}" ]; then echo "Critical Error (Workflow): env.VAULT_ADDR is not set before calling store-kubeconfig.sh. Check Vault login step."; exit 1; fi
-            if [ -z "${{ env.VAULT_TOKEN }}" ]; then echo "Critical Error (Workflow): env.VAULT_TOKEN is not set before calling store-kubeconfig.sh. Check Vault login step."; exit 1; fi
-            # CLUSTER_NAME is from inputs.cluster-name, should be available via env.CLUSTER_NAME if mapped in step's env block or globally.
-            if [ -z "${{ env.CLUSTER_NAME }}" ]; then echo "Critical Error (Workflow): env.CLUSTER_NAME is not set."; exit 1; fi
-
-
-            "${{ env.ARTIFACTS_DIR }}/store-kubeconfig.sh" || {
-              echo "Warning: Failed to store kubeconfig in Vault. The cluster is still accessible using the kubeconfig in the artifacts."
-            }
+          # Ensure the error_handler.sh script is sourced if not already globally available
+          # This is important if verify-cluster-and-store-kubeconfig.sh calls handle_error
+          if [ -f "${{ env.ARTIFACTS_DIR }}/error_handler.sh" ]; then
+            source "${{ env.ARTIFACTS_DIR }}/error_handler.sh"
           else
-            echo "Kubeconfig storage in Vault is skipped for HCP Vault Secrets service."
-            echo "Kubeconfig is available in the run artifacts and was copied to: ${{ env.ARTIFACTS_DIR }}/auth/kubeconfig (if installation succeeded)"
+            echo "Error: error_handler.sh not found. Critical for script error handling."
+            exit 1
           fi
+          
+          ./aws/verify-cluster-and-store-kubeconfig.sh || { exit_code=$?; echo "aws/verify-cluster-and-store-kubeconfig.sh failed with exit code ${exit_code}."; handle_error ${exit_code} "Execution of aws/verify-cluster-and-store-kubeconfig.sh failed" "Verify cluster and store kubeconfig"; }
 
-          echo "Cluster verification complete and kubeconfig handling processed."
+          echo "Cluster verification and kubeconfig storage step completed."
 
       - name: Summary
         if: always()
