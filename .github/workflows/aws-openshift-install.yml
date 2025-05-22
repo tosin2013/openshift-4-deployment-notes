@@ -563,11 +563,7 @@ EOF_AZ_COMMENT
 
           # Run the installer
           cd ${{ env.INSTALL_DIR }}
-          openshift-install create cluster --dir=. --log-level=debug &> ${{ env.ARTIFACTS_DIR }}/install.log || {
-            echo "Installation failed. Check the logs for details."
-            cat ${{ env.ARTIFACTS_DIR }}/install.log
-            handle_error 1 "Failed to install OpenShift cluster" "Run OpenShift installer"
-          }
+          openshift-install create cluster --dir=. --log-level=debug &> ${{ env.ARTIFACTS_DIR }}/install.log || { handle_error $? "OpenShift installation failed during 'create cluster'" "Run OpenShift installer"; }
 
           # Check if kubeconfig exists
           if [ ! -f "${{ env.INSTALL_DIR }}/auth/kubeconfig" ]; then
