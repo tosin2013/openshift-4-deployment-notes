@@ -108,6 +108,42 @@ jobs:
           exec > >(tee -a ${{ env.ARTIFACTS_DIR }}/installation.log) 2>&1
           echo "Installation started at $(date)"
 
+      # Error handling wrapper
+      - name: Set up error handling
+        run: |
+          set -eo pipefail
+          # Create error handling function
+          cat > ${{ env.ARTIFACTS_DIR }}/error_handler.sh << 'EOF'
+          #!/bin/bash
+
+          function handle_error() {
+            local exit_code=$1
+            local error_message=$2
+            local step_name=$3
+
+            echo "Error occurred in step: ${step_name}"
+            echo "Exit code: ${exit_code}"
+            echo "Error message: ${error_message}"
+
+            # Log error details
+            echo "$(date): ERROR in ${step_name} - ${error_message}" >> /tmp/artifacts/error.log
+
+            # Provide cleanup instructions
+            echo "Manual cleanup may be required:"
+            echo "1. Delete any AWS resources created with the cluster name: ${CLUSTER_NAME}"
+            echo "2. Check the AWS console for any remaining resources"
+
+            # Upload logs as artifacts
+            echo "::error::Installation failed in step: ${step_name}. See logs for details."
+
+            exit ${exit_code}
+          }
+
+          export -f handle_error
+          EOF
+
+          chmod +x ${{ env.ARTIFACTS_DIR }}/error_handler.sh
+
       - name: Validate input parameters
         run: |
           set -eo pipefail
@@ -146,47 +182,11 @@ jobs:
 
           echo "Required packages installed successfully."
 
-      # Error handling wrapper
-      - name: Set up error handling
-        run: |
-          set -eo pipefail
-          # Create error handling function
-          cat > ${{ env.ARTIFACTS_DIR }}/error_handler.sh << 'EOF'
-          #!/bin/bash
-
-          function handle_error() {
-            local exit_code=$1
-            local error_message=$2
-            local step_name=$3
-
-            echo "Error occurred in step: ${step_name}"
-            echo "Exit code: ${exit_code}"
-            echo "Error message: ${error_message}"
-
-            # Log error details
-            echo "$(date): ERROR in ${step_name} - ${error_message}" >> /tmp/artifacts/error.log
-
-            # Provide cleanup instructions
-            echo "Manual cleanup may be required:"
-            echo "1. Delete any AWS resources created with the cluster name: ${CLUSTER_NAME}"
-            echo "2. Check the AWS console for any remaining resources"
-
-            # Upload logs as artifacts
-            echo "::error::Installation failed in step: ${step_name}. See logs for details."
-
-            exit ${exit_code}
-          }
-
-          export -f handle_error
-          EOF
-
-          chmod +x ${{ env.ARTIFACTS_DIR }}/error_handler.sh
-          source ${{ env.ARTIFACTS_DIR }}/error_handler.sh
-
       # Vault integration for secret retrieval
       - name: Configure Vault connection
         run: |
           set -eo pipefail
+          source ${{ env.ARTIFACTS_DIR }}/error_handler.sh
           # Check if using HCP Vault Secrets (cloud-hosted)
           if [ ! -z "${{ secrets.HCP_CLIENT_ID }}" ] && [ ! -z "${{ secrets.HCP_CLIENT_SECRET }}" ] && [ ! -z "${{ secrets.HCP_VAULT_SECRETS_APP }}" ]; then
             echo "Using HCP Vault Secrets (cloud-hosted)"
@@ -250,6 +250,7 @@ jobs:
         id: vault-secrets
         run: |
           set -eo pipefail
+          source ${{ env.ARTIFACTS_DIR }}/error_handler.sh # Added for robustness, though direct calls are in subsequent steps
           # Ensure shell variables set by the 'Configure Vault connection' step are available
           # These are VAULT_SERVICE, HCP_CLIENT_ID, HCP_CLIENT_SECRET, HCP_VAULT_SECRETS_APP, VAULT_URL, VAULT_TOKEN, VAULT_NAMESPACE
 
@@ -314,6 +315,7 @@ jobs:
       - name: Check Vault connection
         run: |
           set -eo pipefail
+          source ${{ env.ARTIFACTS_DIR }}/error_handler.sh # Already added in previous attempt, confirmed correct
           if [ "${{ steps.vault-secrets.outcome }}" != "success" ]; then
             echo "Failed to connect to Vault server or retrieve secrets."
             echo "Please check the following based on your VAULT_SERVICE configuration ('${VAULT_SERVICE}'):"
@@ -346,6 +348,7 @@ jobs:
       - name: Validate Vault secrets
         run: |
           set -eo pipefail
+          source ${{ env.ARTIFACTS_DIR }}/error_handler.sh
           echo "Validating secrets retrieved from Vault..."
 
           # Check if pull secret was retrieved
@@ -379,6 +382,7 @@ jobs:
       - name: Store secrets securely
         run: |
           set -eo pipefail
+          source ${{ env.ARTIFACTS_DIR }}/error_handler.sh # Already present and correct
           echo "Storing secrets securely by calling external script ./aws/store-secrets.sh..."
           chmod +x ./aws/store-secrets.sh
 
@@ -410,6 +414,7 @@ jobs:
       - name: Configure AWS CLI
         run: |
           set -eo pipefail
+          source ${{ env.ARTIFACTS_DIR }}/error_handler.sh
           echo "Configuring AWS CLI..."
 
           # Make the script executable
@@ -429,6 +434,7 @@ jobs:
       - name: Install OpenShift packages
         run: |
           set -eo pipefail
+          source ${{ env.ARTIFACTS_DIR }}/error_handler.sh
           echo "Installing OpenShift packages..."
 
           # Make the script executable
@@ -458,6 +464,7 @@ jobs:
       - name: Prepare OpenShift installer
         run: |
           set -eo pipefail
+          source ${{ env.ARTIFACTS_DIR }}/error_handler.sh
           echo "Preparing OpenShift installer..."
 
           # Make the script executable
@@ -483,6 +490,7 @@ jobs:
       - name: Run OpenShift installer
         run: |
           set -eo pipefail
+          source ${{ env.ARTIFACTS_DIR }}/error_handler.sh
           echo "Running OpenShift installer step..."
           chmod +x ./aws/run-openshift-installer.sh
 
@@ -500,6 +508,7 @@ jobs:
       - name: Verify cluster and store kubeconfig
         run: |
           set -eo pipefail
+          source ${{ env.ARTIFACTS_DIR }}/error_handler.sh # Already present and correct
           echo "Verifying cluster and storing kubeconfig by calling external script..."
           chmod +x ./aws/verify-cluster-and-store-kubeconfig.sh
 
