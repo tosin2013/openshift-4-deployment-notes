@@ -1,0 +1,597 @@
+name: AWS OpenShift 4.18 Installation
+
+# This workflow automates the installation of OpenShift 4.18 on AWS
+# It uses HashiCorp Vault for secure storage of sensitive information
+#
+# For self-hosted Vault, required GitHub secrets:
+# - VAULT_TOKEN: Token for authenticating with HashiCorp Vault
+# - VAULT_ADDR: URL of the HashiCorp Vault server (default: http://127.0.0.1:8200 if not provided)
+#
+# For HashiCorp Cloud Platform (HCP) Vault, required GitHub secrets:
+# - HCP_VAULT_TOKEN: Token for authenticating with HCP Vault (if using token auth)
+# - HCP_ORGANIZATION: Your HCP organization name
+# - HCP_PROJECT: Your HCP project name
+# - HCP_VAULT_CLUSTER: Your Vault cluster name
+# - HCP_VAULT_REGION: Region of your HCP Vault cluster (e.g., us-west-2)
+
+on:
+  workflow_dispatch:
+    inputs:
+      cluster_name:
+        description: 'Name of the OpenShift cluster'
+        required: true
+        type: string
+      base_domain:
+        description: 'Base domain for the cluster'
+        required: true
+        type: string
+      aws_region:
+        description: 'AWS region for deployment'
+        required: true
+        type: string
+        default: 'us-east-1'
+      control_plane_instance_type:
+        description: 'Instance type for control plane nodes'
+        required: true
+        type: string
+        default: 'm5.xlarge'
+      compute_instance_type:
+        description: 'Instance type for compute nodes'
+        required: true
+        type: string
+        default: 'm5.large'
+      compute_nodes:
+        description: 'Number of compute nodes'
+        required: true
+        type: number
+        default: 3
+      network_type:
+        description: 'Network configuration type'
+        required: true
+        type: choice
+        options:
+          - new_vpc
+          - existing_vpc
+        default: 'new_vpc'
+      existing_vpc_id:
+        description: 'Existing VPC ID (if using existing VPC)'
+        required: false
+        type: string
+      existing_subnet_ids:
+        description: 'Existing subnet IDs (if using existing VPC, comma-separated)'
+        required: false
+        type: string
+      openshift_version:
+        description: 'OpenShift version to install'
+        required: true
+        type: string
+        default: '4.18'
+      single_az_deployment:
+        description: 'Deploy all nodes in a single availability zone'
+        required: false
+        type: boolean
+        default: false
+
+env:
+  CLUSTER_NAME: ${{ github.event.inputs.cluster_name }}
+  BASE_DOMAIN: ${{ github.event.inputs.base_domain }}
+  AWS_REGION: ${{ github.event.inputs.aws_region }}
+  CONTROL_PLANE_INSTANCE_TYPE: ${{ github.event.inputs.control_plane_instance_type }}
+  COMPUTE_INSTANCE_TYPE: ${{ github.event.inputs.compute_instance_type }}
+  COMPUTE_NODES: ${{ github.event.inputs.compute_nodes }}
+  NETWORK_TYPE: ${{ github.event.inputs.network_type }}
+  EXISTING_VPC_ID: ${{ github.event.inputs.existing_vpc_id }}
+  EXISTING_SUBNET_IDS: ${{ github.event.inputs.existing_subnet_ids }}
+  OPENSHIFT_VERSION: ${{ github.event.inputs.openshift_version }}
+  SINGLE_AZ_DEPLOYMENT: ${{ github.event.inputs.single_az_deployment }}
+  INSTALL_DIR: "/tmp/cluster"
+  ARTIFACTS_DIR: "/tmp/artifacts"
+
+jobs:
+  install-openshift:
+    name: Install OpenShift on AWS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up environment
+        run: |
+          echo "Setting up environment for OpenShift ${{ env.OPENSHIFT_VERSION }} installation on AWS"
+          echo "Cluster name: ${{ env.CLUSTER_NAME }}"
+          echo "Base domain: ${{ env.BASE_DOMAIN }}"
+          echo "AWS region: ${{ env.AWS_REGION }}"
+
+          # Create directories
+          mkdir -p ${{ env.INSTALL_DIR }}
+          mkdir -p ${{ env.ARTIFACTS_DIR }}
+
+          # Set up logging
+          exec > >(tee -a ${{ env.ARTIFACTS_DIR }}/installation.log) 2>&1
+          echo "Installation started at $(date)"
+
+      - name: Validate input parameters
+        run: |
+          # Validate cluster name
+          if [[ ! ${{ env.CLUSTER_NAME }} =~ ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$ ]]; then
+            echo "Error: Cluster name must consist of lower case alphanumeric characters or '-', and must start and end with an alphanumeric character."
+            exit 1
+          fi
+
+          # Validate network configuration
+          if [[ "${{ env.NETWORK_TYPE }}" == "existing_vpc" ]]; then
+            if [[ -z "${{ env.EXISTING_VPC_ID }}" ]]; then
+              echo "Error: Existing VPC ID is required when using existing VPC."
+              exit 1
+            fi
+            if [[ -z "${{ env.EXISTING_SUBNET_IDS }}" ]]; then
+              echo "Error: Existing subnet IDs are required when using existing VPC."
+              exit 1
+            fi
+          fi
+
+          echo "Input parameters validated successfully."
+
+      - name: Install required packages
+        run: |
+          echo "Installing required packages..."
+          sudo apt-get update
+          sudo apt-get install -y jq unzip curl
+
+          # Check if packages were installed successfully
+          if ! command -v jq &> /dev/null || ! command -v unzip &> /dev/null || ! command -v curl &> /dev/null; then
+            echo "Error: Failed to install required packages."
+            exit 1
+          fi
+
+          echo "Required packages installed successfully."
+
+      # Error handling wrapper
+      - name: Set up error handling
+        run: |
+          # Create error handling function
+          cat > ${{ env.ARTIFACTS_DIR }}/error_handler.sh << 'EOF'
+          #!/bin/bash
+
+          function handle_error() {
+            local exit_code=$1
+            local error_message=$2
+            local step_name=$3
+
+            echo "Error occurred in step: ${step_name}"
+            echo "Exit code: ${exit_code}"
+            echo "Error message: ${error_message}"
+
+            # Log error details
+            echo "$(date): ERROR in ${step_name} - ${error_message}" >> /tmp/artifacts/error.log
+
+            # Provide cleanup instructions
+            echo "Manual cleanup may be required:"
+            echo "1. Delete any AWS resources created with the cluster name: ${CLUSTER_NAME}"
+            echo "2. Check the AWS console for any remaining resources"
+
+            # Upload logs as artifacts
+            echo "::error::Installation failed in step: ${step_name}. See logs for details."
+
+            exit ${exit_code}
+          }
+
+          export -f handle_error
+          EOF
+
+          chmod +x ${{ env.ARTIFACTS_DIR }}/error_handler.sh
+          source ${{ env.ARTIFACTS_DIR }}/error_handler.sh
+
+      # Vault integration for secret retrieval
+      - name: Configure Vault connection
+        run: |
+          # Check if using HCP Vault Secrets (cloud-hosted)
+          if [ ! -z "${{ secrets.HCP_CLIENT_ID }}" ] && [ ! -z "${{ secrets.HCP_CLIENT_SECRET }}" ] && [ ! -z "${{ secrets.HCP_VAULT_SECRETS_APP }}" ]; then
+            echo "Using HCP Vault Secrets (cloud-hosted)"
+            echo "VAULT_SERVICE=hcp-vault-secrets" >> $GITHUB_ENV
+            echo "HCP_CLIENT_ID=${{ secrets.HCP_CLIENT_ID }}" >> $GITHUB_ENV
+            echo "HCP_CLIENT_SECRET=${{ secrets.HCP_CLIENT_SECRET }}" >> $GITHUB_ENV
+            echo "HCP_ORGANIZATION=${{ secrets.HCP_ORGANIZATION }}" >> $GITHUB_ENV
+            echo "HCP_PROJECT=${{ secrets.HCP_PROJECT }}" >> $GITHUB_ENV
+            echo "HCP_VAULT_SECRETS_APP=${{ secrets.HCP_VAULT_SECRETS_APP }}" >> $GITHUB_ENV
+
+          # Check if using HCP Vault Dedicated (self-hosted)
+          elif [ ! -z "${{ secrets.HCP_ORGANIZATION }}" ] && [ ! -z "${{ secrets.HCP_PROJECT }}" ] && [ ! -z "${{ secrets.HCP_VAULT_CLUSTER }}" ]; then
+            echo "Using HCP Vault Dedicated (self-hosted)"
+            echo "VAULT_SERVICE=hcp-vault-dedicated" >> $GITHUB_ENV
+
+            # Verify HCP Vault region is provided
+            if [ -z "${{ secrets.HCP_VAULT_REGION }}" ]; then
+              echo "HCP_VAULT_REGION is not set, using default region: us-west-2"
+              HCP_REGION="us-west-2"
+            else
+              HCP_REGION="${{ secrets.HCP_VAULT_REGION }}"
+            fi
+
+            # Construct HCP Vault URL
+            HCP_VAULT_URL="https://${{ secrets.HCP_VAULT_CLUSTER }}.vault.${HCP_REGION}.hashicorp.cloud:8200"
+            echo "VAULT_URL=${HCP_VAULT_URL}" >> $GITHUB_ENV
+            echo "Using HCP Vault Dedicated at: ${HCP_VAULT_URL}"
+
+            # Check authentication method
+            if [ ! -z "${{ secrets.HCP_VAULT_TOKEN }}" ]; then
+              echo "Using token authentication for HCP Vault Dedicated"
+              echo "VAULT_TOKEN=${{ secrets.HCP_VAULT_TOKEN }}" >> $GITHUB_ENV
+            else
+              handle_error 1 "HCP_VAULT_TOKEN secret is not set" "Configure Vault connection"
+            fi
+
+            # Set HCP namespace
+            echo "VAULT_NAMESPACE=admin" >> $GITHUB_ENV
+          else
+            echo "Using self-hosted Vault"
+            echo "VAULT_SERVICE=self-hosted" >> $GITHUB_ENV
+
+            # Set default Vault address if not provided
+            if [ -z "${{ secrets.VAULT_ADDR }}" ]; then
+              echo "VAULT_URL=http://127.0.0.1:8200" >> $GITHUB_ENV
+              echo "Using default Vault address: http://127.0.0.1:8200"
+            else
+              echo "VAULT_URL=${{ secrets.VAULT_ADDR }}" >> $GITHUB_ENV
+              echo "Using provided Vault address: ${{ secrets.VAULT_ADDR }}"
+            fi
+
+            # Verify Vault token is provided
+            if [ -z "${{ secrets.VAULT_TOKEN }}" ]; then
+              handle_error 1 "VAULT_TOKEN secret is not set" "Configure Vault connection"
+            else
+              echo "VAULT_TOKEN=${{ secrets.VAULT_TOKEN }}" >> $GITHUB_ENV
+            fi
+          fi
+
+      - name: Retrieve secrets from HashiCorp Vault
+        id: vault-secrets
+        run: |
+          if [ "${{ env.VAULT_SERVICE }}" = "hcp-vault-secrets" ]; then
+            echo "Retrieving secrets from HCP Vault Secrets..."
+
+            # Install HCP CLI if not available
+            if ! command -v hcp &> /dev/null; then
+              echo "Installing HCP CLI..."
+              curl -fsSL https://releases.hashicorp.com/hcp/0.9.1/hcp_0.9.1_linux_amd64.zip -o hcp.zip
+              unzip hcp.zip
+              sudo mv hcp /usr/local/bin/
+              rm hcp.zip
+            fi
+
+            # Authenticate with HCP
+            hcp auth login --client-id "${{ env.HCP_CLIENT_ID }}" --client-secret "${{ env.HCP_CLIENT_SECRET }}"
+
+            # Retrieve secrets from HCP Vault Secrets
+            PULL_SECRET=$(hcp vault-secrets secrets open pull-secret --app="${{ env.HCP_VAULT_SECRETS_APP }}" --format=json | jq -r '.static_version.value')
+            SSH_PRIVATE_KEY=$(hcp vault-secrets secrets open ssh-private-key --app="${{ env.HCP_VAULT_SECRETS_APP }}" --format=json | jq -r '.static_version.value')
+            SSH_PUBLIC_KEY=$(hcp vault-secrets secrets open ssh-public-key --app="${{ env.HCP_VAULT_SECRETS_APP }}" --format=json | jq -r '.static_version.value')
+            AWS_ACCESS_KEY_ID=$(hcp vault-secrets secrets open aws-access-key-id --app="${{ env.HCP_VAULT_SECRETS_APP }}" --format=json | jq -r '.static_version.value')
+            AWS_SECRET_ACCESS_KEY=$(hcp vault-secrets secrets open aws-secret-access-key --app="${{ env.HCP_VAULT_SECRETS_APP }}" --format=json | jq -r '.static_version.value')
+
+            # Set outputs
+            echo "pull_secret=${PULL_SECRET}" >> $GITHUB_OUTPUT
+            echo "private_key=${SSH_PRIVATE_KEY}" >> $GITHUB_OUTPUT
+            echo "public_key=${SSH_PUBLIC_KEY}" >> $GITHUB_OUTPUT
+            echo "aws_access_key_id=${AWS_ACCESS_KEY_ID}" >> $GITHUB_OUTPUT
+            echo "aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}" >> $GITHUB_OUTPUT
+
+          else
+            echo "Retrieving secrets from HCP Vault Dedicated or self-hosted Vault..."
+
+            # Use traditional Vault action for HCP Vault Dedicated and self-hosted
+            # Install Vault CLI if not available
+            if ! command -v vault &> /dev/null; then
+              echo "Installing Vault CLI..."
+              curl -fsSL https://releases.hashicorp.com/vault/1.15.2/vault_1.15.2_linux_amd64.zip -o vault.zip
+              unzip vault.zip
+              sudo mv vault /usr/local/bin/
+              rm vault.zip
+            fi
+
+            # Set Vault environment
+            export VAULT_ADDR="${{ env.VAULT_URL }}"
+            export VAULT_TOKEN="${{ env.VAULT_TOKEN }}"
+            export VAULT_NAMESPACE="${{ env.VAULT_NAMESPACE }}"
+
+            # Retrieve secrets using Vault CLI
+            PULL_SECRET=$(vault kv get -field=pull_secret aws/pullsecret)
+            SSH_PRIVATE_KEY=$(vault kv get -field=private_key aws/sshkey)
+            SSH_PUBLIC_KEY=$(vault kv get -field=public_key aws/sshkey)
+            AWS_ACCESS_KEY_ID=$(vault kv get -field=aws_access_key_id aws/credentials)
+            AWS_SECRET_ACCESS_KEY=$(vault kv get -field=aws_secret_access_key aws/credentials)
+
+            # Set outputs
+            echo "pull_secret=${PULL_SECRET}" >> $GITHUB_OUTPUT
+            echo "private_key=${SSH_PRIVATE_KEY}" >> $GITHUB_OUTPUT
+            echo "public_key=${SSH_PUBLIC_KEY}" >> $GITHUB_OUTPUT
+            echo "aws_access_key_id=${AWS_ACCESS_KEY_ID}" >> $GITHUB_OUTPUT
+            echo "aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}" >> $GITHUB_OUTPUT
+          fi
+        continue-on-error: true
+
+      - name: Check Vault connection
+        run: |
+          if [ "${{ steps.vault-secrets.outcome }}" != "success" ]; then
+            echo "Failed to connect to Vault server at ${{ env.VAULT_URL }}"
+            echo "Please check:"
+
+            if [ ! -z "${{ secrets.HCP_ORGANIZATION }}" ]; then
+              echo "For HCP Vault:"
+              echo "1. The HCP_ORGANIZATION, HCP_PROJECT, HCP_VAULT_CLUSTER, and HCP_VAULT_REGION secrets are correctly set"
+              echo "2. The HCP_VAULT_TOKEN secret is valid and has not expired"
+              echo "3. The HCP Vault cluster is running and accessible from GitHub Actions"
+            else
+              echo "For self-hosted Vault:"
+              echo "1. The VAULT_ADDR secret is correctly set"
+              echo "2. The VAULT_TOKEN secret is valid and has not expired"
+              echo "3. The Vault server is running and accessible from GitHub Actions"
+            fi
+
+            echo "4. The required secret paths exist in Vault"
+            handle_error 1 "Failed to connect to Vault server" "Retrieve secrets from HashiCorp Vault"
+          fi
+
+      - name: Validate Vault secrets
+        run: |
+          echo "Validating secrets retrieved from Vault..."
+
+          # Check if pull secret was retrieved
+          if [ -z "${{ steps.vault-secrets.outputs.pull_secret }}" ]; then
+            handle_error 1 "Failed to retrieve pull secret from Vault" "Validate Vault secrets"
+          fi
+
+          # Check if SSH keys were retrieved
+          if [ -z "${{ steps.vault-secrets.outputs.private_key }}" ] || [ -z "${{ steps.vault-secrets.outputs.public_key }}" ]; then
+            handle_error 1 "Failed to retrieve SSH keys from Vault" "Validate Vault secrets"
+          fi
+
+          # Check if AWS credentials were retrieved
+          if [ -z "${{ steps.vault-secrets.outputs.aws_access_key_id }}" ] || [ -z "${{ steps.vault-secrets.outputs.aws_secret_access_key }}" ]; then
+            handle_error 1 "Failed to retrieve AWS credentials from Vault" "Validate Vault secrets"
+          fi
+
+          echo "All required secrets were retrieved successfully."
+
+      - name: Mask sensitive values
+        run: |
+          # Mask sensitive values in logs
+          echo "::add-mask::${{ steps.vault-secrets.outputs.pull_secret }}"
+          echo "::add-mask::${{ steps.vault-secrets.outputs.private_key }}"
+          echo "::add-mask::${{ steps.vault-secrets.outputs.aws_access_key_id }}"
+          echo "::add-mask::${{ steps.vault-secrets.outputs.aws_secret_access_key }}"
+
+          echo "Sensitive values have been masked in logs."
+
+      - name: Store secrets securely
+        run: |
+          # Store pull secret
+          echo '${{ steps.vault-secrets.outputs.pull_secret }}' > ${{ env.INSTALL_DIR }}/pull-secret.json
+          chmod 600 ${{ env.INSTALL_DIR }}/pull-secret.json
+
+          # Store SSH keys
+          mkdir -p $HOME/.ssh
+          echo '${{ steps.vault-secrets.outputs.private_key }}' > $HOME/.ssh/cluster-key
+          echo '${{ steps.vault-secrets.outputs.public_key }}' > $HOME/.ssh/cluster-key.pub
+          chmod 600 $HOME/.ssh/cluster-key
+          chmod 644 $HOME/.ssh/cluster-key.pub
+
+          # Set up SSH agent
+          eval "$(ssh-agent -s)"
+          ssh-add $HOME/.ssh/cluster-key
+
+          # Store AWS credentials
+          mkdir -p $HOME/.aws
+          cat > $HOME/.aws/credentials << EOF
+          [default]
+          aws_access_key_id = ${{ steps.vault-secrets.outputs.aws_access_key_id }}
+          aws_secret_access_key = ${{ steps.vault-secrets.outputs.aws_secret_access_key }}
+          region = ${{ env.AWS_REGION }}
+          EOF
+          chmod 600 $HOME/.aws/credentials
+
+          # Verify files were created successfully
+          if [ ! -f "${{ env.INSTALL_DIR }}/pull-secret.json" ] || [ ! -f "$HOME/.ssh/cluster-key" ] || [ ! -f "$HOME/.aws/credentials" ]; then
+            handle_error 1 "Failed to store secrets in files" "Store secrets securely"
+          fi
+
+          echo "Secrets stored securely in the environment."
+
+      # AWS CLI configuration
+      - name: Configure AWS CLI
+        run: |
+          echo "Configuring AWS CLI..."
+
+          # Make the script executable
+          chmod +x ./aws/configure-aws-cli.sh
+
+          # Run the script with AWS credentials
+          ./aws/configure-aws-cli.sh --install ${{ steps.vault-secrets.outputs.aws_access_key_id }} ${{ steps.vault-secrets.outputs.aws_secret_access_key }} ${{ env.AWS_REGION }}
+
+          # Verify AWS CLI is configured correctly
+          if ! aws sts get-caller-identity &>/dev/null; then
+            handle_error 1 "Failed to configure AWS CLI" "Configure AWS CLI"
+          fi
+
+          echo "AWS CLI configured successfully."
+
+      # OpenShift packages installation
+      - name: Install OpenShift packages
+        run: |
+          echo "Installing OpenShift packages..."
+
+          # Make the script executable
+          chmod +x ./pre-steps/configure-openshift-packages.sh
+
+          # Set OpenShift version
+          export VERSION="${{ env.OPENSHIFT_VERSION }}"
+
+          # Run the script
+          ./pre-steps/configure-openshift-packages.sh --install
+
+          # Verify OpenShift CLI and installer are installed
+          if ! command -v oc &>/dev/null || ! command -v openshift-install &>/dev/null; then
+            handle_error 1 "Failed to install OpenShift packages" "Install OpenShift packages"
+          fi
+
+          # Log versions
+          echo "OpenShift CLI version:"
+          oc version
+
+          echo "OpenShift installer version:"
+          openshift-install version
+
+          echo "OpenShift packages installed successfully."
+
+      # OpenShift installer execution
+      - name: Prepare OpenShift installer
+        run: |
+          echo "Preparing OpenShift installer..."
+
+          # Make the script executable
+          chmod +x ./aws/configure-openshift-installer.sh
+
+          # Create install-config.yaml
+          mkdir -p ${{ env.INSTALL_DIR }}
+
+          cat > ${{ env.INSTALL_DIR }}/install-config.yaml << EOF
+          apiVersion: v1
+          baseDomain: ${{ env.BASE_DOMAIN }}
+          metadata:
+            name: ${{ env.CLUSTER_NAME }}
+          platform:
+            aws:
+              region: ${{ env.AWS_REGION }}
+              ${EXISTING_VPC_ID:+"userTags: {Name: ${{ env.CLUSTER_NAME }}"}
+              ${EXISTING_VPC_ID:+"vpcID: ${{ env.EXISTING_VPC_ID }}"}
+              ${EXISTING_SUBNET_IDS:+"subnets: [${{ env.EXISTING_SUBNET_IDS }}]"}
+          compute:
+          - architecture: amd64
+            hyperthreading: Enabled
+            name: worker
+            platform:
+              aws:
+                type: ${{ env.COMPUTE_INSTANCE_TYPE }}
+            replicas: ${{ env.COMPUTE_NODES }}
+          controlPlane:
+            architecture: amd64
+            hyperthreading: Enabled
+            name: master
+            platform:
+              aws:
+                type: ${{ env.CONTROL_PLANE_INSTANCE_TYPE }}
+            replicas: 3
+          networking:
+            networkType: OVNKubernetes
+            clusterNetwork:
+            - cidr: 10.128.0.0/14
+              hostPrefix: 23
+            machineNetwork:
+            - cidr: 10.0.0.0/16
+            serviceNetwork:
+            - 172.30.0.0/16
+          pullSecret: '${{ steps.vault-secrets.outputs.pull_secret }}'
+          sshKey: '${{ steps.vault-secrets.outputs.public_key }}'
+          EOF
+
+          # Backup the install config
+          cp ${{ env.INSTALL_DIR }}/install-config.yaml ${{ env.ARTIFACTS_DIR }}/install-config.yaml
+
+          echo "OpenShift installer prepared successfully."
+
+      - name: Run OpenShift installer
+        run: |
+          echo "Running OpenShift installer..."
+
+          # Run the installer
+          cd ${{ env.INSTALL_DIR }}
+          openshift-install create cluster --dir=. --log-level=debug &> ${{ env.ARTIFACTS_DIR }}/install.log || {
+            echo "Installation failed. Check the logs for details."
+            cat ${{ env.ARTIFACTS_DIR }}/install.log
+            handle_error 1 "Failed to install OpenShift cluster" "Run OpenShift installer"
+          }
+
+          # Check if kubeconfig exists
+          if [ ! -f "${{ env.INSTALL_DIR }}/auth/kubeconfig" ]; then
+            handle_error 1 "Kubeconfig not found after installation" "Run OpenShift installer"
+          fi
+
+          echo "OpenShift cluster installed successfully."
+
+      # Verification and kubeconfig storage
+      - name: Verify cluster and store kubeconfig
+        run: |
+          echo "Verifying cluster and storing kubeconfig..."
+
+          # Set KUBECONFIG
+          export KUBECONFIG="${{ env.INSTALL_DIR }}/auth/kubeconfig"
+
+          # Verify cluster API accessibility
+          if ! oc cluster-info &>/dev/null; then
+            handle_error 1 "Failed to access cluster API" "Verify cluster"
+          fi
+
+          # Check node status
+          echo "Checking node status..."
+          oc get nodes
+
+          # Store kubeconfig in Vault
+          KUBECONFIG_CONTENT=$(cat ${{ env.INSTALL_DIR }}/auth/kubeconfig)
+
+          # Use the same Vault action to store kubeconfig
+          echo "Storing kubeconfig in Vault..."
+
+          # Create a temporary file with the Vault CLI commands
+          cat > ${{ env.ARTIFACTS_DIR }}/store-kubeconfig.sh << 'EOF'
+          #!/bin/bash
+          export VAULT_ADDR="${VAULT_URL}"
+          export VAULT_TOKEN="${VAULT_TOKEN}"
+          export VAULT_NAMESPACE="${VAULT_NAMESPACE}"
+
+          # Store kubeconfig in Vault
+          vault kv put openshift/aws/${{ env.CLUSTER_NAME }}/kubeconfig value="${KUBECONFIG_CONTENT}"
+          EOF
+
+          chmod +x ${{ env.ARTIFACTS_DIR }}/store-kubeconfig.sh
+
+          # Execute the script
+          ${{ env.ARTIFACTS_DIR }}/store-kubeconfig.sh || {
+            echo "Warning: Failed to store kubeconfig in Vault. The cluster is still accessible using the kubeconfig in the artifacts."
+          }
+
+          echo "Cluster verification complete and kubeconfig stored."
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "Installation Summary"
+          echo "===================="
+
+          if [ ${{ job.status }} == "success" ]; then
+            echo "Status: ✅ SUCCESS"
+            echo "OpenShift cluster ${{ env.CLUSTER_NAME }}.${{ env.BASE_DOMAIN }} has been successfully installed."
+            echo ""
+            echo "Access Information:"
+            echo "- Console URL: https://console-openshift-console.apps.${{ env.CLUSTER_NAME }}.${{ env.BASE_DOMAIN }}"
+            echo "- API URL: https://api.${{ env.CLUSTER_NAME }}.${{ env.BASE_DOMAIN }}:6443"
+            echo "- Kubeconfig: Stored in Vault at openshift/aws/${{ env.CLUSTER_NAME }}/kubeconfig"
+          else
+            echo "Status: ❌ FAILED"
+            echo "The installation process encountered errors. Please check the logs for details."
+            echo ""
+            echo "Cleanup Instructions:"
+            echo "1. Delete any AWS resources created with the cluster name: ${{ env.CLUSTER_NAME }}"
+            echo "2. Check the AWS console for any remaining resources"
+          fi
+
+          echo ""
+          echo "Logs and artifacts are available in the GitHub Actions run."
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: installation-artifacts
+          path: ${{ env.ARTIFACTS_DIR }}
+          retention-days: 7
