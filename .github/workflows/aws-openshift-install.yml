@@ -250,9 +250,13 @@ jobs:
         id: vault-secrets
         run: |
           set -eo pipefail
-          source ${{ env.ARTIFACTS_DIR }}/error_handler.sh # Added for robustness, though direct calls are in subsequent steps
-          # Ensure shell variables set by the 'Configure Vault connection' step are available
-          # These are VAULT_SERVICE, HCP_CLIENT_ID, HCP_CLIENT_SECRET, HCP_VAULT_SECRETS_APP, VAULT_URL, VAULT_TOKEN, VAULT_NAMESPACE
+          source ${{ env.ARTIFACTS_DIR }}/error_handler.sh
+
+          echo "Debug: VAULT_SERVICE is '${VAULT_SERVICE}'"
+          echo "Debug: HCP_PROJECT is '${{ env.HCP_PROJECT }}'"
+          echo "Debug: HCP_VAULT_SECRETS_APP is '${{ env.HCP_VAULT_SECRETS_APP }}'"
+          echo "Debug: HCP_CLIENT_ID is '${{ env.HCP_CLIENT_ID }}'"
+
 
           if [ "${VAULT_SERVICE}" = "hcp-vault-secrets" ]; then
             echo "Retrieving secrets from HCP Vault Secrets..."
@@ -267,14 +271,15 @@ jobs:
             fi
 
             # Authenticate with HCP
+            # Ensure HCP_CLIENT_ID and HCP_CLIENT_SECRET are correctly passed from env
             hcp auth login --client-id "${{ env.HCP_CLIENT_ID }}" --client-secret "${{ env.HCP_CLIENT_SECRET }}"
 
-            # Retrieve secrets from HCP Vault Secrets
-            PULL_SECRET=$(hcp vault-secrets secrets open pull_secret --app="${{ env.HCP_VAULT_SECRETS_APP }}" --format=json | jq -r '.static_version.value')
-            SSH_PRIVATE_KEY=$(hcp vault-secrets secrets open ssh_private_key --app="${{ env.HCP_VAULT_SECRETS_APP }}" --format=json | jq -r '.static_version.value')
-            SSH_PUBLIC_KEY=$(hcp vault-secrets secrets open ssh_public_key --app="${{ env.HCP_VAULT_SECRETS_APP }}" --format=json | jq -r '.static_version.value')
-            AWS_ACCESS_KEY_ID=$(hcp vault-secrets secrets open aws_access_key_id --app="${{ env.HCP_VAULT_SECRETS_APP }}" --format=json | jq -r '.static_version.value')
-            AWS_SECRET_ACCESS_KEY=$(hcp vault-secrets secrets open aws_secret_access_key --app="${{ env.HCP_VAULT_SECRETS_APP }}" --format=json | jq -r '.static_version.value')
+            # Retrieve secrets from HCP Vault Secrets, adding --project flag
+            PULL_SECRET=$(hcp vault-secrets secrets open pull_secret --project "${{ env.HCP_PROJECT }}" --app="${{ env.HCP_VAULT_SECRETS_APP }}" --format=json | jq -r '.static_version.value')
+            SSH_PRIVATE_KEY=$(hcp vault-secrets secrets open ssh_private_key --project "${{ env.HCP_PROJECT }}" --app="${{ env.HCP_VAULT_SECRETS_APP }}" --format=json | jq -r '.static_version.value')
+            SSH_PUBLIC_KEY=$(hcp vault-secrets secrets open ssh_public_key --project "${{ env.HCP_PROJECT }}" --app="${{ env.HCP_VAULT_SECRETS_APP }}" --format=json | jq -r '.static_version.value')
+            AWS_ACCESS_KEY_ID=$(hcp vault-secrets secrets open aws_access_key_id --project "${{ env.HCP_PROJECT }}" --app="${{ env.HCP_VAULT_SECRETS_APP }}" --format=json | jq -r '.static_version.value')
+            AWS_SECRET_ACCESS_KEY=$(hcp vault-secrets secrets open aws_secret_access_key --project "${{ env.HCP_PROJECT }}" --app="${{ env.HCP_VAULT_SECRETS_APP }}" --format=json | jq -r '.static_version.value')
 
             # Set outputs
             echo "pull_secret=${PULL_SECRET}" >> $GITHUB_OUTPUT
