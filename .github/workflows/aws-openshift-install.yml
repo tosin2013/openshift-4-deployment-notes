@@ -193,14 +193,16 @@ jobs:
             echo "VAULT_SERVICE=hcp-vault-secrets" >> $GITHUB_ENV
             echo "HCP_CLIENT_ID=${{ secrets.HCP_CLIENT_ID }}" >> $GITHUB_ENV
             echo "HCP_CLIENT_SECRET=${{ secrets.HCP_CLIENT_SECRET }}" >> $GITHUB_ENV
-            echo "HCP_ORGANIZATION=${{ secrets.HCP_ORGANIZATION }}" >> $GITHUB_ENV
-            echo "HCP_PROJECT=${{ secrets.HCP_PROJECT }}" >> $GITHUB_ENV
+            echo "HCP_ORGANIZATION_ID=${{ secrets.HCP_ORGANIZATION }}" >> $GITHUB_ENV # MODIFIED
+            echo "HCP_PROJECT_ID=${{ secrets.HCP_PROJECT }}" >> $GITHUB_ENV       # MODIFIED
             echo "HCP_VAULT_SECRETS_APP=${{ secrets.HCP_VAULT_SECRETS_APP }}" >> $GITHUB_ENV
 
           # Check if using HCP Vault Dedicated (self-hosted)
           elif [ ! -z "${{ secrets.HCP_ORGANIZATION }}" ] && [ ! -z "${{ secrets.HCP_PROJECT }}" ] && [ ! -z "${{ secrets.HCP_VAULT_CLUSTER }}" ]; then
             echo "Using HCP Vault Dedicated (self-hosted)"
             echo "VAULT_SERVICE=hcp-vault-dedicated" >> $GITHUB_ENV
+            echo "HCP_ORGANIZATION_ID=${{ secrets.HCP_ORGANIZATION }}" >> $GITHUB_ENV # MODIFIED
+            echo "HCP_PROJECT_ID=${{ secrets.HCP_PROJECT }}" >> $GITHUB_ENV       # MODIFIED
 
             # Verify HCP Vault region is provided
             if [ -z "${{ secrets.HCP_VAULT_REGION }}" ]; then
@@ -253,7 +255,8 @@ jobs:
           source ${{ env.ARTIFACTS_DIR }}/error_handler.sh
 
           echo "Debug: VAULT_SERVICE is '${VAULT_SERVICE}'"
-          echo "Debug: HCP_PROJECT is '${{ env.HCP_PROJECT }}'"
+          echo "Debug: HCP_ORGANIZATION_ID is '${{ env.HCP_ORGANIZATION_ID }}'" # MODIFIED
+          echo "Debug: HCP_PROJECT_ID is '${{ env.HCP_PROJECT_ID }}'"       # MODIFIED
           echo "Debug: HCP_VAULT_SECRETS_APP is '${{ env.HCP_VAULT_SECRETS_APP }}'"
           echo "Debug: HCP_CLIENT_ID is '${{ env.HCP_CLIENT_ID }}'"
 
@@ -272,14 +275,16 @@ jobs:
 
             # Authenticate with HCP
             # Ensure HCP_CLIENT_ID and HCP_CLIENT_SECRET are correctly passed from env
+            # The HCP CLI should pick up HCP_ORGANIZATION_ID and HCP_PROJECT_ID from the environment.
             hcp auth login --client-id "${{ env.HCP_CLIENT_ID }}" --client-secret "${{ env.HCP_CLIENT_SECRET }}"
 
-            # Retrieve secrets from HCP Vault Secrets, adding --project flag
-            PULL_SECRET=$(hcp vault-secrets secrets open pull_secret --project "${{ env.HCP_PROJECT }}" --app="${{ env.HCP_VAULT_SECRETS_APP }}" --format=json | jq -r '.static_version.value')
-            SSH_PRIVATE_KEY=$(hcp vault-secrets secrets open ssh_private_key --project "${{ env.HCP_PROJECT }}" --app="${{ env.HCP_VAULT_SECRETS_APP }}" --format=json | jq -r '.static_version.value')
-            SSH_PUBLIC_KEY=$(hcp vault-secrets secrets open ssh_public_key --project "${{ env.HCP_PROJECT }}" --app="${{ env.HCP_VAULT_SECRETS_APP }}" --format=json | jq -r '.static_version.value')
-            AWS_ACCESS_KEY_ID=$(hcp vault-secrets secrets open aws_access_key_id --project "${{ env.HCP_PROJECT }}" --app="${{ env.HCP_VAULT_SECRETS_APP }}" --format=json | jq -r '.static_version.value')
-            AWS_SECRET_ACCESS_KEY=$(hcp vault-secrets secrets open aws_secret_access_key --project "${{ env.HCP_PROJECT }}" --app="${{ env.HCP_VAULT_SECRETS_APP }}" --format=json | jq -r '.static_version.value')
+            # Retrieve secrets from HCP Vault Secrets, using explicit --project
+            # HCP_ORGANIZATION_ID is expected to be picked up from env by hcp cli
+            PULL_SECRET=$(hcp vault-secrets secrets open pull_secret --project "${{ env.HCP_PROJECT_ID }}" --app="${{ env.HCP_VAULT_SECRETS_APP }}" --format=json | jq -r '.static_version.value')
+            SSH_PRIVATE_KEY=$(hcp vault-secrets secrets open ssh_private_key --project "${{ env.HCP_PROJECT_ID }}" --app="${{ env.HCP_VAULT_SECRETS_APP }}" --format=json | jq -r '.static_version.value')
+            SSH_PUBLIC_KEY=$(hcp vault-secrets secrets open ssh_public_key --project "${{ env.HCP_PROJECT_ID }}" --app="${{ env.HCP_VAULT_SECRETS_APP }}" --format=json | jq -r '.static_version.value')
+            AWS_ACCESS_KEY_ID=$(hcp vault-secrets secrets open aws_access_key_id --project "${{ env.HCP_PROJECT_ID }}" --app="${{ env.HCP_VAULT_SECRETS_APP }}" --format=json | jq -r '.static_version.value')
+            AWS_SECRET_ACCESS_KEY=$(hcp vault-secrets secrets open aws_secret_access_key --project "${{ env.HCP_PROJECT_ID }}" --app="${{ env.HCP_VAULT_SECRETS_APP }}" --format=json | jq -r '.static_version.value')
 
             # Set outputs
             echo "pull_secret=${PULL_SECRET}" >> $GITHUB_OUTPUT
@@ -404,12 +409,7 @@ jobs:
 
           # Ensure the error_handler.sh script is sourced for the current step's execution context
           # if it's called by the external script. The external script also tries to source it.
-          if [ -f "${{ env.ARTIFACTS_DIR }}/error_handler.sh" ]; then
-            source "${{ env.ARTIFACTS_DIR }}/error_handler.sh"
-          else
-            echo "Error (Workflow): error_handler.sh not found at ${{ env.ARTIFACTS_DIR }}/error_handler.sh. Critical for script error handling."
-            exit 1
-          fi
+          if [ -f "${{ env.
 
           ./aws/store-secrets.sh || { exit_code=$?; echo "aws/store-secrets.sh failed with exit code ${exit_code}."; handle_error ${exit_code} "Execution of aws/store-secrets.sh failed" "Store secrets securely"; }
 
