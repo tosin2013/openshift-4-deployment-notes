@@ -21,6 +21,7 @@
 
 ## Education 
 * [OpenShift Networking](https://network-insight.net/2022/06/09/openshift-networking/)
+* [OpenShift Virtualization and Networking Exploration](https://github.com/tosin2013/demo-virt/tree/rhpds)
 * [Kubevirt Network Deep Dive](https://kubevirt.io/2018/KubeVirt-Network-Deep-Dive.html)
 
 ## Notes
