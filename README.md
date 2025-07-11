@@ -21,14 +21,20 @@
 
 ## Education 
 * [OpenShift Networking](https://network-insight.net/2022/06/09/openshift-networking/)
-* [OpenShift Virtualization and Networking Exploration](https://github.com/tosin2013/demo-virt/tree/rhpds)
-* [Kubevirt Network Deep Dive](https://kubevirt.io/2018/KubeVirt-Network-Deep-Dive.html)
 
 ## Notes
 * [Performing OpenShift 4 installation](run-ocp-installer/)  
 
 ## Cluster Management
-* [Red Hat Advanced Cluster Management for Kubernetes](acm/)  
+* [Red Hat Advanced Cluster Management for Kubernetes](acm/)
+
+## OpenShift Virtualization
+* [Architect the OpenShift Virtualization](https://redhatquickcourses.github.io/architect-the-ocpvirt/Red%20Hat%20OpenShift%20Virtualization%20-%20Architect%20the%20OpenShift%20Virtualization/1/index.html)
+* [How to create and scale 6,000 virtual machines in 7 hours with Red Hat OpenShift Virtualization](https://cloud.redhat.com/learn/how-create-and-scale-6000-virtual-machines-7-hours-red-hat-openshift-virtualization#page-title)
+* [Configure OpenShift Virtualization networking](post-steps/configure-openshift-virtualization-networking.md)
+* [OpenShift Virtualization and Networking Exploration](https://github.com/tosin2013/demo-virt/tree/rhpds)
+* [Kubevirt Network Deep Dive](https://kubevirt.io/2018/KubeVirt-Network-Deep-Dive.html)
+* [Storage considerations for OpenShift Virtualization](https://developers.redhat.com/articles/2025/07/10/storage-considerations-openshift-virtualization)
 
 ## Day Two Operations  
 * [Configure a HTPasswd identity provider](post-steps/configure-htpasswd-identity-provider.md)  
@@ -38,7 +44,6 @@
 * [Deploy Red Hat Quay 3 on OpenShift 4.2](post-steps/deploy-red-hat-quay-3-on-openshift-4.2.md)  
 * [Configure Ansible tower on OpenShift (Legacy)](post-steps/configure-ansible-tower.md).    
 * [Configure Cluster Resource Overrides](post-steps/cluster-resource-override.md).   
-* [Configure OpenShift Virtualization networking](post-steps/configure-openshift-virtualization-networking.md)
 * [Ansible Tower on ACM Deployment](acm/configure-tower-on-acm.md)
 * [Configure Chrony](post-steps/configure-chrony.md)
 * [Managing applications and users via a Gitops Control Plane](https://cloud.redhat.com/blog/managing-applications-via-a-gitops-control-plane)
@@ -47,8 +52,6 @@
 ## Training links 
 * [OCS Installation and Configuration](https://red-hat-storage.github.io/ocs-training/training/index.html)
 * [ODF Sizer](https://access.redhat.com/labs/ocsst/#/workloads)
-* [Architect the OpenShift Virtualization](https://redhatquickcourses.github.io/architect-the-ocpvirt/Red%20Hat%20OpenShift%20Virtualization%20-%20Architect%20the%20OpenShift%20Virtualization/1/index.html)
-* [How to create and scale 6,000 virtual machines in 7 hours with Red Hat OpenShift Virtualization](https://cloud.redhat.com/learn/how-create-and-scale-6000-virtual-machines-7-hours-red-hat-openshift-virtualization#page-title)
 * [RHODS Quick Courses](https://github.com/RedHatQuickCourses/rhods-qc-apps/tree/main)
 
 * [DevSecOps Pipeline Demo](https://github.com/rcarrata/devsecops-demo)
