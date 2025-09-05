@@ -34,3 +34,17 @@ eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/cluster-key 
 openshift-install create cluster --dir $HOME/cluster --log-level debug
 ```
+### Optional 
+**Install Kustomize by downloading precompiled binaries.**
+```
+curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+sudo mv kustomize /usr/local/bin
+```
+
+**Installing Helm**
+```
+$ curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+$ chmod 700 get_helm.sh
+$ ./get_helm.sh
+$ sudo mv helm /usr/local/bin
+```
