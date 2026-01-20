@@ -35,6 +35,7 @@
 * [OpenShift Virtualization and Networking Exploration](https://github.com/tosin2013/demo-virt/tree/rhpds)
 * [Kubevirt Network Deep Dive](https://kubevirt.io/2018/KubeVirt-Network-Deep-Dive.html)
 * [Storage considerations for OpenShift Virtualization](https://developers.redhat.com/articles/2025/07/10/storage-considerations-openshift-virtualization)
+* [How to create VLAN interface for VMs in OpenShift Virtualization?](https://access.redhat.com/solutions/6972064)
 
 ## Day Two Operations  
 * [Configure a HTPasswd identity provider](post-steps/configure-htpasswd-identity-provider.md)  
