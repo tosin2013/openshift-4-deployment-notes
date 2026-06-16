@@ -36,6 +36,7 @@
 * [Kubevirt Network Deep Dive](https://kubevirt.io/2018/KubeVirt-Network-Deep-Dive.html)
 * [Storage considerations for OpenShift Virtualization](https://developers.redhat.com/articles/2025/07/10/storage-considerations-openshift-virtualization)
 * [How to create VLAN interface for VMs in OpenShift Virtualization?](https://access.redhat.com/solutions/6972064)
+* [Building a Windows Server 2025 Golden Image on OpenShift Virtualization](https://medium.com/@yakovbeder/building-a-windows-server-2025-golden-image-on-openshift-virtualization-7a07a89ee821)
 
 ## Day Two Operations  
 * [Configure a HTPasswd identity provider](post-steps/configure-htpasswd-identity-provider.md)  
