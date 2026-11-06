@@ -31,12 +31,14 @@
 ## OpenShift Virtualization
 * [Architect the OpenShift Virtualization](https://redhatquickcourses.github.io/architect-the-ocpvirt/Red%20Hat%20OpenShift%20Virtualization%20-%20Architect%20the%20OpenShift%20Virtualization/1/index.html)
 * [How to create and scale 6,000 virtual machines in 7 hours with Red Hat OpenShift Virtualization](https://cloud.redhat.com/learn/how-create-and-scale-6000-virtual-machines-7-hours-red-hat-openshift-virtualization#page-title)
-* [Configure OpenShift Virtualization networking](post-steps/configure-openshift-virtualization-networking.md)
-* [OpenShift Virtualization and Networking Exploration](https://github.com/tosin2013/demo-virt/tree/rhpds)
+* [Configure OpenShift Virtualization ing](post-steps/configure-openshift-virtualization-ing.md)
+* [OpenShift Virtualization and ing Exploration](https://github.com/tosin2013/demo-virt/tree/rhpds)
 * [Kubevirt Network Deep Dive](https://kubevirt.io/2018/KubeVirt-Network-Deep-Dive.html)
 * [Storage considerations for OpenShift Virtualization](https://developers.redhat.com/articles/2025/07/10/storage-considerations-openshift-virtualization)
 * [How to create VLAN interface for VMs in OpenShift Virtualization?](https://access.redhat.com/solutions/6972064)
 * [Building a Windows Server 2025 Golden Image on OpenShift Virtualization](https://medium.com/@yakovbeder/building-a-windows-server-2025-golden-image-on-openshift-virtualization-7a07a89ee821)
+* [Using dedicated networks for OpenShift Data Foundation](https://hackmd.io/@johnsimcall/H1DCTW230#Example-using-bonded-NICs-instead-of-a-single-NIC)
+* [kubernetes OpenShift Install OpenShift Data Foundation (ODF) using Multus network Isolation](https://kdinesh.in/openshiftodf/)
 
 ## Day Two Operations  
 * [Configure a HTPasswd identity provider](post-steps/configure-htpasswd-identity-provider.md)  
