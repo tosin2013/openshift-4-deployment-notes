@@ -38,7 +38,7 @@
 * [How to create VLAN interface for VMs in OpenShift Virtualization?](https://access.redhat.com/solutions/6972064)
 * [Building a Windows Server 2025 Golden Image on OpenShift Virtualization](https://medium.com/@yakovbeder/building-a-windows-server-2025-golden-image-on-openshift-virtualization-7a07a89ee821)
 * [Using dedicated networks for OpenShift Data Foundation](https://hackmd.io/@johnsimcall/H1DCTW230#Example-using-bonded-NICs-instead-of-a-single-NIC)
-* [kubernetes OpenShift Install OpenShift Data Foundation (ODF) using Multus network Isolation](https://kdinesh.in/openshiftodf/)
+* [OpenShift Data Foundation (ODF) using Multus network Isolation](https://kdinesh.in/openshiftodf/)
 
 ## Day Two Operations  
 * [Configure a HTPasswd identity provider](post-steps/configure-htpasswd-identity-provider.md)  
